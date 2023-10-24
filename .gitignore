@@ -1,5 +1,65 @@
+# Compiled class file
 *.class
+
+# Logs
 *.log
+
+target/
+streams/
+
+# Metals and Bloop
+.metals/
+.bloop/
+
+# sbt specific
+.cache/
+.history/
+.lib/
+.dist/
+.target/
+.log/
+lib_managed/
+src_managed/
+project/boot/
+project/plugins/project/
+
+# Scala-IDE specific
+.scala_dependencies
+.worksheet
+
+# User-specific stuff
+.idea/
+*.swp
+*.swo
+*.DS_Store
+
+# Windows image file caches
+Thumbs.db
+
+# Directory-based project format:
+.idea/
+
+# Windows Installer files
+*.cab
+*.msi
+*.msm
+*.msp
+*.pdb
+
+# Windows thumbnail cache files
+ehthumbs.db
+
+# Output file
+output.txt
+
+# VS Code directories
+.vscode/
+
+# User-specific
+*.rs.bk
+*.sbt
+*.cache
+*.worksheet
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
