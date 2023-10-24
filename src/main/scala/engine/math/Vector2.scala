@@ -1,6 +1,7 @@
 package engine.math
 
 import engine.math.Operations._
+import org.joml
 
 case class Vector2(val x: Float, val y: Float) {
   def +(o: Vector2) = Vector2(x + o.x, y + o.y)
@@ -8,8 +9,27 @@ case class Vector2(val x: Float, val y: Float) {
   def *(f: Float) = Vector2(x * f, y * f)
   def /(f: Float) = this * (1 / f)
 
-  def length: Float = sqrt(x * x + y * y)
+  def length: Float = joml.Vector2f.length(x, y)
+
+  /** More efficient than the `length` method, because it doesn't do the square
+    * root. Try to use this instead of `length` when possible.
+    *
+    * @return
+    *   length of this `Vector2` squared
+    */
+  def lengthSquared: Float = joml.Vector2f.lengthSquared(x, y)
   def normalize = this / length
+  def distance(other: Vector2) = joml.Vector2f.distance(x, y, other.x, other.y)
+
+  /** More efficient than the `distance` method, because it doesn't do the
+    * square root. Try to use this instead of `distance` when possible.
+    *
+    * @param other
+    * @return
+    *   distance squared between this and another `Vector2`
+    */
+  def distanceSquared(other: Vector2) =
+    joml.Vector2f.distanceSquared(x, y, other.x, other.y)
 
   /** Return vector rotated by given angle.
     *
@@ -43,10 +63,8 @@ object Vector2 {
 
   def zero = apply(0, 0)
   def one = apply(1, 1)
-  def left = apply(-1, 0)
-  def right = apply(1, 0)
-  def up = apply(0, 1)
-  def down = apply(0, -1)
+  def xAxis = apply(1, 0)
+  def yAxis = apply(0, 1)
 
   /** Creates a vector given an angle and a length.
     *
@@ -69,5 +87,11 @@ object Vector2Implicits {
   implicit def dTupleToVector2(tuple: (Double, Double)): Vector2 = {
     Vector2(tuple._1.toFloat, tuple._2.toFloat)
   }
+
+  implicit def toJomlVector2(v: Vector2): joml.Vector2f =
+    new joml.Vector2f(v.x, v.y)
+
+  implicit def fromJomlVector2(v: joml.Vector2f): Vector2 =
+    Vector2(v.x, v.y)
 
 }

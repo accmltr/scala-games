@@ -18,7 +18,7 @@ private[engine] final case class _Node(
 ) {
 
   override def toString(): String =
-    s"Node(name: $_name, position: $_position, children: ${_children.size}, " +
+    s"Node(name: $_name, position: ${_position.formatted(3)}, children: ${_children.size}, " +
       s"components: ${_components.size})"
 }
 

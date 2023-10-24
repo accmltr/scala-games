@@ -1,6 +1,7 @@
 package engine.math
 
 import engine.math.Operations._
+import org.joml
 
 case class Vector3(val x: Float, val y: Float, val z: Float) {
   def +(o: Vector3) = Vector3(x + o.x, y + o.y, z + o.z)
@@ -8,22 +9,46 @@ case class Vector3(val x: Float, val y: Float, val z: Float) {
   def *(f: Float) = Vector3(x * f, y * f, z * f)
   def /(f: Float) = this * (1 / f)
 
-  def length: Float = sqrt(x * x + y * y + z * z)
+  def length: Float = joml.Vector3f.length(x, y, z)
+
+  /** More efficient than the `length` method, because it doesn't do the square
+    * root. Try to use this instead of `length` when possible.
+    *
+    * @return
+    *   length of this `Vector3` squared
+    */
+  def lengthSquared: Float = joml.Vector3f.lengthSquared(x, y, z)
+  def distance(other: Vector3) =
+    joml.Vector3f.distance(x, y, z, other.x, other.y, other.z)
+
+  /** More efficient than the `distance` method, because it doesn't do the
+    * square root. Try to use this instead of `distance` when possible.
+    *
+    * @param other
+    * @return
+    *   distance squared between this and another `Vector3`
+    */
+  def distanceSquared(other: Vector3) =
+    joml.Vector3f.distanceSquared(x, y, z, other.x, other.y, other.z)
   def normalize = this / length
 
   /** Returns the dot product of this vector with another vector.
     */
-  def dot(o: Vector3): Float = x * o.x + y * o.y + z * o.z
+  def dot(other: Vector3): Float = x * other.x + y * other.y + z * other.z
 
   /** Returns the cross product of this vector with another vector.
     */
-  def cross(o: Vector3): Vector3 =
-    Vector3(y * o.z - z * o.y, z * o.x - x * o.z, x * o.y - y * o.x)
+  def cross(other: Vector3): Vector3 =
+    Vector3(
+      y * other.z - z * other.y,
+      z * other.x - x * other.z,
+      x * other.y - y * other.x
+    )
 
   /** Returns angle between this vector and another vector (in radians).
     */
-  def angleWith(o: Vector3): Float = {
-    val cosAngle = (this dot o) / (this.length * o.length)
+  def angleWith(other: Vector3): Float = {
+    val cosAngle = (this dot other) / (this.length * other.length)
     math.acos(cosAngle).toFloat
   }
 
@@ -50,28 +75,9 @@ object Vector3 {
 
   def zero = apply(0, 0, 0)
   def one = apply(1, 1, 1)
-  def left = apply(-1, 0, 0)
-  def right = apply(1, 0, 0)
-  def up = apply(0, 1, 0)
-  def down = apply(0, -1, 0)
-  def forward = apply(0, 0, 1)
-  def backward = apply(0, 0, -1)
-
-  /** Creates a vector given spherical coordinates (radius, azimuth, and
-    * inclination). Azimuth and inclination should be in radians.
-    */
-  def fromSpherical(
-      radius: Float,
-      azimuth: Float,
-      inclination: Float
-  ): Vector3 = {
-    val cosInc = cos(inclination)
-    Vector3(
-      radius * cos(azimuth) * cosInc,
-      radius * sin(azimuth) * cosInc,
-      radius * sin(inclination)
-    )
-  }
+  def xAxis = apply(1, 0, 0)
+  def yAxis = apply(0, 1, 0)
+  def zAxis = apply(0, 0, 1)
 }
 
 object Vector3Implicits {
@@ -86,4 +92,10 @@ object Vector3Implicits {
   implicit def dTupleToVector3(tuple: (Double, Double, Double)): Vector3 = {
     Vector3(tuple._1.toFloat, tuple._2.toFloat, tuple._3.toFloat)
   }
+
+  implicit def toJomlVector3(v: Vector3): joml.Vector3f =
+    new joml.Vector3f(v.x, v.y, v.z)
+
+  implicit def fromJomlVector3(v: joml.Vector3f): Vector3 =
+    Vector3(v.x, v.y, v.z)
 }
