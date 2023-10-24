@@ -24,6 +24,7 @@ import scala.collection.mutable.Queue
 import engine.math.Vector3
 import engine.rendering.window.ScreenSize
 import engine.rendering.window.FpsStats
+import engine.input.{KeyListener, MouseListener}
 
 class Window(
     private var _title: String,

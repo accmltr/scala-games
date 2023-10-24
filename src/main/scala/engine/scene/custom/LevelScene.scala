@@ -7,6 +7,7 @@ import engine.rendering.window.ScreenSize
 import engine.rendering.window.ScreenSizeImplicits.given
 
 import org.lwjgl.stb.STBImage._
+import engine.input.KeyCode
 
 class LevelScene(game: Game) extends Scene(game) {
 

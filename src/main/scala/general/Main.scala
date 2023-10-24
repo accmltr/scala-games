@@ -1,3 +1,4 @@
+import engine.input.{KeyCode, MouseCode}
 import engine.Game
 import engine.input.KeyCode
 import engine.math.Vector2

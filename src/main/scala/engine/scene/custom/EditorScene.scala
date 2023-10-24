@@ -127,6 +127,7 @@ def bufferedImageToByteArray(image: BufferedImage): Array[Byte] = {
 }
 
 import java.nio.ByteBuffer
+import engine.input.KeyCode
 
 private def createTexture(
     imageData: Array[Byte],

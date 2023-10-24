@@ -16,6 +16,7 @@ import engine.math.Vector2
 import engine.rendering.window.Window
 import engine.input.Input
 import engine.Node
+import engine.input.{KeyListener, MouseListener, Input}
 
 class Game private (title: String = "Scala Games: Untitled Game") {
 
