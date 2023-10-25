@@ -47,7 +47,7 @@ case class Vector3(val x: Float, val y: Float, val z: Float) {
 
   /** Returns angle between this vector and another vector (in radians).
     */
-  def angleWith(other: Vector3): Float = {
+  def angleBetween(other: Vector3): Float = {
     val cosAngle = (this dot other) / (this.length * other.length)
     math.acos(cosAngle).toFloat
   }

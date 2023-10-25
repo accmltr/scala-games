@@ -42,6 +42,13 @@ case class Vector2(val x: Float, val y: Float) {
   /** Returns angle of vector (in radians).
     */
   def angle: Float = math.atan2(y, x).toFloat
+  def angleBetween(other: Vector2): Float = {
+    val v1 = Vector3(x, y, 0)
+    val v2 = Vector3(other.x, other.y, 0)
+    val dot = v1 dot v2
+    val det = (v1 cross v2).length
+    math.atan2(det, dot).toFloat
+  }
 
   override def equals(other: Any) = other match
     case v: Vector2 => x == v.x && y == v.y

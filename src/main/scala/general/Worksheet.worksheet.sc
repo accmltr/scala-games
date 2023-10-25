@@ -1,8 +1,8 @@
-import engine.math.Vector2
-import engine.math.Vector2Implicits.given
+import engine.math.Rectangle
 
-var pos: Vector2 = (3, 3) + (3, 1) + Vector2.down
+var square = Rectangle(1, 1)
 
-print(pos.formatted(2))
-
-var s: String = pos.formatted(0)
+square.grow(1)
+square.toPolygon
+square.grow(1).toPolygon
+square.toPolygon.grow(1)
