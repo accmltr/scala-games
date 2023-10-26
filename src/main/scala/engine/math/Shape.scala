@@ -30,10 +30,10 @@ case class Rectangle(width: Float, height: Float) extends Shape2D {
     val halfHeight = height / 2
     Polygon(
       List(
-        Vector2(-halfWidth, -halfHeight),
-        Vector2(halfWidth, -halfHeight),
+        Vector2(-halfWidth, halfHeight),
         Vector2(halfWidth, halfHeight),
-        Vector2(-halfWidth, halfHeight)
+        Vector2(halfWidth, -halfHeight),
+        Vector2(-halfWidth, -halfHeight)
       )
     )
   }
@@ -113,16 +113,18 @@ case class Polygon(points: List[Vector2]) extends Shape2D {
             val edge2: Vector2 = nextPoint - head
             val halfEdgeAngle: Float = edge1.angleBetween(edge2) / 2f
             val l: Float = amount / Operations.sin(halfEdgeAngle)
+            val a = edge1.angle + halfEdgeAngle
             val newPoint: Vector2 =
-              head + Vector2.fromAngle(pi + halfEdgeAngle, l)
+              head + Vector2.fromAngle(a, l)
             newPoint :: _aux(next, head)
           } else {
-            val edge1: Vector2 = previous - head
-            val edge2: Vector2 = head - nextPoint
+            val edge1: Vector2 = nextPoint - head
+            val edge2: Vector2 = head - previous
             val halfEdgeAngle: Float = edge1.angleBetween(edge2) / 2f
             val l: Float = amount / Operations.sin(halfEdgeAngle)
+            val a = edge1.angle + pi + halfEdgeAngle
             val newPoint: Vector2 =
-              head + Vector2.fromAngle(pi + halfEdgeAngle, l)
+              head + Vector2.fromAngle(a, l)
             newPoint :: _aux(next, head)
           }
       }
@@ -131,6 +133,13 @@ case class Polygon(points: List[Vector2]) extends Shape2D {
     Polygon(_aux(points))
   }
   def toPolygon: Polygon = this
+
+  override def equals(x: Any): Boolean = x match {
+    case Polygon(points) => this.points == points
+    case that: Shape2D =>
+      points == that.toPolygon.points
+    case _ => false
+  }
 
   private def _isPolygonClockwise: Boolean = {
     val sum = points.zip(points.tail :+ points.head).foldLeft(0f) {
