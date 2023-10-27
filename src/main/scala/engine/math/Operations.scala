@@ -15,6 +15,7 @@ object Operations {
   def asin(rad: Float): Float = joml.Math.asin(rad)
   def acos(rad: Float): Float = joml.Math.acos(rad)
   def atan2(y: Float, x: Float): Float = joml.Math.atan2(y, x)
+  def abs(v: Float): Float = joml.Math.abs(v)
   def pow(base: Float, exponent: Float): Float =
     math.pow(base, exponent).toFloat
   def sqrt(n: Float): Float = joml.Math.sqrt(n)

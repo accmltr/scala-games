@@ -50,6 +50,11 @@ case class Vector2(val x: Float, val y: Float) {
     math.atan2(det, dot).toFloat
   }
 
+  def nearEqual(other: Vector2, epsilon: Float = 0.0001f): Boolean =
+    Operations.abs(x - other.x) <= epsilon && Operations.abs(
+      y - other.y
+    ) <= epsilon
+
   override def equals(other: Any) = other match
     case v: Vector2 => x == v.x && y == v.y
     case _          => false

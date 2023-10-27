@@ -52,6 +52,11 @@ case class Vector3(val x: Float, val y: Float, val z: Float) {
     math.acos(cosAngle).toFloat
   }
 
+  def nearEqual(other: Vector3, epsilon: Float = 0.0001f): Boolean =
+    Operations.abs(x - other.x) <= epsilon && Operations.abs(
+      y - other.y
+    ) <= epsilon && Operations.abs(z - other.z) <= epsilon
+
   override def equals(other: Any) = other match {
     case v: Vector3 => x == v.x && y == v.y && z == v.z
     case _          => false
