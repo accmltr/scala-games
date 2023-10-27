@@ -4,6 +4,8 @@ import engine.math.Operations.pow
 import org.joml
 import scala.compiletime.ops.float
 import engine.math.Constants.pi
+import scala.compiletime.ops.boolean
+import scala.annotation.tailrec
 
 trait Shape extends ShapeOps[Shape] {
   def toPolygon: Polygon
@@ -100,37 +102,70 @@ case class Polygon(points: List[Vector2]) extends Shape2D {
   override def grow(amount: Float): Polygon = {
     // keep each edge parallel to the original edge and move it outwards by amount
 
-    def _aux(
+    @tailrec
+    def recGrow(
         remaining: List[Vector2],
-        previous: Vector2 = points.lastOption.getOrElse(Vector2.zero)
-    ): List[Vector2] = {
+        previous: Vector2 = null,
+        first: Vector2 = null,
+        second: Vector2 = null,
+        acc: List[Vector2] = Nil
+    ): List[Vector2] =
       remaining match {
-        case Nil => Nil
+        case Nil =>
+          if first == null || second == null
+          then Nil // if a list with less than 3 points is passed
+          else
+            var p: Vector2 = makeNewPoint(
+              previous,
+              first,
+              second,
+              isClockwise
+            )
+            p :: acc // if a non-empty list has been computed to its end
         case head :: next =>
-          val nextPoint = next.headOption.getOrElse(points.head)
-          if isClockwise then {
-            val edge1: Vector2 = head - previous
-            val edge2: Vector2 = nextPoint - head
-            val halfEdgeAngle: Float = edge1.angleBetween(edge2) / 2f
-            val l: Float = amount / Operations.sin(halfEdgeAngle)
-            val a = edge1.angle + halfEdgeAngle
-            val newPoint: Vector2 =
-              head + Vector2.fromAngle(a, l)
-            newPoint :: _aux(next, head)
-          } else {
-            val edge1: Vector2 = nextPoint - head
-            val edge2: Vector2 = head - previous
-            val halfEdgeAngle: Float = edge1.angleBetween(edge2) / 2f
-            val l: Float = amount / Operations.sin(halfEdgeAngle)
-            val a = edge1.angle + pi + halfEdgeAngle
-            val newPoint: Vector2 =
-              head + Vector2.fromAngle(a, l)
-            newPoint :: _aux(next, head)
-          }
+          if first == null
+          then recGrow(next, head, head, null, acc)
+          else if second == null
+          then
+            if next.isEmpty
+            then recGrow(next, head, first, null, acc)
+            else
+              var p: Vector2 = makeNewPoint(
+                first,
+                head,
+                next.head,
+                isClockwise
+              )
+              recGrow(next, head, first, head, p :: acc)
+          else
+            var p: Vector2 = makeNewPoint(
+              previous,
+              head,
+              if next.nonEmpty then next.head else first,
+              isClockwise
+            )
+            recGrow(next, head, first, second, p :: acc) // recursion
       }
-    }
 
-    Polygon(_aux(points))
+    def makeNewPoint(
+        p1: Vector2,
+        p2: Vector2,
+        p3: Vector2,
+        isClockwise: Boolean
+    ): Vector2 =
+      val edge1: Vector2 = if !isClockwise then p1 - p3 else p3 - p1
+      val edge2: Vector2 = if !isClockwise then p2 - p1 else p1 - p2
+      val halfEdgeAngle: Float = edge1.angleBetween(edge2) / 2f
+      val l: Float = amount / Operations.sin(halfEdgeAngle)
+      val a =
+        if !isClockwise
+        then edge1.angle + halfEdgeAngle
+        else edge2.angle + pi + halfEdgeAngle
+      val newPoint: Vector2 =
+        p2 + Vector2.fromAngle(a, l)
+      newPoint
+
+    Polygon(recGrow(points))
   }
   def toPolygon: Polygon = this
 

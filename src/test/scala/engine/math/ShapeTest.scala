@@ -45,7 +45,7 @@ class ShapeTest extends AnyFreeSpec {
       assert(polygon.points(3) == Vector2(-5, -5))
     }
   }
-  "Rectangle and Polygon" - {
+  "Rectangle to Polygon" - {
     "should equal" in {
       val rectangle = Rectangle(10, 10)
       val polygon = Polygon(
@@ -54,22 +54,10 @@ class ShapeTest extends AnyFreeSpec {
       assert(rectangle.toPolygon == polygon)
     }
     "should equal after grow" in {
-      val rectangle = Rectangle(10, 10)
-      val polygon = rectangle.toPolygon
-      val grownRectangle = rectangle.grow(2)
-      val grownPolygon = polygon.grow(2)
+      val grownRectangle = Rectangle(10, 10).grow(2)
+      val grownPolygon = Rectangle(10, 10).toPolygon.grow(2)
 
-      def aux(a: List[Vector2], b: List[Vector2]): Boolean = {
-        (a, b) match {
-          case (Nil, Nil) => true
-          case (head1 :: next1, head2 :: next2) =>
-            Operations.floatsEqual(head1.x, head2.x, 0.01f) && Operations
-              .floatsEqual(head1.y, head2.y, 0.01f) && aux(next1, next2)
-          case _ => false
-        }
-      }
-
-      assert(aux(grownRectangle.toPolygon.points, grownPolygon.points))
+      assert(grownRectangle.toPolygon.points == grownPolygon.points)
     }
   }
 }
