@@ -19,6 +19,6 @@ object Operations {
   def pow(base: Float, exponent: Float): Float =
     math.pow(base, exponent).toFloat
   def sqrt(n: Float): Float = joml.Math.sqrt(n)
-  def floatsEqual(a: Float, b: Float, epsilon: Float): Boolean =
+  def nearEqual(a: Float, b: Float, epsilon: Float = 0.0001f): Boolean =
     joml.Math.abs(a - b) <= epsilon
 }

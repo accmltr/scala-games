@@ -2,8 +2,10 @@ package engine.math
 
 import engine.math.Operations._
 import org.joml
+import engine.test_utils.NearEqualsable
 
-case class Vector3(val x: Float, val y: Float, val z: Float) {
+case class Vector3(val x: Float, val y: Float, val z: Float)
+    extends NearEqualsable[Vector3] {
   def +(o: Vector3) = Vector3(x + o.x, y + o.y, z + o.z)
   def -(o: Vector3) = Vector3(x - o.x, y - o.y, z - o.z)
   def *(f: Float) = Vector3(x * f, y * f, z * f)
@@ -52,10 +54,10 @@ case class Vector3(val x: Float, val y: Float, val z: Float) {
     math.acos(cosAngle).toFloat
   }
 
-  def nearEqual(other: Vector3, epsilon: Float = 0.0001f): Boolean =
-    Operations.abs(x - other.x) <= epsilon && Operations.abs(
-      y - other.y
-    ) <= epsilon && Operations.abs(z - other.z) <= epsilon
+  def nearEquals(other: Vector3, epsilon: Float = 0.0001f): Boolean =
+    Operations.nearEqual(x, other.x, epsilon) &&
+      Operations.nearEqual(y, other.y, epsilon) &&
+      Operations.nearEqual(z, other.z, epsilon)
 
   override def equals(other: Any) = other match {
     case v: Vector3 => x == v.x && y == v.y && z == v.z

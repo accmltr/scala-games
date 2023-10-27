@@ -1,5 +1,6 @@
 package engine.math
 import org.scalatest.freespec.AnyFreeSpec
+import engine.test_utils.assertNearEquals
 
 class ShapeTest extends AnyFreeSpec {
   "Rectangle" - {
@@ -51,13 +52,13 @@ class ShapeTest extends AnyFreeSpec {
       val polygon = Polygon(
         List(Vector2(-5, 5), Vector2(5, 5), Vector2(5, -5), Vector2(-5, -5))
       )
-      assert(rectangle.toPolygon == polygon)
+      assert(rectangle.toPolygon nearEquals polygon)
     }
     "should equal after grow" in {
       val grownRectangle = Rectangle(10, 10).grow(2)
       val grownPolygon = Rectangle(10, 10).toPolygon.grow(2)
 
-      assert(grownRectangle.toPolygon.points == grownPolygon.points)
+      assertNearEquals(grownRectangle.toPolygon, grownPolygon)
     }
   }
 }

@@ -6,6 +6,7 @@ import scala.compiletime.ops.float
 import engine.math.Constants.pi
 import scala.compiletime.ops.boolean
 import scala.annotation.tailrec
+import engine.test_utils.NearEqualsable
 
 trait Shape extends ShapeOps[Shape] {
   def toPolygon: Polygon
@@ -74,7 +75,9 @@ case class Circle(radius: Float) extends Shape2D {
   }
 }
 
-case class Polygon(points: List[Vector2]) extends Shape2D {
+case class Polygon(points: List[Vector2])
+    extends Shape2D,
+      NearEqualsable[Polygon] {
 
   val isClockwise: Boolean = _isPolygonClockwise
 
@@ -149,22 +152,44 @@ case class Polygon(points: List[Vector2]) extends Shape2D {
         p2: Vector2,
         p3: Vector2
     ): Vector2 =
-      val edge1: Vector2 = if isClockwise then p3 - p2 else p1 - p2
-      val edge2: Vector2 = if isClockwise then p1 - p2 else p3 - p2
+      val edge1: Vector2 = if isClockwise then p3 - p2 else p2 - p1
+      val edge2: Vector2 = if isClockwise then p2 - p1 else p3 - p2
       val halfEdgeAngle: Float = edge1.angleBetween(edge2) / 2f
       val l: Float = amount / Operations.sin(halfEdgeAngle)
       val a =
         if isClockwise
-        then edge1.angle + halfEdgeAngle
-        else edge2.angle - halfEdgeAngle
+        then edge1.angle + pi - halfEdgeAngle
+        else edge2.angle + pi + halfEdgeAngle
+      var offset = Vector2.fromAngle(a, l)
       val newPoint: Vector2 =
-        p2 + Vector2.fromAngle(a, l)
+        p2 + offset
       newPoint
 
     Polygon(recGrow(points))
   }
   def toPolygon: Polygon = this
 
+  def nearEquals(other: Polygon, epsilon: Float = 0.0001f): Boolean = {
+
+    @tailrec
+    def checkPoints(points1: List[Vector2], points2: List[Vector2]): Boolean = {
+      points1 match {
+        case head1 :: next1 =>
+          points2 match {
+            case head2 :: next2 =>
+              if head1 nearEquals head2
+              then checkPoints(next1, next2)
+              else false
+            case Nil => false
+          }
+        case Nil => points2.isEmpty
+      }
+    }
+
+    if points.length != other.points.length
+    then false
+    else checkPoints(points, other.points)
+  }
   override def equals(x: Any): Boolean = x match {
     case Polygon(points) => this.points == points
     case that: Shape2D =>

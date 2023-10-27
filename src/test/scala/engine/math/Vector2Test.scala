@@ -59,17 +59,17 @@ class Vector2Test extends AnyFreeSpec {
     "should have correct from angle 1" in {
       val angle = pi
       val length = 3f
-      assert(Vector2.fromAngle(angle, length) nearEqual Vector2(-3, 0))
+      assert(Vector2.fromAngle(angle, length) nearEquals Vector2(-3, 0))
     }
     "should have correct from angle 2" in {
       val angle = (3f / 2f) * pi
       val length = 3f
-      assert(Vector2.fromAngle(angle, length) nearEqual Vector2(0, -3))
+      assert(Vector2.fromAngle(angle, length) nearEquals Vector2(0, -3))
     }
     "should have correct from angle 3" in {
       val angle = pi / 4
       assert(
-        Vector2.fromAngle(angle, 1) nearEqual Vector2(.707107, .707107),
+        Vector2.fromAngle(angle, 1) nearEquals Vector2(.707107, .707107),
         "got " + Vector2.fromAngle(angle, 1)
       )
     }

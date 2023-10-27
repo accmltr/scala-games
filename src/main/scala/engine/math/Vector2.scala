@@ -2,8 +2,9 @@ package engine.math
 
 import engine.math.Operations._
 import org.joml
+import engine.test_utils.NearEqualsable
 
-case class Vector2(val x: Float, val y: Float) {
+case class Vector2(val x: Float, val y: Float) extends NearEqualsable[Vector2] {
   def +(o: Vector2) = Vector2(x + o.x, y + o.y)
   def -(o: Vector2) = Vector2(x - o.x, y - o.y)
   def *(f: Float) = Vector2(x * f, y * f)
@@ -50,10 +51,9 @@ case class Vector2(val x: Float, val y: Float) {
     math.atan2(det, dot).toFloat
   }
 
-  def nearEqual(other: Vector2, epsilon: Float = 0.0001f): Boolean =
-    Operations.abs(x - other.x) <= epsilon && Operations.abs(
-      y - other.y
-    ) <= epsilon
+  def nearEquals(other: Vector2, epsilon: Float = 0.0001f): Boolean =
+    Operations.nearEqual(x, other.x, epsilon) &&
+      Operations.nearEqual(y, other.y, epsilon)
 
   override def equals(other: Any) = other match
     case v: Vector2 => x == v.x && y == v.y
