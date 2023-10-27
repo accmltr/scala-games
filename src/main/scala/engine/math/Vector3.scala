@@ -55,9 +55,9 @@ case class Vector3(val x: Float, val y: Float, val z: Float)
   }
 
   def nearEquals(other: Vector3, epsilon: Float = 0.0001f): Boolean =
-    Operations.nearEqual(x, other.x, epsilon) &&
-      Operations.nearEqual(y, other.y, epsilon) &&
-      Operations.nearEqual(z, other.z, epsilon)
+    Operations.nearEquals(x, other.x, epsilon) &&
+      Operations.nearEquals(y, other.y, epsilon) &&
+      Operations.nearEquals(z, other.z, epsilon)
 
   override def equals(other: Any) = other match {
     case v: Vector3 => x == v.x && y == v.y && z == v.z

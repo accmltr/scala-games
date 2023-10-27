@@ -1,6 +1,8 @@
 import engine.math.Constants.pi
 import engine.math._
 
+1.00002f nearEquals 1.00001f
+
 var square = Rectangle(10, 10)
 var square_polygon = square.toPolygon
 square.grow(2).toPolygon

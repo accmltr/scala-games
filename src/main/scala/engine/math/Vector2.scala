@@ -52,8 +52,8 @@ case class Vector2(val x: Float, val y: Float) extends NearEqualsable[Vector2] {
   }
 
   def nearEquals(other: Vector2, epsilon: Float = 0.0001f): Boolean =
-    Operations.nearEqual(x, other.x, epsilon) &&
-      Operations.nearEqual(y, other.y, epsilon)
+    Operations.nearEquals(x, other.x, epsilon) &&
+      Operations.nearEquals(y, other.y, epsilon)
 
   override def equals(other: Any) = other match
     case v: Vector2 => x == v.x && y == v.y
