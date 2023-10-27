@@ -118,8 +118,7 @@ case class Polygon(points: List[Vector2]) extends Shape2D {
             var p: Vector2 = makeNewPoint(
               previous,
               first,
-              second,
-              isClockwise
+              second
             )
             p :: acc // if a non-empty list has been computed to its end
         case head :: next =>
@@ -133,16 +132,14 @@ case class Polygon(points: List[Vector2]) extends Shape2D {
               var p: Vector2 = makeNewPoint(
                 first,
                 head,
-                next.head,
-                isClockwise
+                next.head
               )
               recGrow(next, head, first, head, p :: acc)
           else
             var p: Vector2 = makeNewPoint(
               previous,
               head,
-              if next.nonEmpty then next.head else first,
-              isClockwise
+              if next.nonEmpty then next.head else first
             )
             recGrow(next, head, first, second, p :: acc) // recursion
       }
@@ -150,17 +147,16 @@ case class Polygon(points: List[Vector2]) extends Shape2D {
     def makeNewPoint(
         p1: Vector2,
         p2: Vector2,
-        p3: Vector2,
-        isClockwise: Boolean
+        p3: Vector2
     ): Vector2 =
-      val edge1: Vector2 = if !isClockwise then p1 - p3 else p3 - p1
-      val edge2: Vector2 = if !isClockwise then p2 - p1 else p1 - p2
+      val edge1: Vector2 = if isClockwise then p3 - p2 else p1 - p2
+      val edge2: Vector2 = if isClockwise then p1 - p2 else p3 - p2
       val halfEdgeAngle: Float = edge1.angleBetween(edge2) / 2f
       val l: Float = amount / Operations.sin(halfEdgeAngle)
       val a =
-        if !isClockwise
+        if isClockwise
         then edge1.angle + halfEdgeAngle
-        else edge2.angle + pi + halfEdgeAngle
+        else edge2.angle - halfEdgeAngle
       val newPoint: Vector2 =
         p2 + Vector2.fromAngle(a, l)
       newPoint
