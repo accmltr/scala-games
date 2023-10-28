@@ -1,6 +1,6 @@
 package engine.math
 import org.scalatest.freespec.AnyFreeSpec
-import engine.math.Constants.pi
+import engine.math.pi
 
 class Vector2Test extends AnyFreeSpec {
   "Vector2" - {
