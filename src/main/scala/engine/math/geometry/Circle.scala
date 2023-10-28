@@ -1,7 +1,6 @@
 package engine.math.geometry
 
 import engine.math._
-import engine.math.Operations.pow
 
 case class Circle(radius: Float) extends Shape2D {
   val radiusSquared = pow(radius, 2)
@@ -21,8 +20,8 @@ case class Circle(radius: Float) extends Shape2D {
     Polygon(
       (0 until points).map { i =>
         Vector2(
-          halfRadius * Operations.cos(angle * i),
-          halfRadius * Operations.sin(angle * i)
+          halfRadius * cos(angle * i),
+          halfRadius * sin(angle * i)
         )
       }.toList
     )

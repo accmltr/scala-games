@@ -83,7 +83,7 @@ case class Polygon(points: List[Vector2])
       val edge1: Vector2 = if isClockwise then p3 - p2 else p2 - p1
       val edge2: Vector2 = if isClockwise then p2 - p1 else p3 - p2
       val halfEdgeAngle: Float = edge1.angleBetween(edge2) / 2f
-      val l: Float = amount / Operations.sin(halfEdgeAngle)
+      val l: Float = amount / sin(halfEdgeAngle)
       val a =
         if isClockwise
         then edge1.angle + pi - halfEdgeAngle

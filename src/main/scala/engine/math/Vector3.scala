@@ -1,6 +1,5 @@
 package engine.math
 
-import engine.math.Operations._
 import org.joml
 
 case class Vector3(val x: Float, val y: Float, val z: Float)
@@ -53,10 +52,11 @@ case class Vector3(val x: Float, val y: Float, val z: Float)
     math.acos(cosAngle).toFloat
   }
 
-  def nearEquals(other: Vector3, epsilon: Float = 0.0001f): Boolean =
-    Operations.nearEquals(x, other.x, epsilon) &&
-      Operations.nearEquals(y, other.y, epsilon) &&
-      Operations.nearEquals(z, other.z, epsilon)
+  def nearEquals(other: Vector3, epsilon: Float = 0.0001f): Boolean = {
+    (x nearEquals (other.x, epsilon)) &&
+    (y nearEquals (other.y, epsilon)) &&
+    (z nearEquals (other.z, epsilon))
+  }
 
   override def equals(other: Any) = other match {
     case v: Vector3 => x == v.x && y == v.y && z == v.z

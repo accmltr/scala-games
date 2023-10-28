@@ -1,6 +1,5 @@
 package engine.math
 
-import engine.math.Operations._
 import org.joml
 
 case class Vector2(val x: Float, val y: Float) extends NearEqualsable[Vector2] {
@@ -28,20 +27,23 @@ case class Vector2(val x: Float, val y: Float) extends NearEqualsable[Vector2] {
     * @return
     *   distance squared between this and another `Vector2`
     */
-  def distanceSquared(other: Vector2) =
+  def distanceSquared(other: Vector2) = {
     joml.Vector2f.distanceSquared(x, y, other.x, other.y)
+  }
 
   /** Return vector rotated by given angle.
     *
     * @param angle
     *   should be in radians
     */
-  def rotated(angle: Float) =
+  def rotated(angle: Float) = {
     Vector2(x * cos(angle) - y * sin(angle), x * sin(angle) + y * cos(angle))
+  }
 
   /** Returns angle of vector (in radians).
     */
   def angle: Float = math.atan2(y, x).toFloat
+
   def angleBetween(other: Vector2): Float = {
     val v1 = Vector3(x, y, 0)
     val v2 = Vector3(other.x, other.y, 0)
@@ -50,21 +52,24 @@ case class Vector2(val x: Float, val y: Float) extends NearEqualsable[Vector2] {
     math.atan2(det, dot).toFloat
   }
 
-  def nearEquals(other: Vector2, epsilon: Float = 0.0001f): Boolean =
-    Operations.nearEquals(x, other.x, epsilon) &&
-      Operations.nearEquals(y, other.y, epsilon)
+  def nearEquals(other: Vector2, epsilon: Float = 0.0001f): Boolean = {
+    (x nearEquals (other.x, epsilon)) && (y nearEquals (other.y, epsilon))
+  }
 
-  override def equals(other: Any) = other match
-    case v: Vector2 => x == v.x && y == v.y
-    case _          => false
+  override def equals(other: Any) = {
+    other match
+      case v: Vector2 => x == v.x && y == v.y
+      case _          => false
+  }
 
   override def toString = "(%f, %f)".format(x, y)
 
   /** Returns a new vector with the given number of decimals.
     */
-  def formatted(decimals: Int): String =
+  def formatted(decimals: Int): String = {
     val format = "%%.%df".format(decimals)
     "(%s, %s)".format(format.format(x), format.format(y))
+  }
 }
 
 object Vector2 {

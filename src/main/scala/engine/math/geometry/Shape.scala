@@ -1,7 +1,6 @@
 package engine.math.geometry
 
 import engine.math._
-import engine.math.Operations._
 import org.joml
 import scala.compiletime.ops.float
 import scala.compiletime.ops.boolean
