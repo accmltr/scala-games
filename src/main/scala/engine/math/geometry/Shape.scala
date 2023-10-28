@@ -1,11 +1,12 @@
-package engine.math
+package engine.math.geometry
 
-import engine.math.Operations.pow
+import engine.math._
+import engine.math.Operations._
 import org.joml
 import scala.compiletime.ops.float
 import scala.compiletime.ops.boolean
 import scala.annotation.tailrec
-import engine.test_utils.NearEqualsable
+import engine.math.NearEqualsable
 
 trait Shape extends ShapeOps[Shape] {
   def toPolygon: Polygon

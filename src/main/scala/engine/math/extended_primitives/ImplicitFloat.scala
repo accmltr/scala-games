@@ -1,6 +1,6 @@
 package engine.math.extended_primitives
 
-import engine.test_utils.NearEqualsable
+import engine.math.NearEqualsable
 
 private[math] class ImplicitFloat(value: Float) extends NearEqualsable[Float] {
 

@@ -1,4 +1,5 @@
 package engine
+import math.NearEqualsable
 
 package object test_utils {
   def assertNearEquals[T](

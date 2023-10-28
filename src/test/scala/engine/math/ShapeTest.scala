@@ -1,6 +1,7 @@
 package engine.math
 import org.scalatest.freespec.AnyFreeSpec
 import engine.test_utils.assertNearEquals
+import geometry.{Rectangle, Polygon}
 
 class ShapeTest extends AnyFreeSpec {
   "Rectangle" - {

@@ -1,4 +1,4 @@
-package engine.test_utils
+package engine.math
 
 trait NearEqualsable[T] {
   def nearEquals(other: T, epsilon: Float): Boolean

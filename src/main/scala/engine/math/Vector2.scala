@@ -2,7 +2,6 @@ package engine.math
 
 import engine.math.Operations._
 import org.joml
-import engine.test_utils.NearEqualsable
 
 case class Vector2(val x: Float, val y: Float) extends NearEqualsable[Vector2] {
   def +(o: Vector2) = Vector2(x + o.x, y + o.y)
