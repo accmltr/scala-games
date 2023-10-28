@@ -3,7 +3,6 @@ package engine.math
 import engine.math.Operations.pow
 import org.joml
 import scala.compiletime.ops.float
-import engine.math.Constants.pi
 import scala.compiletime.ops.boolean
 import scala.annotation.tailrec
 import engine.test_utils.NearEqualsable
