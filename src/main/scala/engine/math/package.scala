@@ -10,6 +10,6 @@ package object math {
   // implicit conversions
   // ------------------------
 
-  given Conversion[Float, extended_primitives.ImplicitFloat] = (f: Float) =>
-    extended_primitives.ImplicitFloat(f)
+  given Conversion[Float, extended_primitives.ImplicitFloat] =
+    extended_primitives.ImplicitFloat(_)
 }
