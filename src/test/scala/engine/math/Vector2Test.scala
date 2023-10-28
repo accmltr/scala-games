@@ -1,6 +1,7 @@
 package engine.math
 import org.scalatest.freespec.AnyFreeSpec
 import engine.math.pi
+import engine.test_utils.assertNearEquals
 
 class Vector2Test extends AnyFreeSpec {
   "Vector2" - {
@@ -59,19 +60,16 @@ class Vector2Test extends AnyFreeSpec {
     "should have correct from angle 1" in {
       val angle = pi
       val length = 3f
-      assert(Vector2.fromAngle(angle, length) nearEquals Vector2(-3, 0))
+      assertNearEquals(Vector2.fromAngle(angle, length), Vector2(-3, 0))
     }
     "should have correct from angle 2" in {
       val angle = (3f / 2f) * pi
       val length = 3f
-      assert(Vector2.fromAngle(angle, length) nearEquals Vector2(0, -3))
+      assertNearEquals(Vector2.fromAngle(angle, length), Vector2(0, -3))
     }
     "should have correct from angle 3" in {
       val angle = pi / 4
-      assert(
-        Vector2.fromAngle(angle, 1) nearEquals Vector2(.707107, .707107),
-        "got " + Vector2.fromAngle(angle, 1)
-      )
+      assertNearEquals(Vector2.fromAngle(angle, 1), Vector2(.707107, .707107))
     }
   }
 }
