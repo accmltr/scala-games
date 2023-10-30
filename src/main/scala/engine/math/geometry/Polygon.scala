@@ -6,15 +6,14 @@ import scala.annotation.tailrec
 case class Polygon(points: Vector[Vector2])
     extends Shape2D,
       NearEqualsable[Polygon] {
-
-  val isClockwise: Boolean = _isPolygonClockwise
-
   if (points.size >= 3)
     throw RuntimeException("Polygon must have at least 3 points defining it.")
   if (_hasDuplicates)
     throw RuntimeException(
-      "Polygon may not have any 2 points that are the same. [This is to simplify operations internally and gain performance]"
+      "Polygon may not have any 2 points that are equal. [This is to simplify operations internally and gain performance]"
     )
+
+  val isClockwise: Boolean = _isPolygonClockwise
 
   private val polygonIntersection =
     new org.joml.PolygonsIntersection(
@@ -37,58 +36,16 @@ case class Polygon(points: Vector[Vector2])
   def scale(amount: Float): Polygon = {
     Polygon(points.map(_ * amount))
   }
+
+  /** Moves each point of the polygon along its normal by the given amount.
+    *
+    * @param amount
+    * @return
+    *   the grown polygon
+    */
   override def grow(amount: Float): Polygon = {
-    // keep each edge parallel to the original edge and move it outwards by amount
 
-    @tailrec
-    def recGrow(
-        remaining: Vector[Vector2],
-        previous: Vector2 = null,
-        first: Vector2 = null,
-        second: Vector2 = null,
-        acc: Vector[Vector2] = Vector.empty
-    ): Vector[Vector2] = {
-      if (points.size < 3)
-        return points
-      else
-        return Vector.empty
-    }
-
-    // remaining match {
-    //   case Nil =>
-    //     if first == null || second == null
-    //     then Nil // if a list with less than 3 points is passed
-    //     else
-    //       var p: Vector2 = makeNewPoint(
-    //         previous,
-    //         first,
-    //         second
-    //       )
-    //       p :: acc // if a non-empty list has been computed to its end
-    //   case head :: next =>
-    //     if first == null
-    //     then recGrow(next, head, head, null, acc)
-    //     else if second == null
-    //     then
-    //       if next.isEmpty
-    //       then recGrow(next, head, first, null, acc)
-    //       else
-    //         var p: Vector2 = makeNewPoint(
-    //           first,
-    //           head,
-    //           next.head
-    //         )
-    //         recGrow(next, head, first, head, p :: acc)
-    //     else
-    //       var p: Vector2 = makeNewPoint(
-    //         previous,
-    //         head,
-    //         if next.nonEmpty then next.head else first
-    //       )
-    //       recGrow(next, head, first, second, p :: acc) // recursion
-    // }
-
-    def makeNewPoint(
+    def offsetVert(
         p1: Vector2,
         p2: Vector2,
         p3: Vector2
@@ -106,54 +63,32 @@ case class Polygon(points: Vector[Vector2])
         p2 + offset
       newPoint
 
-    Polygon(recGrow(points))
+    val k = points.size - 1
+    val gen = for (i <- 0 to k) yield {
+      val p1 = points(if i == 0 then k else i - 1)
+      val p2 = points(i)
+      val p3 = points(if i == k then 0 else i + 1)
+      offsetVert(p1, p2, p3)
+    }
+    Polygon(gen.toVector)
   }
   def toPolygon: Polygon = this
 
   // todo: add method mentioned in disclaimer
-  /** Disclaimer: nearEquals will not work for the same polygon with different
-    * point order, i.e. clockwise vs counterclockwise, or for polygons with
-    * different starting points. For that use case, a new method will be added.
+  /** Checks whether the points of this polygon are near equal to the points of
+    * another polygon.
     *
     * @param other
+    *   The polygon being compared to this one
     * @param epsilon
+    *   Discrepency allowed between points, e.g. 0.40 epsilon means 1.37 is
+    *   considered equal to 1.0 is considered equal to 1.00
     * @return
     */
   def nearEquals(other: Polygon, epsilon: Float = 0.0001f): Boolean = {
+    // Find the closest point to this polygon's starting point
+    val closestPoint = other.points.minBy(p => (p - points.head).lengthSquared)
 
-    @tailrec
-    def checkPoints(points1: List[Vector2], points2: List[Vector2]): Boolean = {
-      points1 match {
-        case head1 :: next1 =>
-          points2 match {
-            case head2 :: next2 =>
-              if head1 nearEquals head2
-              then checkPoints(next1, next2)
-              else false
-            case Nil => false
-          }
-        case Nil => points2.isEmpty
-      }
-    }
-
-    if points.length != other.points.length
-    then false
-    else checkPoints(points, other.points)
-  }
-
-// todo: add method mentioned in disclaimer
-  /** Disclaimer: nearEquals will not work for the same polygon with different
-    * point order, i.e. clockwise vs counterclockwise, or for polygons with
-    * different starting points. For that use case, a new method will be added.
-    *
-    * @param x
-    * @return
-    */
-  override def equals(x: Any): Boolean = x match {
-    case Polygon(points) => this.points == points
-    case that: Shape2D =>
-      points == that.toPolygon.points
-    case _ => false
   }
 
   private def _isPolygonClockwise: Boolean = {
@@ -164,10 +99,11 @@ case class Polygon(points: Vector[Vector2])
     sum > 0
   }
 
-  private def _hasDuplicates: Boolean =
+  private def _hasDuplicates: Boolean = {
     for
       i <- 0 until points.size
       j <- i + 1 until points.size
     do if points(i) == points(j) then return true
     false
+  }
 }
