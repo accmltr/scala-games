@@ -2,6 +2,7 @@ package engine.math.geometry
 
 import engine.math._
 import scala.annotation.tailrec
+import scala.util.boundary
 
 case class Polygon(points: Vector[Vector2])
     extends Shape2D,
@@ -86,9 +87,26 @@ case class Polygon(points: Vector[Vector2])
     * @return
     */
   def nearEquals(other: Polygon, epsilon: Float = 0.0001f): Boolean = {
-    // Find the closest point to this polygon's starting point
-    val closestPoint = other.points.minBy(p => (p - points.head).lengthSquared)
+    // Find the closest point to this polygon's starting point and save its index
+    val closestPointIndex = other.points.zipWithIndex.foldLeft(0) {
+      case (acc, (point, index)) =>
+        if (
+          (points(0) distanceSquared point) < (points(0) distanceSquared
+            other.points(acc))
+        )
+          index
+        else acc
+    }
 
+    // Return
+    boundary:
+      for (i <- 0 until points.size) {
+        val thisPoint = points(i)
+        val otherPoint = other.points((i + closestPointIndex) % points.size)
+        if (!(thisPoint nearEquals (otherPoint, epsilon)))
+          boundary(false)
+      }
+      true
   }
 
   private def _isPolygonClockwise: Boolean = {

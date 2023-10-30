@@ -20,7 +20,7 @@ case class Rectangle(width: Float, height: Float) extends Shape2D {
     val halfWidth = width / 2
     val halfHeight = height / 2
     Polygon(
-      List(
+      Vector(
         Vector2(-halfWidth, halfHeight),
         Vector2(halfWidth, halfHeight),
         Vector2(halfWidth, -halfHeight),

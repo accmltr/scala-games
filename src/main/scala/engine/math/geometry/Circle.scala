@@ -23,7 +23,7 @@ case class Circle(radius: Float) extends Shape2D {
           halfRadius * cos(angle * i),
           halfRadius * sin(angle * i)
         )
-      }.toList
+      }.toVector
     )
   }
 }
