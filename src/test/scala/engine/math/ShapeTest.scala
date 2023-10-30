@@ -51,9 +51,9 @@ class ShapeTest extends AnyFreeSpec {
     "should equal" in {
       val rectangle = Rectangle(10, 10)
       val polygon = Polygon(
-        List(Vector2(-5, 5), Vector2(5, 5), Vector2(5, -5), Vector2(-5, -5))
+        Vector(Vector2(-5, 5), Vector2(5, 5), Vector2(5, -5), Vector2(-5, -5))
       )
-      assert(rectangle.toPolygon nearEquals polygon)
+      assertNearEquals(rectangle.toPolygon, polygon)
     }
     "should equal after grow" in {
       val grownRectangle = Rectangle(10, 10).grow(2)

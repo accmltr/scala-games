@@ -7,8 +7,8 @@ import scala.util.boundary
 case class Polygon(points: Vector[Vector2])
     extends Shape2D,
       NearEqualsable[Polygon] {
-  if (points.size >= 3)
-    throw RuntimeException("Polygon must have at least 3 points defining it.")
+  if (points.size < 3)
+    throw RuntimeException("Polygon must have at least 3 points defining it")
   if (_hasDuplicates)
     throw RuntimeException(
       "Polygon may not have any 2 points that are equal. [This is to simplify operations internally and gain performance]"
