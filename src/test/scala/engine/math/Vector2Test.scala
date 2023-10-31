@@ -71,5 +71,10 @@ class Vector2Test extends AnyFreeSpec {
       val angle = pi / 4
       assertNearEquals(Vector2.fromAngle(angle, 1), Vector2(.707107, .707107))
     }
+    "should nearEquals" in {
+      val vector1 = Vector2(0, .5)
+      val vector2 = Vector2(0, 0)
+      assert((vector1 nearEquals (vector2, 0.5)))
+    }
   }
 }

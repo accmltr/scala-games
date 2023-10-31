@@ -27,8 +27,21 @@ package object math {
   def pow(base: Float, exponent: Float): Float =
     math.pow(base, exponent).toFloat
   def sqrt(n: Float): Float = joml.Math.sqrt(n)
+
+  /** NOTE: With smaller numbers this can have inaccurate results because of
+    * floating point errors. For example, `nearEquals(1.0001, 1.0000, 0.0001)`
+    * returns `false` when it should return `true`.
+    *
+    * @param a
+    * @param b
+    * @param epsilon
+    * @return
+    */
   def nearEquals(a: Float, b: Float, epsilon: Float = 0.0001f): Boolean =
-    joml.Math.abs(a - b) <= epsilon
+    val diff = a - b
+    if diff > 0
+    then diff < epsilon
+    else diff > -epsilon
 
   // ------------------------
   // implicit conversions
