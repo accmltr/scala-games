@@ -74,7 +74,7 @@ class Vector2Test extends AnyFreeSpec {
     "should nearEquals" in {
       val vector1 = Vector2(0, .5)
       val vector2 = Vector2(0, 0)
-      assert((vector1 nearEquals (vector2, 0.5)))
+      assertNearEquals(vector1, vector2, .50001f)
     }
   }
 }

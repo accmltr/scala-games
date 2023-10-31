@@ -70,17 +70,22 @@ class ShapeTest extends AnyFreeSpec {
       )
       var polygon2 = Polygon(
         Vector(
-          Vector2(-5.11, 5),
+          Vector2(-5.1, 5),
           Vector2(5, 5),
           Vector2(5, -5),
           Vector2(-5, -5)
         )
       )
 
-      assertNotNearEquals(
+      assertNearEquals(
         polygon1,
         polygon2,
         .11f
+      )
+      assertNotNearEquals(
+        polygon1,
+        polygon2,
+        .1f
       )
     }
   }
