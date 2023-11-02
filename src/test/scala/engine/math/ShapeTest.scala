@@ -80,12 +80,12 @@ class ShapeTest extends AnyFreeSpec {
       assertNearEquals(
         polygon1,
         polygon2,
-        .11f
+        .1f
       )
       assertNotNearEquals(
         polygon1,
         polygon2,
-        .1f
+        .09f
       )
     }
   }
