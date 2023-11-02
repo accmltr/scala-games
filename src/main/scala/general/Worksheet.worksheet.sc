@@ -6,17 +6,6 @@ import engine.math.geometry.Polygon
 import scala.util.boundary
 import engine.math.given_Conversion_Float_ImplicitFloat
 
-val a = 1.00001f
-val b = 1.00000f
-val epsilon = 0.00001f
-
-a - b
-
-a - b > epsilon
-b - a < -epsilon
-
-if ((a + b) < (2 * a)) {
-  (a + b + epsilon) > (2 * a)
-} else {
-  (a + b) < ((2 * a) + epsilon)
-}
+nearEquals(0.1f, 0.2f, 0.100000001f)
+nearEquals(0.1f, 0.2f, 0.100000000f)
+nearEquals(0.1f, 0.2f, 0.099999999f)
