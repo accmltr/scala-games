@@ -2,6 +2,7 @@ package engine.math
 import org.scalatest.freespec.AnyFreeSpec
 import engine.test_utils.assertNearEquals
 import geometry.{Rectangle, Polygon}
+import engine.test_utils.assertNotNearEquals
 
 class ShapeTest extends AnyFreeSpec {
   "Rectangle" - {
@@ -45,6 +46,47 @@ class ShapeTest extends AnyFreeSpec {
       assert(polygon.points(1) == Vector2(5, 5))
       assert(polygon.points(2) == Vector2(5, -5))
       assert(polygon.points(3) == Vector2(-5, -5))
+    }
+  }
+  "Polygon" - {
+    "should nearEquals" in {
+      var polygon1 = Polygon(
+        Vector(Vector2(-5, 5), Vector2(5, 5), Vector2(5, -5), Vector2(-5, -5))
+      )
+      var polygon2 = Polygon(
+        Vector(
+          Vector2(-5.1, 5),
+          Vector2(5, 5),
+          Vector2(5, -5),
+          Vector2(-5, -5)
+        )
+      )
+
+      assert((polygon1 nearEquals (polygon2, .1f)))
+    }
+    "should not nearEquals" in {
+      var polygon1 = Polygon(
+        Vector(Vector2(-5, 5), Vector2(5, 5), Vector2(5, -5), Vector2(-5, -5))
+      )
+      var polygon2 = Polygon(
+        Vector(
+          Vector2(-5.1, 5),
+          Vector2(5, 5),
+          Vector2(5, -5),
+          Vector2(-5, -5)
+        )
+      )
+
+      assertNearEquals(
+        polygon1,
+        polygon2,
+        .1f
+      )
+      assertNotNearEquals(
+        polygon1,
+        polygon2,
+        .09f
+      )
     }
   }
   "Rectangle to Polygon" - {

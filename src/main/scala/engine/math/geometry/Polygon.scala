@@ -104,7 +104,7 @@ case class Polygon(points: Vector[Vector2])
         val thisPoint = points(i)
         val otherPoint = other.points((i + closestPointIndex) % points.size)
         if (!(thisPoint nearEquals (otherPoint, epsilon)))
-          boundary(false)
+          boundary.break(false)
       }
       true
   }

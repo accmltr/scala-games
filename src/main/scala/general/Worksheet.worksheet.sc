@@ -1,12 +1,11 @@
-import engine.math._
-import engine.math.geometry.{Rectangle, Polygon}
-val rectangle = Rectangle(10, 10)
-val polygon = Polygon(
-  Vector(Vector2(-5, 5), Vector2(5, 5), Vector2(5, -5), Vector2(-5, -5))
-)
-rectangle.toPolygon nearEquals polygon
+import engine.math.nearEquals
+import engine.test_utils.assertNotNearEquals
+import engine.test_utils.assertNearEquals
+import engine.math.Vector2
+import engine.math.geometry.Polygon
+import scala.util.boundary
+import engine.math.given_Conversion_Float_ImplicitFloat
 
-val grownRectangle = Rectangle(10, 10).grow(2).toPolygon
-val grownPolygon = Rectangle(10, 10).toPolygon.grow(2)
-
-grownRectangle.toPolygon nearEquals grownPolygon
+nearEquals(0.1f, 0.2f, 0.100000001f)
+nearEquals(0.1f, 0.2f, 0.100000000f)
+nearEquals(0.1f, 0.2f, 0.099999999f)
