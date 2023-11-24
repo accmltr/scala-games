@@ -19,9 +19,17 @@ class InstanceManager[T](var historySize: Int = 10000) {
     id
   }
 
-  def register(i: T): Instance[T] = this.synchronized {
-    require(i != null, "'instance' parameter may not be null")
-    val ref = Instance(Option(i), newId, this)
+  /** **Note:** Be sure to get rid of local references to the newly registered
+    * instance, and use only the returned `Instance` from there on out.
+    *
+    * @param rawInstance
+    *   The instance to register and encapsulate within the `Instance` wrapper
+    *   class.
+    * @return
+    */
+  def register(rawInstance: T): Instance[T] = this.synchronized {
+    require(rawInstance != null, "'rawInstance' parameter may not be null")
+    val ref = Instance(Option(rawInstance), newId, this)
     _instances += ref.id -> ref
     ref
   }
