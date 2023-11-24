@@ -1,4 +1,4 @@
-package lib.level_system
+package lib.level
 
 /** Interface for level systems.
   */

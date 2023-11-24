@@ -1,9 +1,9 @@
-package lib.level_system
+package lib.level
 
 import org.scalatest.freespec.AnyFreeSpec
 import engine.test_utils.assertNearEquals
 import engine.math.given
-import lib.level_system.Basic._
+import lib.level.Basic._
 
 class BasicTest extends AnyFreeSpec {
   "expToLevel" - {
