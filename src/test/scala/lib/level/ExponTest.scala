@@ -3,9 +3,9 @@ package lib.level
 import org.scalatest.freespec.AnyFreeSpec
 import engine.test_utils.assertNearEquals
 import engine.math.given
-import lib.level.Basic._
+import lib.level.Expon._
 
-class BasicTest extends AnyFreeSpec {
+class ExponTest extends AnyFreeSpec {
   "expToLevel" - {
     "should be 1 for 0 exp" in {
       assert(expToLevel(0) == 1)

@@ -1,6 +1,6 @@
 package lib.level
 
-object Basic extends LevelSystem {
+object Expon extends LevelSystem {
 
   private def nonLinearExpToLevel(exp: Float): Float = {
     math.floor(1 + (math.sqrt(exp / 100))).toFloat
