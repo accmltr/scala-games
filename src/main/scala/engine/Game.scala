@@ -21,7 +21,7 @@ import engine.input.{KeyListener, MouseListener, Input}
 class Game private (title: String = "Scala Games: Untitled Game") {
 
   private[this] var _initialized: Boolean = false
-  private[engine] var _currentNode: Node = null
+  private[this] var _root: Node = null
   private[this] val _input: Input = Input()
   private[this] val _window: Window = Window(
     title,
@@ -37,12 +37,13 @@ class Game private (title: String = "Scala Games: Untitled Game") {
     _initialized = true
     window.run()
   }
-  def setRoot(node: Node): Unit = {
+  def root: Node = _root
+  def root_=(node: Node): Unit = {
     if (node == null)
       throw new IllegalArgumentException("The root node may not be null")
     if (node.parent.isDefined)
       throw new IllegalArgumentException("The root node may not have a parent")
-    _currentNode = node
+    _root = node
   }
 
   // Engine-side Methods
@@ -63,7 +64,7 @@ object Game {
     if (root == null)
       throw new IllegalArgumentException("'root' cannot be null")
     val game = new Game()
-    game.setRoot(root)
+    game.root = root
     return game
   }
 
@@ -71,7 +72,7 @@ object Game {
     if (root == null)
       throw new IllegalArgumentException("'root' cannot be null")
     val game = new Game(title)
-    game.setRoot(root)
+    game.root = root
     return game
   }
 }
