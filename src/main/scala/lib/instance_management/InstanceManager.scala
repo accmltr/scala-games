@@ -2,7 +2,12 @@ package lib.instance_management
 
 import scala.collection.immutable.Queue
 
-/** **Purpose:** Prevent memory leaks and track instances.
+/** Tracks instances of a certain type.
+  *
+  * **Purpose:** Prevent memory leaks and track instances.
+  *
+  * **Note:** This class was mainly created for a solution to the problem of
+  * destroying game objects in a game engine.
   */
 class InstanceManager[T](var historySize: Int = 10000) {
 
