@@ -60,17 +60,17 @@ class Game private (title: String = "Scala Games: Untitled Game") {
 //
 // Companion Object
 object Game {
-  def apply(root: Node): Game = {
-    if (root == null)
-      throw new IllegalArgumentException("'root' cannot be null")
+  def apply(root: Node = null): Game = {
+    // if (root == null)
+    //   throw new IllegalArgumentException("Game needs a root node")
     val game = new Game()
     game.root = root
     return game
   }
 
   def apply(title: String, root: Node): Game = {
-    if (root == null)
-      throw new IllegalArgumentException("'root' cannot be null")
+    // if (root == null)
+    //       throw new IllegalArgumentException("Game needs a root node")
     val game = new Game(title)
     game.root = root
     return game
