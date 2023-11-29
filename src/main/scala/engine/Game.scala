@@ -18,7 +18,7 @@ import engine.input.Input
 import engine.Node
 import engine.input.{KeyListener, MouseListener, Input}
 
-class Game private (title: String = "Scala Games: Untitled Game") {
+class Game(title: String = "Scala Games: Untitled Game") {
 
   private[this] var _initialized: Boolean = false
   private[this] var _root: Node = null
@@ -54,19 +54,4 @@ class Game private (title: String = "Scala Games: Untitled Game") {
   def initialized: Boolean = _initialized
   def input: Input = _input
   def window: Window = _window
-}
-
-//
-//
-// Companion Object
-object Game {
-  def apply(root: Node = null): Game = {
-    val game = new Game()
-    return game
-  }
-
-  def apply(title: String): Game = {
-    val game = new Game(title)
-    return game
-  }
 }
