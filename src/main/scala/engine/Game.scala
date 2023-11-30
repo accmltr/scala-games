@@ -17,11 +17,16 @@ import engine.rendering.window.Window
 import engine.input.Input
 import engine.Node
 import engine.input.{KeyListener, MouseListener, Input}
+import lib.instance_management.InstanceManager
+import lib.instance_management.Instance
 
 abstract class Game extends App {
 
   // Givens
   given Game = this
+
+  private val instanceManager: InstanceManager[Node] =
+    InstanceManager()
 
   private var _title: String = "Scala Games: Untitled Game"
   private var _initialized: Boolean = false
@@ -34,6 +39,11 @@ abstract class Game extends App {
     initCallback,
     updateCallback
   )
+
+  // Node Management
+  def register(node: Node): Instance[Node] = {
+    instanceManager.register(node)
+  }
 
   // Public Methods
   def run(): Unit = {

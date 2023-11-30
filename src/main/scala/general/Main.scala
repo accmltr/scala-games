@@ -10,7 +10,7 @@ import engine.Component
 
 object MyGame extends Game {
 
-  title = "Scala Games: My First Game"
+  title = "MyGame"
 
   root = {
     val node = Node()
