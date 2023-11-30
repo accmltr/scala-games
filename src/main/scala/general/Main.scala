@@ -12,17 +12,20 @@ object MyGame extends Game {
 
   title = "Scala Games: My First Game"
 
-  root = Node()
-  root.name = "MyFirstNode"
-  root.position = (0, 0)
-  root.scale = (1, 1)
-  root.rotation = 0
-  root.children = List(
-    Node(),
-    Node(),
-    Node(),
-    Node()
-  )
+  root = {
+    val node = Node()
+    node.name = "MyFirstNode"
+    node.position = (0, 0)
+    node.scale = (1, 1)
+    node.rotation = 0
+    node.children = List(
+      Node(),
+      Node(),
+      Node(),
+      Node()
+    )
+    node
+  }
 
   println(root)
 
