@@ -5,6 +5,9 @@ import engine.math.Vector2
 import engine.Component
 
 class Node()(using game: Game) {
+
+  given Game = game
+
   val name: String = "unnamed"
   val position: Vector2 = Vector2.zero
   val rotation: Float = 0
