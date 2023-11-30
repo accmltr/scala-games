@@ -2,17 +2,17 @@ package engine
 
 import scala.reflect.ClassTag
 import engine.math.Vector2
-import java.awt.Component
+import engine.Component
 
-case class Node(
-    name: String = "unnamed",
-    position: Vector2 = Vector2.zero,
-    rotation: Float = 0,
-    scale: Vector2 = Vector2.one,
-    parent: Option[Node] = None,
-    children: List[Node] = List.empty,
-    components: List[Component] = List.empty
-)(using game: Game) {
+class Node()(using game: Game) {
+  val name: String = "unnamed"
+  val position: Vector2 = Vector2.zero
+  val rotation: Float = 0
+  val scale: Vector2 = Vector2.one
+  val parent: Option[Node] = None
+  val children: List[Node] = List.empty
+  val components: List[Component] = List.empty
+
   override def toString(): String =
     s"Node(name: $name, position: ${position.formatted(3)}, children: ${children.size}, " +
       s"components: ${components.size})"
