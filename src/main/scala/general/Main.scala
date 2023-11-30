@@ -6,27 +6,30 @@ import engine.math.Vector2Implicits.given
 import engine.input.MouseCode
 import engine.rendering.window.{ScreenSize, FpsStats}
 import engine.Node
+import engine.Component
 
-@main def main: Unit =
+object MyGame extends Game {
 
-  val root = Node(
-    name = "MyFirstNode",
-    position = (0, 0),
-    scale = (1, 1),
-    rotation = 0,
-    children = List(
-      Node("Child 1"),
-      Node("Child 2"),
-      Node("Child 3"),
-      Node("Child 4")
-    )
+  title = "Scala Games: My First Game"
+
+  root = Node()
+  root.name = "MyFirstNode"
+  root.position = (0, 0)
+  root.scale = (1, 1)
+  root.rotation = 0
+  root.children = List(
+    Node(),
+    Node(),
+    Node(),
+    Node()
   )
+
   println(root)
 
-  val game = Game(root)
-  game.window.size = ScreenSize.p720
-  game.window.maximized = false
-  game.window.vsync = true
-  game.window.fpsStats.showAvg = true
-  // game.setScene(new scene.custom.EditorScene(game))
-  game.run()
+  window.size = ScreenSize.p720
+  window.maximized = false
+  window.vsync = true
+  window.fpsStats.showAvg = true
+  // setScene(new scene.custom.EditorScene(game))
+  run()
+}

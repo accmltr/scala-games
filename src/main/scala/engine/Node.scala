@@ -6,15 +6,16 @@ import engine.Component
 
 class Node()(using game: Game) {
 
+  // Givens
   given Game = game
 
-  val name: String = "unnamed"
-  val position: Vector2 = Vector2.zero
-  val rotation: Float = 0
-  val scale: Vector2 = Vector2.one
-  val parent: Option[Node] = None
-  val children: List[Node] = List.empty
-  val components: List[Component] = List.empty
+  var name: String = "unnamed"
+  var position: Vector2 = Vector2.zero
+  var rotation: Float = 0
+  var scale: Vector2 = Vector2.one
+  var parent: Option[Node] = None
+  var children: List[Node] = List.empty
+  var components: List[Component] = List.empty
 
   override def toString(): String =
     s"Node(name: $name, position: ${position.formatted(3)}, children: ${children.size}, " +

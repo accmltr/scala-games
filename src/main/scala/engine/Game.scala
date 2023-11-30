@@ -18,13 +18,17 @@ import engine.input.Input
 import engine.Node
 import engine.input.{KeyListener, MouseListener, Input}
 
-class Game(title: String = "Scala Games: Untitled Game") {
+abstract class Game extends App {
 
-  private[this] var _initialized: Boolean = false
-  private[this] var _root: Node = null
-  private[this] val _input: Input = Input()
-  private[this] val _window: Window = Window(
-    title,
+  // Givens
+  given Game = this
+
+  private var _title: String = "Scala Games: Untitled Game"
+  private var _initialized: Boolean = false
+  private var _root: Node = null
+  private val _input: Input = Input()
+  private val _window: Window = Window(
+    _title,
     input.mouseListener,
     input.keyListener,
     initCallback,
@@ -51,7 +55,14 @@ class Game(title: String = "Scala Games: Untitled Game") {
   private[engine] def updateCallback(delta: Float): Unit = {}
 
   // Getters
+  def title: String = _title
   def initialized: Boolean = _initialized
   def input: Input = _input
   def window: Window = _window
+
+  // Setters
+  def title_=(value: String): Unit = {
+    _window.title = value
+    _title = value
+  }
 }
