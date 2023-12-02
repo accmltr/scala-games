@@ -5,7 +5,7 @@ import engine.math.Vector2
 import engine.Component
 import lib.instance_management.Instance
 
-class _Node private[engine] (game: Game) {
+class Node private[engine] (game: Game) {
 
   // Engine Node Management
   val instance = game.register(this)
@@ -27,10 +27,6 @@ class _Node private[engine] (game: Game) {
       s"components: ${components.size})"
 }
 
-trait Node {
-  val s: Int = 3
-}
-
 object Node {
-  def apply()(using game: Game): Instance[Node] = (new _Node(game)).instance
+  def apply()(using game: Game): Instance[Node] = (new Node(game)).instance
 }
