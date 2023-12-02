@@ -118,10 +118,12 @@ case class Polygon(points: Vector[Vector2])
   }
 
   private def _hasDuplicates: Boolean = {
-    for
-      i <- 0 until points.size
-      j <- i + 1 until points.size
-    do if points(i) == points(j) then return true
+    boundary(
+      for
+        i <- 0 until points.size
+        j <- i + 1 until points.size
+      do if points(i) == points(j) then boundary.break(true)
+    )
     false
   }
 }
