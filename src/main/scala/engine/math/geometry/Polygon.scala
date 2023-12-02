@@ -5,8 +5,8 @@ import scala.annotation.tailrec
 import scala.util.boundary
 
 case class Polygon(points: Vector[Vector2])
-    extends Shape2D,
-      NearEqualsable[Polygon] {
+    extends Shape2D
+    with NearEqualsable[Polygon] {
   if (points.size < 3)
     throw RuntimeException("Polygon must have at least 3 points defining it")
   if (_hasDuplicates)
@@ -50,7 +50,7 @@ case class Polygon(points: Vector[Vector2])
         p1: Vector2,
         p2: Vector2,
         p3: Vector2
-    ): Vector2 =
+    ): Vector2 = {
       val edge1: Vector2 = if isClockwise then p3 - p2 else p2 - p1
       val edge2: Vector2 = if isClockwise then p2 - p1 else p3 - p2
       val halfEdgeAngle: Float = edge1.angleBetween(edge2) / 2f
@@ -63,6 +63,7 @@ case class Polygon(points: Vector[Vector2])
       val newPoint: Vector2 =
         p2 + offset
       newPoint
+    }
 
     val k = points.size - 1
     val gen = for (i <- 0 to k) yield {
