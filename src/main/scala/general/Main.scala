@@ -15,8 +15,8 @@ object MyGame extends Game {
   root = {
     val node = Node()
     node.name = "MyFirstNode"
-    node.position = (0, 0)
-    node.scale = (1, 1)
+    node.position = Vector2(0, 0)
+    node.scale = Vector2(1, 1)
     node.rotation = 0
     node.children = List(
       Node(),

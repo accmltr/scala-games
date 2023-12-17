@@ -22,7 +22,7 @@ private[engine] class MouseListener {
 
   def cursorPositionCallback(GLFWwindow: Long, x: Double, y: Double): Unit = {
     _lastPosition = _position
-    _position = (x, y)
+    _position = Vector2(x, y)
     _isDragging = _buttonsPressed.contains(GLFW_MOUSE_BUTTON_LEFT)
   }
 
@@ -44,7 +44,7 @@ private[engine] class MouseListener {
   }
 
   def scrollCallback(GLFWwindow: Long, deltaX: Double, deltaY: Double): Unit =
-    _scroll = (deltaX, deltaY)
+    _scroll = Vector2(deltaX, deltaY)
 
   // Public Accessors
   def scroll: Vector2 = _scroll
