@@ -10,6 +10,8 @@ import engine.Component
 
 object MyGame extends Game {
 
+  println("MyGame: Game Created")
+
   title = "MyGame"
 
   root = {
@@ -33,6 +35,16 @@ object MyGame extends Game {
   window.maximized = false
   window.vsync = true
   window.fpsStats.showAvg = true
-  // setScene(new scene.custom.EditorScene(game))
+
+  onInit += { (_) =>
+    println("MyGame: Game Initialized")
+  }
+  println("Added onInit callback")
+
+  onUpdate += { (delta: Float) =>
+    // println(s"MyGame: Game Updated: $delta")
+    // println(s"MyGame: Mouse Position: ${input.mousePosition}")
+  }
+
   run()
 }

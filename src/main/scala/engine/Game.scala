@@ -19,6 +19,7 @@ import engine.Node
 import engine.input.{KeyListener, MouseListener, Input}
 import lib.instance_management.InstanceManager
 import lib.instance_management.Instance
+import engine.scene.Signal
 
 abstract class Game extends App {
 
@@ -60,9 +61,17 @@ abstract class Game extends App {
     _root = node
   }
 
+  // Temp Callback Exposure
+  val onInit: Signal[Unit] = Signal()
+  val onUpdate: Signal[Float] = Signal()
+
   // Engine-side Methods
-  private[engine] def initCallback(): Unit = {}
-  private[engine] def updateCallback(delta: Float): Unit = {}
+  private[engine] def initCallback(): Unit = {
+    onInit.emit(())
+  }
+  private[engine] def updateCallback(delta: Float): Unit = {
+    onUpdate.emit(delta)
+  }
 
   // Getters
   def title: String = _title
