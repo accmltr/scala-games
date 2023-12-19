@@ -25,6 +25,7 @@ object MyGame extends Game {
   // TEMP: Extra Creation
   val extra = Extra(this)
   var quadRenderer: QuadRenderer = _
+  var polygonRenderer: PolygonRenderer = _
 
   title = "MyGame"
 
@@ -57,6 +58,21 @@ object MyGame extends Game {
 
   onInit += { (_) =>
     quadRenderer = QuadRenderer()
+    val star: Vector[engine.math.Vector2] = {
+      val points = 5
+      val radius = 0.5f
+      val center = Vector2(0, 0)
+      val angle = 2 * math.Pi / points
+      val offset = math.Pi / 2.0f
+      (0 until points).map { i =>
+        val x = radius * math.cos(i * angle + offset)
+        val y = radius * math.sin(i * angle + offset)
+        Vector2(x.toFloat, y.toFloat)
+      }.toVector
+    }
+    polygonRenderer = PolygonRenderer(
+      star
+    )
     extra.init()
     shader.compile()
   }
@@ -64,7 +80,8 @@ object MyGame extends Game {
 
   onUpdate += { (delta: Float) =>
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-    quadRenderer.render(shader)
+    // quadRenderer.render(shader)
+    polygonRenderer.render(shader)
     // shader.use()
     // extra.update(delta)
   }
@@ -197,6 +214,35 @@ class Extra(game: Game) {
     glDisableVertexAttribArray(0)
     glDisableVertexAttribArray(1)
     glDisableVertexAttribArray(2)
+    glBindVertexArray(0)
+  }
+}
+
+class PolygonRenderer(
+    vertices: Vector[engine.math.Vector2]
+) {
+
+  // vertices to FloatBuffer
+  var fbVerts = BufferUtils.createFloatBuffer(vertices.length * 2)
+  vertices.foreach { v =>
+    fbVerts.put(v.x)
+    fbVerts.put(v.y)
+  }
+  fbVerts.flip()
+
+  val vaoId = glGenVertexArrays()
+  glBindVertexArray(vaoId)
+
+  val vboId = glGenBuffers()
+  glBindBuffer(GL_ARRAY_BUFFER, vboId)
+  glBufferData(GL_ARRAY_BUFFER, fbVerts, GL_STATIC_DRAW)
+  glVertexAttribPointer(0, 2, GL_FLOAT, false, 0, 0)
+  glEnableVertexAttribArray(0)
+
+  def render(shader: Shader): Unit = {
+    shader.use()
+    glBindVertexArray(vaoId)
+    glDrawArrays(GL_POLYGON, 0, vertices.length)
     glBindVertexArray(0)
   }
 }
