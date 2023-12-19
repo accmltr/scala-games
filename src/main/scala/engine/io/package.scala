@@ -6,12 +6,19 @@ import java.nio.file.{Files, Paths}
 
 package object io {
   def readTextFile(path: String): String = {
-    try {
-      new String(Files.readAllBytes(Paths.get(path)))
-    } catch {
-      case e: IOException =>
-        e.printStackTrace()
-        assert(false, s"Error: Could read file: '$path'")
+    if (Files.exists(Paths.get(path))) {
+      try {
+        val source = scala.io.Source.fromFile(path)
+        val lines = source.getLines
+        val result = lines.mkString("\n")
+        source.close()
+        result
+      } catch {
+        case e: Exception =>
+          throw new IOException(s"Error reading shader file: $e")
+      }
+    } else {
+      throw new IOException(s"Shader file does not exist: $path")
     }
   }
 }
