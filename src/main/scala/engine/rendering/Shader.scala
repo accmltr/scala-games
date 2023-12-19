@@ -1,79 +1,65 @@
 package engine.rendering
 
-import org.joml._
-import org.lwjgl.BufferUtils
-
+import engine.io._
 import java.io.IOException
 import java.nio.FloatBuffer
-import java.nio.file.{Files, Paths}
+import org.joml._
+import org.lwjgl.BufferUtils
 import org.lwjgl.opengl.GL11._
 import org.lwjgl.opengl.GL20._
 import org.lwjgl.opengl.GL20.glGetShaderInfoLog
 import engine.math.Vector3
 import engine.math.Vector2
 
-class Shader(filepath: String) {
+class Shader(vertexPath: String, fragmentPath: String) {
   private var shaderProgramID: Int = 0
   private var beingUsed: Boolean = false
   private var vertexSource: String = _
   private var fragmentSource: String = _
 
+  // Read shader sources
   try {
-    val source: String = new String(Files.readAllBytes(Paths.get(filepath)))
-    val splitString: Array[String] = source.split("(#type)( )+([a-zA-Z]+)")
-
-    // Find the first pattern after #type 'pattern'
-    var index: Int = source.indexOf("#type") + 6
-    var eol: Int = source.indexOf("\r\n", index)
-    val firstPattern: String = source.substring(index, eol).trim
-
-    // Find the second pattern after #type 'pattern'
-    index = source.indexOf("#type", eol) + 6
-    eol = source.indexOf("\r\n", index)
-    val secondPattern: String = source.substring(index, eol).trim
-
-    if (firstPattern.equals("vertex")) {
-      vertexSource = splitString(1)
-    } else if (firstPattern.equals("fragment")) {
-      fragmentSource = splitString(1)
-    } else {
-      throw new IOException(s"Unexpected token '$firstPattern'")
-    }
-
-    if (secondPattern.equals("vertex")) {
-      vertexSource = splitString(2)
-    } else if (secondPattern.equals("fragment")) {
-      fragmentSource = splitString(2)
-    } else {
-      throw new IOException(s"Unexpected token '$secondPattern'")
-    }
+    vertexSource = readTextFile(vertexPath)
   } catch {
     case e: IOException =>
       e.printStackTrace()
-      assert(false, s"Error: Could not open file for shader: '$filepath'")
+      assert(false, s"Error: Could not read vertex shader: '$vertexPath'")
+  }
+  try {
+    fragmentSource = readTextFile(fragmentPath)
+  } catch {
+    case e: IOException =>
+      e.printStackTrace()
+      assert(false, s"Error: Could not read vertex shader: '$fragmentPath'")
   }
 
   def compile(): Unit = {
-    // Compile and link shaders
+    // Compile and link vertex shader
     val vertexID = glCreateShader(GL_VERTEX_SHADER)
     glShaderSource(vertexID, vertexSource)
     glCompileShader(vertexID)
 
+    // Compile and link fragment shader
     val fragmentID = glCreateShader(GL_FRAGMENT_SHADER)
     glShaderSource(fragmentID, fragmentSource)
     glCompileShader(fragmentID)
 
+    // Create shader program and link shaders
     shaderProgramID = glCreateProgram()
     glAttachShader(shaderProgramID, vertexID)
     glAttachShader(shaderProgramID, fragmentID)
     glLinkProgram(shaderProgramID)
 
+    // Delete shaders
     glDeleteShader(vertexID)
     glDeleteShader(fragmentID)
 
     if (glGetProgrami(shaderProgramID, GL_LINK_STATUS) == 0) {
       println(glGetShaderInfoLog(shaderProgramID, 1024))
-      assert(false, "Error: Shader program failed to link! File: " + filepath)
+      assert(
+        false,
+        "Error: Vertex and/or fragment shader failed to link with GL program."
+      )
     }
 
     glValidateProgram(shaderProgramID)
@@ -81,7 +67,7 @@ class Shader(filepath: String) {
       println(glGetShaderInfoLog(shaderProgramID, 1024))
       assert(
         false,
-        "Error: Shader program failed to validate! File: " + filepath
+        "Error: Shader program validation failed. Check vertex and fragment shaders for errors."
       )
     }
   }
