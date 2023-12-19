@@ -1,4 +1,4 @@
-package engine.core
+package engine.rendering.render_managers
 
 /** Optimizes the rendering of shapes for a new frame.
   *
@@ -10,4 +10,6 @@ package engine.core
   * Note: This is managed by the super render manager and given calls each time
   * a layer is to be rendered.
   */
-object ShapeRenderManager {}
+object ShapeRenderManager extends RenderManager {
+  override def renderLayer(layer: Int): Unit = {}
+}

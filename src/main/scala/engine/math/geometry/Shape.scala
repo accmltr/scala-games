@@ -9,7 +9,6 @@ import engine.math.NearEqualsable
 import scala.Conversion
 
 trait Shape {
-  def toPolygon: Polygon
 
   /** @param point
     *   a point relative to the shape origin
@@ -22,9 +21,8 @@ trait Shape {
     */
   def grow(amount: Float): Shape
   def scale(amount: Float): Shape
-}
 
-// Implicit Conversions
-object Shape {
-  given Conversion[Shape, Polygon] = _.toPolygon
+  def vertices: Vector[Vector2]
+  def triangulated: Vector[Vector2]
+
 }

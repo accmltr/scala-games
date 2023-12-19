@@ -17,6 +17,8 @@ class Shader(vert: VertexShader, frag: FragmentShader) {
   val vertexSource: String = vert.source
   val fragmentSource: String = frag.source
 
+  def compiled: Boolean = _shaderProgramID != 0
+  def shaderProgramID: Int = _shaderProgramID
   def beingUsed: Boolean = _beingUsed
 
   def compile(): Unit = {
