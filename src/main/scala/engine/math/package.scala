@@ -25,7 +25,7 @@ package object math {
   def atan2(y: Float, x: Float): Float = joml.Math.atan2(y, x)
   def abs(v: Float): Float = joml.Math.abs(v)
   def pow(base: Float, exponent: Float): Float =
-    math.pow(base, exponent).toFloat
+    scala.math.pow(base, exponent).toFloat
   def sqrt(n: Float): Float = joml.Math.sqrt(n)
 
   /** Checks whether two floats are equal up to a given epsilon value.
