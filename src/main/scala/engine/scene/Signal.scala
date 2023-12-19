@@ -1,7 +1,7 @@
 package engine.scene
 
 // Todo: Make Signals safe for Node destruction
-private[scene] class Signal[D] {
+class Signal[D] {
   private var listeners: List[(D) => Unit] = Nil
 
   def +=(f: (D) => Unit): Unit =
