@@ -4,7 +4,7 @@ import engine.scene.Scene
 import engine.Game
 import engine.input.KeyCode
 import java.awt.RenderingHints.Key
-import engine.rendering.Shader
+import engine.rendering.shader.Shader
 import org.lwjgl.opengl.GL
 import org.lwjgl.opengl.GL11._
 import org.lwjgl.opengl.GL13._

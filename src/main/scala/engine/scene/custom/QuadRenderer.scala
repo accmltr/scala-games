@@ -7,7 +7,7 @@ import org.lwjgl.opengl.GL20._
 import org.lwjgl.opengl.GL30._
 import org.lwjgl.BufferUtils
 import engine.math.Vector3
-import engine.rendering.Shader
+import engine.rendering.shader.Shader
 import org.joml.Matrix4f
 import engine.rendering.Camera2D
 import engine.math.Vector2
