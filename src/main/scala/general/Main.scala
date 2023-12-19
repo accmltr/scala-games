@@ -19,11 +19,11 @@ import engine.rendering.shader.Shader
 import org.joml.Matrix4f
 import java.nio.IntBuffer
 import java.nio.FloatBuffer
+import engine.math.geometry.Circle
 
 object MyGame extends Game {
 
-  // TEMP: Extra Creation
-  val extra = Extra(this)
+  // TEMP: For Practice
   var quadRenderer: QuadRenderer = _
   var polygonRenderer: PolygonRenderer = _
 
@@ -58,22 +58,9 @@ object MyGame extends Game {
 
   onInit += { (_) =>
     quadRenderer = QuadRenderer()
-    val star: Vector[engine.math.Vector2] = {
-      val points = 5
-      val radius = 0.5f
-      val center = Vector2(0, 0)
-      val angle = 2 * math.Pi / points
-      val offset = math.Pi / 2.0f
-      (0 until points).map { i =>
-        val x = radius * math.cos(i * angle + offset)
-        val y = radius * math.sin(i * angle + offset)
-        Vector2(x.toFloat, y.toFloat)
-      }.toVector
-    }
     polygonRenderer = PolygonRenderer(
-      star
+      Circle(.7, 100).points
     )
-    extra.init()
     shader.compile()
   }
   println("Added onInit callback")
@@ -88,136 +75,6 @@ object MyGame extends Game {
 
   run()
 }
-
-class Extra(game: Game) {
-  private val vertices = Array[Float](
-    // Quad vertices
-    0f, 1f, 0.0f, // Top-left
-    1f, 1f, 0.0f, // Top-right
-    1f, 0f, 0.0f, // Bottom-right
-    0f, 0f, 0.0f // Bottom-left
-  ).map(_ * game.window.size.height)
-  private val vertexColors = Array[Float](
-    // Quad colors
-    1.0f, 0.0f, 0.0f, 1.0f, // Top-left
-    0.0f, 1.0f, 0.0f, 1.0f, // Top-right
-    0.0f, 0.0f, 1.0f, 1.0f, // Bottom-right
-    1.0f, 1.0f, 1.0f, 1.0f // Bottom-left
-  )
-  private val vertexArray = Array[Float](
-    vertices(0),
-    vertices(1),
-    vertices(2),
-    vertexColors(0),
-    vertexColors(1),
-    vertexColors(2),
-    vertexColors(3),
-    1,
-    1, // Top-left
-    vertices(3),
-    vertices(4),
-    vertices(5),
-    vertexColors(4),
-    vertexColors(5),
-    vertexColors(6),
-    vertexColors(7),
-    0,
-    1, // Top-right
-    vertices(6),
-    vertices(7),
-    vertices(8),
-    vertexColors(8),
-    vertexColors(9),
-    vertexColors(10),
-    vertexColors(11),
-    0,
-    0, // Bottom-right
-    vertices(9),
-    vertices(10),
-    vertices(11),
-    vertexColors(12),
-    vertexColors(13),
-    vertexColors(14),
-    vertexColors(15),
-    1,
-    0 // Bottom-left
-  )
-  private val elements = Array[Int](
-    0, 1, 2, // Top-left triangle
-    2, 3, 0 // Bottom-right triangle
-  )
-  private var vaoId: Int = 0
-  private var vboId: Int = 0
-
-  def init(): Unit = {
-    vaoId = glGenVertexArrays()
-    glBindVertexArray(vaoId)
-
-    val vertexBuffer = BufferUtils.createFloatBuffer(vertexArray.length)
-    vertexBuffer.put(vertexArray).flip()
-
-    vboId = glGenBuffers()
-    glBindBuffer(GL_ARRAY_BUFFER, vboId)
-    glBufferData(GL_ARRAY_BUFFER, vertexBuffer, GL_STATIC_DRAW)
-
-    // Create the indices and select it (bind) - INDICES
-    val elementBuffer = BufferUtils.createIntBuffer(elements.length)
-    elementBuffer.put(elements).flip()
-
-    val eboId = glGenBuffers()
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboId)
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, elementBuffer, GL_STATIC_DRAW)
-
-    // Define the structure of the data - VERTICES
-    val floatSize = 4
-    val positionSize = 3
-    val colorSize = 4
-    val uvSize = 2
-    val vertexSizeBytes = (positionSize + colorSize + uvSize) * floatSize
-
-    glVertexAttribPointer(0, positionSize, GL_FLOAT, false, vertexSizeBytes, 0)
-    glEnableVertexAttribArray(0)
-
-    glVertexAttribPointer(
-      1,
-      colorSize,
-      GL_FLOAT,
-      false,
-      vertexSizeBytes,
-      positionSize * floatSize
-    )
-    glEnableVertexAttribArray(1)
-
-    glVertexAttribPointer(
-      2,
-      uvSize,
-      GL_FLOAT,
-      false,
-      vertexSizeBytes,
-      (positionSize + colorSize) * floatSize
-    )
-    glEnableVertexAttribArray(2)
-
-  }
-
-  def update(delta: Float): Unit = {
-    // Bind to the VAO
-    glBindVertexArray(vaoId)
-    glEnableVertexAttribArray(0)
-    glEnableVertexAttribArray(1)
-    glEnableVertexAttribArray(2)
-
-    // Draw the vertices
-    glDrawElements(GL_TRIANGLES, elements.length, GL_UNSIGNED_INT, 0)
-
-    // Restore state
-    glDisableVertexAttribArray(0)
-    glDisableVertexAttribArray(1)
-    glDisableVertexAttribArray(2)
-    glBindVertexArray(0)
-  }
-}
-
 class PolygonRenderer(
     vertices: Vector[engine.math.Vector2]
 ) {
