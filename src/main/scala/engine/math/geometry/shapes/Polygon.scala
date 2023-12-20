@@ -1,13 +1,13 @@
-package engine.math.geometry
+package engine.math.geometry.shapes
 
 import engine.math._
 import scala.annotation.tailrec
 import scala.util.boundary
 
-case class Polygon(override val vertices: Vector[Vector2])
+case class Polygon(points: Vector[Vector2])
     extends Shape2D
     with NearEqualsable[Polygon] {
-  if (vertices.size < 3)
+  if (points.size < 3)
     throw RuntimeException("Polygon must have at least 3 points defining it")
   if (_hasDuplicates)
     throw RuntimeException(
@@ -18,13 +18,13 @@ case class Polygon(override val vertices: Vector[Vector2])
 
   private val polygonIntersection =
     new org.joml.PolygonsIntersection(
-      vertices.flatMap(p => List(p.x, p.y)).toArray,
+      points.flatMap(p => List(p.x, p.y)).toArray,
       Array(0),
-      vertices.length
+      points.length
     ) // Assuming the polygon is not made of multiple disjoint polygons
 
   def translate(translation: Vector2): Polygon = {
-    Polygon(vertices.map(_ + translation))
+    Polygon(points.map(_ + translation))
   }
   def rotate(degrees: Float): Polygon = ???
   def rotateAround(degrees: Float, point: Vector2): Polygon = ???
@@ -35,7 +35,7 @@ case class Polygon(override val vertices: Vector[Vector2])
   }
 
   def scale(amount: Float): Polygon = {
-    Polygon(vertices.map(_ * amount))
+    Polygon(points.map(_ * amount))
   }
 
   /** Moves each point of the polygon along its normal by the given amount.
@@ -65,11 +65,11 @@ case class Polygon(override val vertices: Vector[Vector2])
       newPoint
     }
 
-    val k = vertices.size - 1
+    val k = points.size - 1
     val gen = for (i <- 0 to k) yield {
-      val p1 = vertices(if i == 0 then k else i - 1)
-      val p2 = vertices(i)
-      val p3 = vertices(if i == k then 0 else i + 1)
+      val p1 = points(if i == 0 then k else i - 1)
+      val p2 = points(i)
+      val p3 = points(if i == k then 0 else i + 1)
       offsetVert(p1, p2, p3)
     }
     Polygon(gen.toVector)
@@ -88,11 +88,11 @@ case class Polygon(override val vertices: Vector[Vector2])
     */
   def nearEquals(other: Polygon, epsilon: Float = 0.0001f): Boolean = {
     // Find the closest point to this polygon's starting point and save its index
-    val closestPointIndex = other.vertices.zipWithIndex.foldLeft(0) {
+    val closestPointIndex = other.points.zipWithIndex.foldLeft(0) {
       case (acc, (point, index)) =>
         if (
-          (vertices(0) distanceSquared point) < (vertices(0) distanceSquared
-            other.vertices(acc))
+          (points(0) distanceSquared point) < (points(0) distanceSquared
+            other.points(acc))
         )
           index
         else acc
@@ -100,9 +100,9 @@ case class Polygon(override val vertices: Vector[Vector2])
 
     // Return
     boundary:
-      for (i <- 0 until vertices.size) {
-        val thisPoint = vertices(i)
-        val otherPoint = other.vertices((i + closestPointIndex) % vertices.size)
+      for (i <- 0 until points.size) {
+        val thisPoint = points(i)
+        val otherPoint = other.points((i + closestPointIndex) % points.size)
         if (!(thisPoint nearEquals (otherPoint, epsilon)))
           boundary.break(false)
       }
@@ -110,7 +110,7 @@ case class Polygon(override val vertices: Vector[Vector2])
   }
 
   private def _isPolygonClockwise: Boolean = {
-    val sum = vertices.zip(vertices.tail :+ vertices.head).foldLeft(0f) {
+    val sum = points.zip(points.tail :+ points.head).foldLeft(0f) {
       case (acc, (p1, p2)) =>
         acc + (p2.x - p1.x) * (p2.y + p1.y)
     }
@@ -120,9 +120,9 @@ case class Polygon(override val vertices: Vector[Vector2])
   private def _hasDuplicates: Boolean = {
     boundary(
       for
-        i <- 0 until vertices.size
-        j <- i + 1 until vertices.size
-      do if vertices(i) == vertices(j) then boundary.break(true)
+        i <- 0 until points.size
+        j <- i + 1 until points.size
+      do if points(i) == points(j) then boundary.break(true)
     )
     false
   }

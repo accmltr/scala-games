@@ -7,7 +7,7 @@ import engine.input.MouseCode
 import engine.rendering.window.{ScreenSize, FpsStats}
 import engine.Node
 import engine.Component
-import engine.rendering.shaders.Shader
+import engine.rendering.shader.Shader
 import org.lwjgl.opengl.GL11._
 import org.lwjgl.opengl.GL13._
 import org.lwjgl.opengl.GL15._
@@ -15,11 +15,11 @@ import org.lwjgl.opengl.GL20._
 import org.lwjgl.opengl.GL30._
 import org.lwjgl.BufferUtils
 import engine.math.Vector3
-import engine.rendering.shaders.Shader
+import engine.rendering.shader.Shader
 import org.joml.Matrix4f
 import java.nio.IntBuffer
 import java.nio.FloatBuffer
-import engine.math.geometry.Circle
+import engine.math.geometry.shapes.Circle
 
 object MyGame extends Game {
 
@@ -58,9 +58,9 @@ object MyGame extends Game {
 
   onInit += { (_) =>
     quadRenderer = QuadRenderer()
-    polygonRenderer = PolygonRenderer(
-      Circle(.7, 100).vertices
-    )
+    // polygonRenderer = PolygonRenderer(
+    //   Circle(.7, 100).vertices
+    // )
     shader.compile()
   }
   println("Added onInit callback")

@@ -1,4 +1,4 @@
-package engine.math.geometry
+package engine.math.geometry.shapes
 
 import engine.math._
 import org.joml
@@ -21,8 +21,5 @@ trait Shape {
     */
   def grow(amount: Float): Shape
   def scale(amount: Float): Shape
-
-  val vertices: Vector[Vector2]
-  val triangulated: Vector[Vector2]
 
 }
