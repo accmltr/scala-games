@@ -3,6 +3,14 @@ package engine.math.geometry
 import engine.math._
 
 case class Circle(radius: Float, segments: Int) extends Shape2D {
+
+  if (radius <= 0) {
+    throw new IllegalArgumentException("Radius must be greater than 0")
+  }
+  if (segments <= 2) {
+    throw new IllegalArgumentException("Segments must be greater than 2")
+  }
+
   val radiusSquared = pow(radius, 2)
   override val vertices: Vector[Vector2] = {
     val angle = 360f / segments
