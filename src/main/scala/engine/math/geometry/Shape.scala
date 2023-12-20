@@ -22,7 +22,7 @@ trait Shape {
   def grow(amount: Float): Shape
   def scale(amount: Float): Shape
 
-  def vertices: Vector[Vector2]
-  def triangulated: Vector[Vector2]
+  val vertices: Vector[Vector2]
+  val triangulated: Vector[Vector2]
 
 }

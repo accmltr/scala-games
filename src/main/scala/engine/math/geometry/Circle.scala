@@ -4,6 +4,18 @@ import engine.math._
 
 case class Circle(radius: Float, segments: Int) extends Shape2D {
   val radiusSquared = pow(radius, 2)
+  override val vertices: Vector[Vector2] = {
+    val angle = 360f / segments
+    val halfRadius = radius / 2
+    // return
+    (0 until segments).map { i =>
+      Vector2(
+        halfRadius * cos(angle * i),
+        halfRadius * sin(angle * i)
+      )
+    }.toVector
+  }
+
   override def contains(point: Vector2): Boolean = {
     point.lengthSquared <= radiusSquared
   }
@@ -12,18 +24,6 @@ case class Circle(radius: Float, segments: Int) extends Shape2D {
   }
   override def grow(amount: Float): Circle = {
     Circle(radius + amount)
-  }
-  def toPolygon: Polygon = {
-    val angle = 360f / segments
-    val halfRadius = radius / 2
-    Polygon(
-      (0 until segments).map { i =>
-        Vector2(
-          halfRadius * cos(angle * i),
-          halfRadius * sin(angle * i)
-        )
-      }.toVector
-    )
   }
 }
 

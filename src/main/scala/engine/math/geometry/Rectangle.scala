@@ -3,6 +3,16 @@ package engine.math.geometry
 import engine.math._
 
 case class Rectangle(width: Float, height: Float) extends Shape2D {
+
+  override val vertices: Vector[Vector2] = {
+    Vector(
+      Vector2(-width / 2, -height / 2),
+      Vector2(width / 2, -height / 2),
+      Vector2(width / 2, height / 2),
+      Vector2(-width / 2, height / 2)
+    )
+  }
+
   override def contains(point: Vector2): Boolean = {
     val halfWidth = width / 2
     val halfHeight = height / 2
@@ -15,20 +25,6 @@ case class Rectangle(width: Float, height: Float) extends Shape2D {
   override def grow(amount: Float): Rectangle = {
     Rectangle(width + 2 * amount, height + 2 * amount)
   }
-
-  override def toPolygon: Polygon = {
-    val halfWidth = width / 2
-    val halfHeight = height / 2
-    Polygon(
-      Vector(
-        Vector2(-halfWidth, halfHeight),
-        Vector2(halfWidth, halfHeight),
-        Vector2(halfWidth, -halfHeight),
-        Vector2(-halfWidth, -halfHeight)
-      )
-    )
-  }
-
 }
 
 object Rectangle {

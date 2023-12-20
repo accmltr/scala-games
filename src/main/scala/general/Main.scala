@@ -59,7 +59,7 @@ object MyGame extends Game {
   onInit += { (_) =>
     quadRenderer = QuadRenderer()
     polygonRenderer = PolygonRenderer(
-      Circle(.7, 100).points
+      Circle(.7, 100).vertices
     )
     shader.compile()
   }
