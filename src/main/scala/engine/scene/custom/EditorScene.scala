@@ -3,8 +3,8 @@
 // import engine.scene.Scene
 // import engine.Game
 // import engine.input.KeyCode
-// import java.awt.RenderingHints.Key
-// import engine.rendering.shader.Shader
+// import java.awt.renderHints.Key
+// import engine.render.shader.Shader
 // import org.lwjgl.opengl.GL
 // import org.lwjgl.opengl.GL11._
 // import org.lwjgl.opengl.GL13._

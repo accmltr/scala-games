@@ -7,17 +7,17 @@
 // import org.lwjgl.opengl.GL30._
 // import org.lwjgl.BufferUtils
 // import engine.math.Vector3
-// import engine.rendering.shader.Shader
+// import engine.render.shader.Shader
 // import org.joml.Matrix4f
-// import engine.rendering.Camera2D
+// import engine.render.Camera2D
 // import engine.math.Vector2
 // import engine.math.Vector2Implicits.given
 // import engine.Game
 // import engine.Time
-// import engine.rendering.Texture
-// import engine.rendering.Camera2D
-// import engine.rendering.window.Window
-// import engine.rendering.window.ScreenSizeImplicits.given
+// import engine.render.Texture
+// import engine.render.Camera2D
+// import engine.render.window.Window
+// import engine.render.window.ScreenSizeImplicits.given
 
 // class QuadRenderer(game: Game) {
 

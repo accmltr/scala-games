@@ -4,10 +4,10 @@ import engine.input.KeyCode
 import engine.math.Vector2
 import engine.math.Vector2Implicits.given
 import engine.input.MouseCode
-import engine.rendering.window.{ScreenSize, FpsStats}
+import engine.render.window.{ScreenSize, FpsStats}
 import engine.Node
 import engine.Component
-import engine.rendering.shader.Shader
+import engine.render.shader.Shader
 import org.lwjgl.opengl.GL11._
 import org.lwjgl.opengl.GL13._
 import org.lwjgl.opengl.GL15._
@@ -15,11 +15,11 @@ import org.lwjgl.opengl.GL20._
 import org.lwjgl.opengl.GL30._
 import org.lwjgl.BufferUtils
 import engine.math.Vector3
-import engine.rendering.shader.Shader
+import engine.render.shader.Shader
 import org.joml.Matrix4f
 import java.nio.IntBuffer
 import java.nio.FloatBuffer
-import engine.math.geometry.shapes.Circle
+import engine.math.shapes.Circle
 
 object MyGame extends Game {
 

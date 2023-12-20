@@ -13,7 +13,7 @@ import engine.Time
 import engine.TimeImplicits.given
 import engine.input.{MouseListener, KeyListener}
 import engine.math.Vector2
-import engine.rendering.window.Window
+import engine.render.window.Window
 import engine.input.Input
 import engine.Node
 import engine.input.{KeyListener, MouseListener, Input}

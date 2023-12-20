@@ -1,4 +1,4 @@
-package engine.rendering
+package engine.render
 
 /* Java version:
 import org.lwjgl.BufferUtils;

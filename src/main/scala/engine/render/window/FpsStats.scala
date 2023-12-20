@@ -1,4 +1,4 @@
-package engine.rendering.window
+package engine.render.window
 
 import scala.collection.immutable.Queue
 import engine.Time

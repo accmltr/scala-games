@@ -1,4 +1,4 @@
-package engine.rendering.render_managers
+package engine.render.render_managers
 
 /** Optimizes the rendering of shapes for a new frame.
   *

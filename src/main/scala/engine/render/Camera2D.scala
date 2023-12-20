@@ -1,11 +1,11 @@
-package engine.rendering
+package engine.render
 
 import org.joml._
 import engine.math.Vector2
 import engine.math.Vector2Implicits.given
-import engine.rendering.window.ScreenSize
-import engine.rendering.window.ScreenSizeImplicits.given
-import engine.rendering.window.ScreenSizeImplicits
+import engine.render.window.ScreenSize
+import engine.render.window.ScreenSizeImplicits.given
+import engine.render.window.ScreenSizeImplicits
 
 class Camera2D(
     var position: Vector2 = Vector2(0, 0),

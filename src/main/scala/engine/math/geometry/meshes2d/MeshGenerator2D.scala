@@ -1,8 +1,8 @@
 package engine.math.geometry.meshes2d
 
 import engine.math.Vector2
-import engine.math.geometry.shapes.*
 import engine.math.*
+import engine.math.shapes.{Polygon, Shape, Rectangle, Circle}
 
 object MeshGenerator2D {
   def shapePerimeter(shape: Shape): Vector[Vector2] = {

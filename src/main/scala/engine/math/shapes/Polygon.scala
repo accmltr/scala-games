@@ -1,4 +1,4 @@
-package engine.math.geometry.shapes
+package engine.math.shapes
 
 import engine.math._
 import scala.annotation.tailrec

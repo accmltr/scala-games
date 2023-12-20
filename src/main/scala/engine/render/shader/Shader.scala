@@ -1,4 +1,4 @@
-package engine.rendering.shader
+package engine.render.shader
 
 import engine.io._
 import java.io.IOException

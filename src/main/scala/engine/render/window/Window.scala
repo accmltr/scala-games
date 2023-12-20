@@ -1,4 +1,4 @@
-package engine.rendering.window
+package engine.render.window
 
 import org.lwjgl._
 import org.lwjgl.glfw._
@@ -22,8 +22,8 @@ import engine.input.{MouseListener, KeyListener}
 import engine.math.Vector2
 import scala.collection.mutable.Queue
 import engine.math.Vector3
-import engine.rendering.window.ScreenSize
-import engine.rendering.window.FpsStats
+import engine.render.window.ScreenSize
+import engine.render.window.FpsStats
 import engine.input.{KeyListener, MouseListener}
 
 class Window(
