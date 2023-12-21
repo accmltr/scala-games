@@ -32,6 +32,22 @@ class Shader(vert: VertexShader, frag: FragmentShader) {
     glShaderSource(fragmentID, fragmentSource)
     glCompileShader(fragmentID)
 
+    val compiled = new Array[Int](1)
+
+    // Check for errors in vertex shader
+    glGetShaderiv(vertexID, GL_COMPILE_STATUS, compiled)
+    if (compiled(0) == 0) {
+      val log = glGetShaderInfoLog(vertexID)
+      throw new RuntimeException("Failed to compile vertex shader: " + log)
+    }
+
+    // Check for errors in fragment shader
+    glGetShaderiv(fragmentID, GL_COMPILE_STATUS, compiled)
+    if (compiled(0) == 0) {
+      val log = glGetShaderInfoLog(fragmentID)
+      throw new RuntimeException("Failed to compile fragment shader: " + log)
+    }
+
     // Create shader program and link shaders
     _shaderProgramID = glCreateProgram()
     glAttachShader(_shaderProgramID, vertexID)

@@ -9,9 +9,6 @@ import org.lwjgl.BufferUtils
 case class CircleRenderer(radius: Float, segments: Int = 32)
     extends ShapeRenderer {
 
-  println("Creating CircleRenderer")
-  println(s"radius: $radius, segments: $segments")
-
   override val vertices: FloatBuffer = {
     val angle = (2 * pi) / segments
     val halfRadius = radius / 2
@@ -24,7 +21,6 @@ case class CircleRenderer(radius: Float, segments: Int = 32)
       val y = halfRadius * sin(angle * i)
       floatBuffer.put(x)
       floatBuffer.put(y)
-      println(s"Added vertex: $x, $y")
     }
     floatBuffer.flip()
   }
@@ -34,8 +30,6 @@ case class CircleRenderer(radius: Float, segments: Int = 32)
       intBuffer.put(0)
       intBuffer.put(i)
       intBuffer.put(if (i == segments) 1 else i + 1)
-      println(s"Segment index: $i")
-      println(s"Added indices: 0, $i, ${if (i == segments) 1 else i + 1}")
     }
     intBuffer.flip()
   }
