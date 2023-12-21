@@ -121,6 +121,7 @@ class Shader(vert: VertexShader, frag: FragmentShader) {
     val varLocation: Int = glGetUniformLocation(_shaderProgramID, varName)
     use()
     glUniform2f(varLocation, vec.x, vec.y)
+    println(s"varlocation: $varLocation")
   }
 
   def uploadFloat(varName: String, value: Float): Unit = {

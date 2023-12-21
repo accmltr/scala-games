@@ -21,6 +21,9 @@ import java.nio.IntBuffer
 import java.nio.FloatBuffer
 import engine.math.shapes.Circle
 import engine.render.shape_renderer.CircleRenderer
+import engine.math.sin
+import engine.Time
+import engine.math.cos
 
 object MyGame extends Game {
 
@@ -64,6 +67,7 @@ object MyGame extends Game {
       circleRenderer.vertices,
       circleRenderer.indices
     )
+
     shader.compile()
   }
   println("Added onInit callback")
@@ -71,6 +75,10 @@ object MyGame extends Game {
   onUpdate += { (delta: Float) =>
     // glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     // quadRenderer.render(shader)
+    shader.uploadVec2f(
+      "position",
+      Vector2(sin(Time.current), .5 * cos(Time.current))
+    )
     polygonRenderer.render(shader)
     // shader.use()
     // extra.update(delta)
