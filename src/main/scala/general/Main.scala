@@ -59,34 +59,10 @@ object MyGame extends Game {
 
   onInit += { (_) =>
     // quadRenderer = QuadRenderer()
-    // val circleRenderer: CircleRenderer = CircleRenderer(Circle(0.5f), 3)
+    val circleRenderer: CircleRenderer = CircleRenderer(Circle(0.5f), 24)
     polygonRenderer = PolygonRenderer(
-      // circleRenderer.vertices,
-      // circleRenderer.indices
-      {
-        BufferUtils
-          .createFloatBuffer(8)
-          .put(
-            Array(
-              0f, 0f, // center
-              0.25f, 0f, // right
-              -0.125f, 0.2165f, // top left
-              -0.125f, -0.2165f // bottom left
-            )
-          )
-          .flip()
-      }, {
-        BufferUtils
-          .createIntBuffer(9)
-          .put(
-            Array(
-              0, 1, 2, // first triangle
-              0, 2, 3, // second triangle
-              0, 3, 1 // third triangle
-            )
-          )
-          .flip()
-      }
+      circleRenderer.vertices,
+      circleRenderer.indices
     )
     shader.compile()
   }
@@ -128,7 +104,7 @@ class PolygonRenderer(
   def render(shader: Shader): Unit = {
     shader.use()
     glBindVertexArray(vaoId)
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0)
+    glDrawElements(GL_TRIANGLES, indices.limit(), GL_UNSIGNED_INT, 0)
     glBindVertexArray(0)
   }
 }
