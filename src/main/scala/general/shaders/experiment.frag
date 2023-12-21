@@ -1,7 +1,13 @@
 #version 330 core
 out vec4 FragColor;
 
+uniform vec2 position;
+uniform float radius;// Assuming radius is a single float value
+uniform vec2 resolution;
+
 void main()
 {
-	FragColor=vec4(1.,.5,.2,1.);// Orange color
+	vec2 uv=(gl_FragCoord.xy-position)/resolution;
+	float len=length(uv);
+	FragColor=vec4(uv,len,1.);
 }

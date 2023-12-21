@@ -57,7 +57,6 @@ object MyGame extends Game {
 
   window.size = ScreenSize.p720
   window.maximized = false
-  window.vsync = true
   window.fpsStats.showAvg = true
 
   onInit += { (_) =>
@@ -67,18 +66,19 @@ object MyGame extends Game {
       circleRenderer.vertices,
       circleRenderer.indices
     )
-
+    window.vsync = true
     shader.compile()
   }
-  println("Added onInit callback")
 
   onUpdate += { (delta: Float) =>
     // glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     // quadRenderer.render(shader)
+    shader.uploadVec2f("resolution", window.size.toVector2)
     shader.uploadVec2f(
       "position",
       Vector2(sin(Time.current), .5 * cos(Time.current))
     )
+    shader.uploadFloat("radius", 0.75f) // * cos(Time.current))
     polygonRenderer.render(shader)
     // shader.use()
     // extra.update(delta)
