@@ -4,7 +4,6 @@ import engine.scene.Scene
 import engine.Game
 import engine.input.KeyCode
 import engine.render.window.ScreenSize
-import engine.render.window.ScreenSizeImplicits.given
 
 import org.lwjgl.stb.STBImage._
 import engine.input.KeyCode

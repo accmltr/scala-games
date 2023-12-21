@@ -77,10 +77,10 @@ object Vector2 {
   def apply(x: Float, y: Float) = new Vector2(x, y)
   def apply(x: Int, y: Int) = new Vector2(x, y)
 
-  def zero = apply(0, 0)
-  def one = apply(1, 1)
-  def xAxis = apply(1, 0)
-  def yAxis = apply(0, 1)
+  inline def zero = apply(0, 0)
+  inline def one = apply(1, 1)
+  inline def xAxis = apply(1, 0)
+  inline def yAxis = apply(0, 1)
 
   /** Creates a vector given an angle and a length.
     *

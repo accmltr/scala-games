@@ -4,12 +4,10 @@ import org.joml._
 import engine.math.Vector2
 import engine.math.Vector2Implicits.given
 import engine.render.window.ScreenSize
-import engine.render.window.ScreenSizeImplicits.given
-import engine.render.window.ScreenSizeImplicits
 
 class Camera2D(
     var position: Vector2 = Vector2(0, 0),
-    projectionSize: Vector2 = ScreenSize.p720
+    projectionSize: Vector2 = ScreenSize.p720.toVector2
 ) {
   private var _projMatrix, _viewMatrix, _inverseMatrix: Matrix4f =
     new Matrix4f()
