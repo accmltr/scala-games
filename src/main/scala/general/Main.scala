@@ -4,7 +4,7 @@ import engine.input.KeyCode
 import engine.math.Vector2
 import engine.math.Vector2Implicits.given
 import engine.input.MouseCode
-import engine.render.window.{ScreenSize, FpsStats}
+import engine.render.window.{Resolution, FpsStats}
 import engine.Node
 import engine.Component
 import engine.render.shader.Shader
@@ -55,7 +55,7 @@ object MyGame extends Game {
 
   println(root)
 
-  window.size = ScreenSize.p720
+  window.resolution = Resolution.p720
   window.maximized = false
   window.fpsStats.showAvg = true
 
@@ -73,8 +73,8 @@ object MyGame extends Game {
   onUpdate += { (delta: Float) =>
     // glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     // quadRenderer.render(shader)
-    shader.uploadFloat("aspect", window.aspectRatio)
-    shader.uploadVec2f("resolution", window.size.toVector2)
+    shader.uploadFloat("aspect", window.aspect)
+    shader.uploadVec2f("resolution", window.resolution.toVector2)
     shader.uploadVec2f(
       "position",
       Vector2(sin(Time.current), .5 * cos(Time.current))

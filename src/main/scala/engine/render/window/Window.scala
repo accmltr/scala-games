@@ -22,7 +22,7 @@ import engine.input.{MouseListener, KeyListener}
 import engine.math.Vector2
 import scala.collection.mutable.Queue
 import engine.math.Vector3
-import engine.render.window.ScreenSize
+import engine.render.window.Resolution
 import engine.render.window.FpsStats
 import engine.input.{KeyListener, MouseListener}
 
@@ -37,7 +37,7 @@ class Window(
   private var _window: Long = -1;
   private var _deltaTime = 0.0f
   private var _backgroundColor = Vector3(0.0f, 0.0f, 0.0f)
-  private var _size = ScreenSize(800, 600)
+  private var _resolution = Resolution(800, 600)
   private var _vsync = false
   private var _maximized = false
   private var _centered = true
@@ -55,10 +55,11 @@ class Window(
     _title = title
     if (isInitialized)
       glfwSetWindowTitle(_window, _title)
-  def size: ScreenSize = _size
-  def size_=(size: ScreenSize): Unit = _size = size
-  if (isInitialized) glfwSetWindowSize(_window, _size.width, _size.height)
-  def aspectRatio: Float = _size.toVector2.x / _size.toVector2.y
+  def resolution: Resolution = _resolution
+  def resolution_=(size: Resolution): Unit = _resolution = size
+  if (isInitialized)
+    glfwSetWindowSize(_window, _resolution.width, _resolution.height)
+  def aspect: Float = _resolution.toVector2.x / _resolution.toVector2.y
   def maximized: Boolean = _maximized
   def maximized_=(maximized: Boolean): Unit =
     _maximized = maximized
@@ -109,7 +110,13 @@ class Window(
       glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE)
 
     // Create the window
-    _window = glfwCreateWindow(_size.width, _size.height, _title, NULL, NULL)
+    _window = glfwCreateWindow(
+      _resolution.width,
+      _resolution.height,
+      _title,
+      NULL,
+      NULL
+    )
     if (_window == NULL)
       throw new RuntimeException("Failed to create the GLFW window")
 
@@ -118,7 +125,7 @@ class Window(
       _window,
       (window: Long, width: Int, height: Int) => {
         glViewport(0, 0, width, height)
-        _size = ScreenSize(width, height)
+        _resolution = Resolution(width, height)
       }
     )
 
