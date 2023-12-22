@@ -58,6 +58,7 @@ class Window(
   def size: ScreenSize = _size
   def size_=(size: ScreenSize): Unit = _size = size
   if (isInitialized) glfwSetWindowSize(_window, _size.width, _size.height)
+  def aspectRatio: Float = _size.toVector2.x / _size.toVector2.y
   def maximized: Boolean = _maximized
   def maximized_=(maximized: Boolean): Unit =
     _maximized = maximized
@@ -111,6 +112,15 @@ class Window(
     _window = glfwCreateWindow(_size.width, _size.height, _title, NULL, NULL)
     if (_window == NULL)
       throw new RuntimeException("Failed to create the GLFW window")
+
+    // Set frame size callback
+    glfwSetFramebufferSizeCallback(
+      _window,
+      (window: Long, width: Int, height: Int) => {
+        glViewport(0, 0, width, height)
+        _size = ScreenSize(width, height)
+      }
+    )
 
     // Set input callbacks
     glfwSetCursorPosCallback(

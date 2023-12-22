@@ -73,12 +73,12 @@ object MyGame extends Game {
   onUpdate += { (delta: Float) =>
     // glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     // quadRenderer.render(shader)
+    shader.uploadFloat("aspect", window.aspectRatio)
     shader.uploadVec2f("resolution", window.size.toVector2)
     shader.uploadVec2f(
       "position",
       Vector2(sin(Time.current), .5 * cos(Time.current))
     )
-    shader.uploadFloat("radius", 0.75f) // * cos(Time.current))
     polygonRenderer.render(shader)
     // shader.use()
     // extra.update(delta)
