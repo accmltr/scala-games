@@ -28,7 +28,6 @@ import engine.math.cos
 object MyGame extends Game {
 
   // TEMP: For Practice
-  var quadRenderer: QuadRenderer = _
   var polygonRenderer: PolygonRenderer = _
 
   title = "MyGame"
@@ -60,7 +59,6 @@ object MyGame extends Game {
   window.fpsStats.showAvg = true
 
   onInit += { (_) =>
-    // quadRenderer = QuadRenderer()
     val circleRenderer: CircleRenderer = CircleRenderer(Circle(0.5f), 24)
     polygonRenderer = PolygonRenderer(
       circleRenderer.vertices,
@@ -71,8 +69,6 @@ object MyGame extends Game {
   }
 
   onUpdate += { (delta: Float) =>
-    // glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-    // quadRenderer.render(shader)
     shader.uploadFloat("aspect", window.aspect)
     shader.uploadVec2f("resolution", window.resolution.toVector2)
     shader.uploadVec2f(
@@ -80,12 +76,11 @@ object MyGame extends Game {
       Vector2(sin(Time.current), .5 * cos(Time.current))
     )
     polygonRenderer.render(shader)
-    // shader.use()
-    // extra.update(delta)
   }
 
   run()
 }
+
 class PolygonRenderer(
     vertices: FloatBuffer,
     indices: IntBuffer
@@ -113,56 +108,6 @@ class PolygonRenderer(
     shader.use()
     glBindVertexArray(vaoId)
     glDrawElements(GL_TRIANGLES, indices.limit(), GL_UNSIGNED_INT, 0)
-    glBindVertexArray(0)
-  }
-}
-
-class QuadRenderer {
-  val vertices: FloatBuffer = BufferUtils
-    .createFloatBuffer(8)
-    .put(
-      Array(
-        -0.5f, -0.5f, // Bottom left corner
-        0.5f, -0.5f, // Bottom right corner
-        0.5f, 0.5f, // Top right corner
-        -0.5f, 0.5f // Top left corner
-      )
-    )
-    .flip()
-
-  val indices: IntBuffer = BufferUtils
-    .createIntBuffer(6)
-    .put(
-      Array(
-        0, 1, 2, // First triangle
-        2, 3, 0 // Second triangle
-      )
-    )
-    .flip()
-
-  // Create and bind a VAO
-  val vaoId = glGenVertexArrays()
-  glBindVertexArray(vaoId)
-
-  // Create and bind a VBO for the vertices
-  val vboId = glGenBuffers()
-  glBindBuffer(GL_ARRAY_BUFFER, vboId)
-  glBufferData(GL_ARRAY_BUFFER, vertices, GL_STATIC_DRAW)
-  glVertexAttribPointer(0, 2, GL_FLOAT, false, 0, 0)
-  glEnableVertexAttribArray(0)
-
-  // Create and bind a VBO for the indices
-  val eboId = glGenBuffers()
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboId)
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices, GL_STATIC_DRAW)
-
-  // Unbind the VAO
-  glBindVertexArray(0)
-
-  def render(shader: Shader): Unit = {
-    shader.use()
-    glBindVertexArray(vaoId)
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0)
     glBindVertexArray(0)
   }
 }
