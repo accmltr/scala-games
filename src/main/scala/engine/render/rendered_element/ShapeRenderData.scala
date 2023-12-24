@@ -1,4 +1,4 @@
-package engine.render.render_data
+package engine.render.rendered_element
 
 import engine.render.shader.Shader
 import engine.math.shapes.Shape

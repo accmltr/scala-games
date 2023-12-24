@@ -1,4 +1,4 @@
-package engine.render.render_managers
+package engine.render
 
 trait RenderManager {
   def renderLayer(layer: Int): Unit
