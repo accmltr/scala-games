@@ -8,8 +8,8 @@ import org.lwjgl.BufferUtils
 import org.lwjgl.opengl.GL11._
 import org.lwjgl.opengl.GL20._
 import org.lwjgl.opengl.GL20.glGetShaderInfoLog
-import engine.math.Vector3
-import engine.math.Vector2
+import engine.math.{Vector2, Vector3, Vector4}
+import java.nio.IntBuffer
 
 class Shader(vert: VertexShader, frag: FragmentShader) {
   private var _shaderProgramID: Int = 0
@@ -105,7 +105,7 @@ class Shader(vert: VertexShader, frag: FragmentShader) {
     glUniformMatrix3fv(varLocation, false, matBuffer)
   }
 
-  def uploadVec4f(varName: String, vec: Vector4f): Unit = {
+  def uploadVec4f(varName: String, vec: Vector4): Unit = {
     val varLocation: Int = glGetUniformLocation(_shaderProgramID, varName)
     use()
     glUniform4f(varLocation, vec.x, vec.y, vec.z, vec.w)
@@ -141,10 +141,28 @@ class Shader(vert: VertexShader, frag: FragmentShader) {
     glUniform1i(varLocation, slot)
   }
 
+  def uploadIntBuffer(varName: String, buffer: IntBuffer): Unit = {
+    val varLocation: Int = glGetUniformLocation(_shaderProgramID, varName)
+    use()
+    glUniform1iv(varLocation, buffer)
+  }
+
+  def uploadFloatBuffer(varName: String, buffer: FloatBuffer): Unit = {
+    val varLocation: Int = glGetUniformLocation(_shaderProgramID, varName)
+    use()
+    glUniform1fv(varLocation, buffer)
+  }
+
   def uploadIntArray(varName: String, array: Array[Int]): Unit = {
     val varLocation: Int = glGetUniformLocation(_shaderProgramID, varName)
     use()
     glUniform1iv(varLocation, array)
+  }
+
+  def uploadFloatArray(varName: String, array: Array[Float]): Unit = {
+    val varLocation: Int = glGetUniformLocation(_shaderProgramID, varName)
+    use()
+    glUniform1fv(varLocation, array)
   }
 }
 
