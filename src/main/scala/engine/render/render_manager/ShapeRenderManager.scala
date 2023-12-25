@@ -1,16 +1,13 @@
 package engine.render.render_manager
-import engine.render.RenderManager
+import engine.render.render_manager.RenderManager
+import engine.render.rendered_element.RenderedElement
 
-/** Optimizes the rendering of shapes for a new frame.
-  *
-  * Groups all shapes by layer and then by shader ID.
-  *
-  * After grouping it creates a vertex buffer for each leaf group and renders
-  * the group in one draw call.
-  *
-  * Note: This is managed by the super render manager and given calls each time
-  * a layer is to be rendered.
-  */
-object ShapeRenderManager extends RenderManager {
-  override def renderLayer(layer: Int): Unit = {}
+case class ShapeRenderManager() extends RenderManager {
+
+  override def addElement(element: RenderedElement): Unit = ???
+
+  override def removeElement(element: RenderedElement): Unit = ???
+
+  override def renderLayer(layer: Float): Unit = ???
+
 }
