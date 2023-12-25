@@ -24,11 +24,16 @@ import engine.render.shape_renderer.CircleRenderer
 import engine.math.sin
 import engine.Time
 import engine.math.cos
+import engine.render.RenderMaster
+import engine.render.render_manager.MeshRenderManager
+import engine.render.rendered_element.RenderedMesh
+import engine.render.mesh.Mesh
+import engine.render.Color
 
 object MyGame extends Game {
 
   // TEMP: For Practice
-  var polygonRenderer: PolygonRenderer = _
+  // var polygonRenderer: PolygonRenderer = _
 
   title = "MyGame"
 
@@ -58,12 +63,21 @@ object MyGame extends Game {
   window.maximized = false
   window.fpsStats.showAvg = true
 
+  val renderMaster: RenderMaster = RenderMaster()
+  val meshRenderManager: MeshRenderManager = MeshRenderManager()
+  renderMaster += meshRenderManager
+  renderMaster += RenderedMesh(
+    shader,
+    Mesh(Circle(0.5f), 24),
+    tint = Color.CYAN
+  )
+
   onInit += { (_) =>
-    val circleRenderer: CircleRenderer = CircleRenderer(Circle(0.5f), 24)
-    polygonRenderer = PolygonRenderer(
-      circleRenderer.vertices,
-      circleRenderer.indices
-    )
+    // val circleRenderer: CircleRenderer = CircleRenderer(Circle(0.5f), 24)
+    // polygonRenderer = PolygonRenderer(
+    //   circleRenderer.vertices,
+    //   circleRenderer.indices
+    // )
     window.vsync = true
     shader.compile()
   }
@@ -71,11 +85,16 @@ object MyGame extends Game {
   onUpdate += { (delta: Float) =>
     shader.uploadFloat("aspect", window.aspect)
     shader.uploadVec2f("resolution", window.resolution.toVector2)
-    shader.uploadVec2f(
-      "position",
-      Vector2(sin(Time.current), .5 * cos(Time.current))
-    )
-    polygonRenderer.render(shader)
+
+    renderMaster.render()
+
+    // shader.uploadFloat("aspect", window.aspect)
+    // shader.uploadVec2f("resolution", window.resolution.toVector2)
+    // shader.uploadVec2f(
+    //   "position",
+    //   Vector2(sin(Time.current), .5 * cos(Time.current))
+    // )
+    // polygonRenderer.render(shader)
   }
 
   run()

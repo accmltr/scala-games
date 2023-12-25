@@ -1,9 +1,8 @@
 package engine.render.rendered_element
 
-import engine.render.render_manager.RenderManager
+import engine.render.render_manager.*
 import java.nio.{FloatBuffer, IntBuffer}
 import engine.render.Color
-import engine.render.render_manager.ShapeRenderManager
 import engine.render.shader.Shader
 import engine.math.shapes.*
 import engine.math.*
@@ -82,69 +81,8 @@ final case class RenderedMesh(
 
   override def isManager(manager: RenderManager): Boolean = {
     manager match {
-      case shapeManager: ShapeRenderManager => true
-      case _                                => false
+      case _: MeshRenderManager => true
+      case _                    => false
     }
   }
 }
-/*
-
-  def uploadMat4f(varName: String, mat4: Matrix4f): Unit = {
-    val varLocation: Int = glGetUniformLocation(_shaderProgramID, varName)
-    use()
-    val matBuffer: FloatBuffer = BufferUtils.createFloatBuffer(16)
-    mat4.get(matBuffer)
-    glUniformMatrix4fv(varLocation, false, matBuffer)
-  }
-
-  def uploadMat3f(varName: String, mat3: Matrix3f): Unit = {
-    val varLocation: Int = glGetUniformLocation(_shaderProgramID, varName)
-    use()
-    val matBuffer: FloatBuffer = BufferUtils.createFloatBuffer(9)
-    mat3.get(matBuffer)
-    glUniformMatrix3fv(varLocation, false, matBuffer)
-  }
-
-  def uploadVec4f(varName: String, vec: Vector4f): Unit = {
-    val varLocation: Int = glGetUniformLocation(_shaderProgramID, varName)
-    use()
-    glUniform4f(varLocation, vec.x, vec.y, vec.z, vec.w)
-  }
-
-  def uploadVec3f(varName: String, vec: Vector3): Unit = {
-    val varLocation: Int = glGetUniformLocation(_shaderProgramID, varName)
-    use()
-    glUniform3f(varLocation, vec.x, vec.y, vec.z)
-  }
-
-  def uploadVec2f(varName: String, vec: Vector2): Unit = {
-    val varLocation: Int = glGetUniformLocation(_shaderProgramID, varName)
-    use()
-    glUniform2f(varLocation, vec.x, vec.y)
-  }
-
-  def uploadFloat(varName: String, value: Float): Unit = {
-    val varLocation: Int = glGetUniformLocation(_shaderProgramID, varName)
-    use()
-    glUniform1f(varLocation, value)
-  }
-
-  def uploadInt(varName: String, value: Int): Unit = {
-    val varLocation: Int = glGetUniformLocation(_shaderProgramID, varName)
-    use()
-    glUniform1i(varLocation, value)
-  }
-
-  def uploadTexture(varName: String, slot: Int): Unit = {
-    val varLocation: Int = glGetUniformLocation(_shaderProgramID, varName)
-    use()
-    glUniform1i(varLocation, slot)
-  }
-
-  def uploadIntArray(varName: String, array: Array[Int]): Unit = {
-    val varLocation: Int = glGetUniformLocation(_shaderProgramID, varName)
-    use()
-    glUniform1iv(varLocation, array)
-  }
-}
- */
