@@ -17,8 +17,6 @@ trait RenderedElement {
   def isManager(manager: RenderManager): Boolean
 }
 
-trait BatchRenderedElement extends RenderedElement {}
-
 trait SelfRenderedElement extends RenderedElement {
   def render(): Unit
 }
