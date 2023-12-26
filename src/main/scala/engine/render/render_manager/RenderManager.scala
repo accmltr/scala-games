@@ -58,6 +58,10 @@ final case class MeshRenderManager() extends RenderManager {
       glBindVertexArray(0)
 
       e.shader.use()
+
+      // Upload uniforms
+      e.uploadUniforms()
+
       glBindVertexArray(vaoId)
       glDrawElements(GL_TRIANGLES, e.mesh.indices.limit(), GL_UNSIGNED_INT, 0)
       glBindVertexArray(0)

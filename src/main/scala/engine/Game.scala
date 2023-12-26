@@ -52,7 +52,13 @@ abstract class Game extends App {
     _initialized = true
     window.run()
   }
+
+  def quit(): Unit = {
+    glfwSetWindowShouldClose(window.windowId, true)
+  }
+
   def root: Node = _root
+
   def root_=(node: Node): Unit = {
     if (node == null)
       throw new IllegalArgumentException("The root node may not be null")

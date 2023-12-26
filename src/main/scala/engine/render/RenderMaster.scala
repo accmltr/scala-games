@@ -33,7 +33,6 @@ class RenderMaster {
   }
 
   def render(): Unit = {
-    println(_layers)
     _layers.foreach(l => _managers.foreach(_.renderLayer(l)))
   }
 }

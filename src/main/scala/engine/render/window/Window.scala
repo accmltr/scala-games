@@ -34,7 +34,7 @@ class Window(
     postRenderCallback: Float => Unit
 ) {
   // Private Fields
-  private var _window: Long = -1;
+  private var _windowId: Long = -1;
   private var _deltaTime = 0.0f
   private var _backgroundColor = Vector3(0.0f, 0.0f, 0.0f)
   private var _resolution = Resolution(800, 600)
@@ -45,8 +45,8 @@ class Window(
   val fpsStats = FpsStats()
 
   // Public Accessors
-  def window: Long = _window
-  def isInitialized: Boolean = _window != -1
+  def windowId: Long = _windowId
+  def isInitialized: Boolean = _windowId != -1
   def deltaTime: Double = _deltaTime
   def backgroundColor: Vector3 = _backgroundColor
   def backgroundColor_=(color: Vector3): Unit = _backgroundColor = color
@@ -54,20 +54,20 @@ class Window(
   def title_=(title: String): Unit =
     _title = title
     if (isInitialized)
-      glfwSetWindowTitle(_window, _title)
+      glfwSetWindowTitle(_windowId, _title)
   def resolution: Resolution = _resolution
   def resolution_=(size: Resolution): Unit = _resolution = size
   if (isInitialized)
-    glfwSetWindowSize(_window, _resolution.width, _resolution.height)
+    glfwSetWindowSize(_windowId, _resolution.width, _resolution.height)
   def aspect: Float = _resolution.toVector2.x / _resolution.toVector2.y
   def maximized: Boolean = _maximized
   def maximized_=(maximized: Boolean): Unit =
     _maximized = maximized
     if (isInitialized)
       if (maximized)
-        glfwMaximizeWindow(_window)
+        glfwMaximizeWindow(_windowId)
       else
-        glfwRestoreWindow(_window)
+        glfwRestoreWindow(_windowId)
   def vsync: Boolean = _vsync
   def vsync_=(vsync: Boolean): Unit =
     if (isInitialized)
@@ -85,8 +85,8 @@ class Window(
     _runLoop()
 
     // Free the window callbacks and destroy the window
-    glfwFreeCallbacks(_window)
-    glfwDestroyWindow(_window)
+    glfwFreeCallbacks(_windowId)
+    glfwDestroyWindow(_windowId)
 
     // Terminate GLFW and free the error callback
     glfwTerminate()
@@ -110,19 +110,19 @@ class Window(
       glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE)
 
     // Create the window
-    _window = glfwCreateWindow(
+    _windowId = glfwCreateWindow(
       _resolution.width,
       _resolution.height,
       _title,
       NULL,
       NULL
     )
-    if (_window == NULL)
+    if (_windowId == NULL)
       throw new RuntimeException("Failed to create the GLFW window")
 
     // Set frame size callback
     glfwSetFramebufferSizeCallback(
-      _window,
+      _windowId,
       (window: Long, width: Int, height: Int) => {
         glViewport(0, 0, width, height)
         _resolution = Resolution(width, height)
@@ -131,19 +131,19 @@ class Window(
 
     // Set input callbacks
     glfwSetCursorPosCallback(
-      _window,
+      _windowId,
       mouseListener.cursorPositionCallback
     )
     glfwSetMouseButtonCallback(
-      _window,
+      _windowId,
       mouseListener.mouseButtonCallback
     )
     glfwSetScrollCallback(
-      _window,
+      _windowId,
       mouseListener.scrollCallback
     )
     glfwSetKeyCallback(
-      _window,
+      _windowId,
       keyListener.keyCallback
     )
 
@@ -155,28 +155,28 @@ class Window(
           val pHeight = stack.mallocInt(1) // int*
 
           // Get the window size passed to glfwCreateWindow
-          glfwGetWindowSize(_window, pWidth, pHeight)
+          glfwGetWindowSize(_windowId, pWidth, pHeight)
 
           // Get the resolution of the primary monitor
           val vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor())
 
           // Center the window
           glfwSetWindowPos(
-            _window,
+            _windowId,
             (vidmode.width() - pWidth.get(0)) / 2,
             (vidmode.height() - pHeight.get(0)) / 2
           )
       } // the stack frame is popped automatically
 
     // Make the OpenGL context current
-    glfwMakeContextCurrent(_window)
+    glfwMakeContextCurrent(_windowId)
 
     // Enable v-sync
     glfwSwapInterval(if (_vsync) 1 else 0)
 
     // Make the window visible
-    glfwShowWindow(_window)
-    glfwFocusWindow(_window)
+    glfwShowWindow(_windowId)
+    glfwFocusWindow(_windowId)
 
     // This line is critical for LWJGL's interoperation with GLFW's
     // OpenGL context, or any context that is managed externally.
@@ -194,12 +194,12 @@ class Window(
     // Set the clear color
     glClearColor(0, 0.5, 1, 1)
 
-    while (!glfwWindowShouldClose(_window)) {
+    while (!glfwWindowShouldClose(_windowId)) {
       // Poll events
       glfwPollEvents()
 
       // Swap the color buffers
-      glfwSwapBuffers(_window)
+      glfwSwapBuffers(_windowId)
 
       // Set the clear color
       val color = _backgroundColor
@@ -225,7 +225,7 @@ class Window(
       if (fpsStats.showAvg)
         title += " | Avg FPS: " + f"${fpsStats.avg}%4.0f"
       title += " | Mouse: " + mouseListener.position.formatted(0) // Temp
-      glfwSetWindowTitle(_window, title)
+      glfwSetWindowTitle(_windowId, title)
 
       // Trigger the renderUpdate
       postRenderCallback(_deltaTime)
@@ -236,7 +236,7 @@ class Window(
     }
   }
   def requestAttention(): Unit = {
-    glfwRequestWindowAttention(_window)
+    glfwRequestWindowAttention(_windowId)
   }
 
 }

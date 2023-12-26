@@ -69,7 +69,7 @@ object MyGame extends Game {
   renderMaster += RenderedMesh(
     shader,
     Mesh(Circle(0.5f), 24),
-    tint = Color.CYAN
+    tint = Color.GRAY
   )
 
   onInit += { (_) =>
@@ -87,6 +87,10 @@ object MyGame extends Game {
     shader.uploadVec2f("resolution", window.resolution.toVector2)
 
     renderMaster.render()
+
+    if (input.justReleased(KeyCode.escape)) {
+      quit()
+    }
 
     // shader.uploadFloat("aspect", window.aspect)
     // shader.uploadVec2f("resolution", window.resolution.toVector2)

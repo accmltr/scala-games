@@ -28,6 +28,7 @@ trait RenderedElement {
 
   private[engine] def uploadUniforms(): Unit = {
     shader.uploadVec4f("tint", Vector4(tint.r, tint.g, tint.b, tint.a))
+    println("uploaded tint")
     uniforms.foreach { case (name, value) =>
       value match
         case _: Int     => shader.uploadInt(name, value.asInstanceOf[Int])
