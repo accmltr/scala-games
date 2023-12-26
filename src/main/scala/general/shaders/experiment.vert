@@ -1,10 +1,10 @@
 #version 330 core
-layout(location=0)in vec2 aPos;// Vertex positions
+layout(location=0)in vec2 aPos;// Vertex position
 
 uniform float aspect;
-uniform vec2 position;
+uniform mat3 transform;
 
 void main()
 {
-	gl_Position=vec4(aPos.x+position.x,aPos.y*aspect+position.y,0.,1.);
+	gl_Position=vec4(transform*vec3(aPos.x,aPos.y*aspect,1.),1.);
 }

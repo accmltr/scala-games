@@ -29,6 +29,7 @@ import engine.render.render_manager.MeshRenderManager
 import engine.render.rendered_element.RenderedMesh
 import engine.render.mesh.Mesh
 import engine.render.Color
+import engine.math.Matrix3
 
 object MyGame extends Game {
 
@@ -67,8 +68,9 @@ object MyGame extends Game {
   val meshRenderManager: MeshRenderManager = MeshRenderManager()
   renderMaster += meshRenderManager
   renderMaster += RenderedMesh(
-    shader,
-    Mesh(Circle(0.5f), 24),
+    shader = shader,
+    transform = Matrix3(Vector2(0, 1), 0, 1),
+    mesh = Mesh(Circle(0.5f), 24),
     tint = Color.GRAY
   )
 

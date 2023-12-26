@@ -10,6 +10,7 @@ import org.lwjgl.opengl.GL20._
 import org.lwjgl.opengl.GL20.glGetShaderInfoLog
 import engine.math.{Vector2, Vector3, Vector4}
 import java.nio.IntBuffer
+import engine.math.Matrix3
 
 class Shader(vert: VertexShader, frag: FragmentShader) {
   private var _shaderProgramID: Int = 0
@@ -97,11 +98,22 @@ class Shader(vert: VertexShader, frag: FragmentShader) {
     glUniformMatrix4fv(varLocation, false, matBuffer)
   }
 
-  def uploadMat3f(varName: String, mat3: Matrix3f): Unit = {
+  def uploadMat3f(varName: String, mat3: Matrix3): Unit = {
+    val mat3f = new Matrix3f(
+      mat3.m00,
+      mat3.m01,
+      mat3.m02,
+      mat3.m10,
+      mat3.m11,
+      mat3.m12,
+      mat3.m20,
+      mat3.m21,
+      mat3.m22
+    )
     val varLocation: Int = glGetUniformLocation(_shaderProgramID, varName)
     use()
     val matBuffer: FloatBuffer = BufferUtils.createFloatBuffer(9)
-    mat3.get(matBuffer)
+    mat3f.get(matBuffer)
     glUniformMatrix3fv(varLocation, false, matBuffer)
   }
 

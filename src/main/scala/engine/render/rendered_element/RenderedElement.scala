@@ -17,18 +17,21 @@ type Uniforms = FloatBuffer | IntBuffer | Array[Float] | Array[Int] | Boolean |
 
 trait RenderedElement {
   val shader: Shader
+  val transform: Matrix3
   val tint: Color
   val layer: Float
-  val uniforms: Map[String, Uniforms]
+  val uniforms: Map[String, Uniforms] = Map.empty
 
+  if uniforms.contains("transform") then
+    throw new IllegalArgumentException("Uniform name 'transform' is reserved")
   if uniforms.contains("tint") then
     throw new IllegalArgumentException("Uniform name 'tint' is reserved")
 
   def isManager(manager: RenderManager): Boolean
 
   private[engine] def uploadUniforms(): Unit = {
+    shader.uploadMat3f("transform", transform)
     shader.uploadVec4f("tint", Vector4(tint.r, tint.g, tint.b, tint.a))
-    println("uploaded tint")
     uniforms.foreach { case (name, value) =>
       value match
         case _: Int     => shader.uploadInt(name, value.asInstanceOf[Int])
@@ -48,25 +51,25 @@ trait RenderedElement {
   }
 }
 
-trait WorldSpaceElement() extends RenderedElement {
-  val position: Vector2
-  val rotation: Float
-  val scale: Vector2
+// trait WorldSpaceElement() extends RenderedElement {
+//   val position: Vector2
+//   val rotation: Float
+//   val scale: Vector2
 
-  if uniforms.contains("position") then
-    throw new IllegalArgumentException("Uniform name 'position' is reserved")
-  if uniforms.contains("rotation") then
-    throw new IllegalArgumentException("Uniform name 'rotation' is reserved")
-  if uniforms.contains("scale") then
-    throw new IllegalArgumentException("Uniform name 'scale' is reserved")
+//   if uniforms.contains("position") then
+//     throw new IllegalArgumentException("Uniform name 'position' is reserved")
+//   if uniforms.contains("rotation") then
+//     throw new IllegalArgumentException("Uniform name 'rotation' is reserved")
+//   if uniforms.contains("scale") then
+//     throw new IllegalArgumentException("Uniform name 'scale' is reserved")
 
-  private[engine] override def uploadUniforms(): Unit = {
-    super.uploadUniforms()
-    shader.uploadVec2f("position", position)
-    shader.uploadFloat("rotation", rotation)
-    shader.uploadVec2f("scale", scale)
-  }
-}
+//   private[engine] override def uploadUniforms(): Unit = {
+//     super.uploadUniforms()
+//     shader.uploadVec2f("position", position)
+//     shader.uploadFloat("rotation", rotation)
+//     shader.uploadVec2f("scale", scale)
+//   }
+// }
 
 trait SelfRenderedElement() extends RenderedElement {
   def render(): Unit
@@ -74,6 +77,7 @@ trait SelfRenderedElement() extends RenderedElement {
 
 final case class RenderedMesh(
     override val shader: Shader,
+    override val transform: Matrix3 = Matrix3.IDENTITY,
     var mesh: Mesh,
     override val layer: Float = 0,
     override val tint: Color = Color.WHITE,
