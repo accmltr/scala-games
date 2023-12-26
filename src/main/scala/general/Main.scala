@@ -69,7 +69,7 @@ object MyGame extends Game {
   renderMaster += meshRenderManager
   renderMaster += RenderedMesh(
     shader = shader,
-    transform = Matrix3(Vector2(0, 1), 0, 1),
+    transform = Matrix3(Vector2(10, 0), 0, 1),
     mesh = Mesh(Circle(0.5f), 24),
     tint = Color.GRAY
   )

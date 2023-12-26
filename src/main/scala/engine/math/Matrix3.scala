@@ -24,6 +24,13 @@ final case class Matrix3(
       m20 * other.m02 + m21 * other.m12 + m22 * other.m22
     )
   }
+
+  def *(other: Vector2): Vector2 = {
+    Vector2(
+      m00 * other.x + m01 * other.y + m02,
+      m10 * other.x + m11 * other.y + m12
+    )
+  }
 }
 
 object Matrix3 {
