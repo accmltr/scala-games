@@ -30,6 +30,9 @@ import engine.render.rendered_element.RenderedMesh
 import engine.render.mesh.Mesh
 import engine.render.Color
 import engine.math.Matrix3
+import engine.math.Matrix4
+import engine.math.Matrix3.transform
+import engine.math.pi
 
 object MyGame extends Game {
 
@@ -67,12 +70,6 @@ object MyGame extends Game {
   val renderMaster: RenderMaster = RenderMaster()
   val meshRenderManager: MeshRenderManager = MeshRenderManager()
   renderMaster += meshRenderManager
-  renderMaster += RenderedMesh(
-    shader = shader,
-    transform = Matrix3(Vector2(10, 0), 0, 1),
-    mesh = Mesh(Circle(0.5f), 24),
-    tint = Color.GRAY
-  )
 
   onInit += { (_) =>
     // val circleRenderer: CircleRenderer = CircleRenderer(Circle(0.5f), 24)
@@ -88,7 +85,23 @@ object MyGame extends Game {
     shader.uploadFloat("aspect", window.aspect)
     shader.uploadVec2f("resolution", window.resolution.toVector2)
 
+    val r = RenderedMesh(
+      shader = shader,
+      transform = Matrix3
+        .transform(
+          translation = Vector2(cos(Time.current) * 2, sin(Time.current) * 11),
+          rotation = cos(Time.current) * 2,
+          scale = Vector2(1f, 1f)
+        )
+        .transposed,
+      mesh = Mesh(Circle(0.5f), 24),
+      tint = Color.GRAY
+    )
+    renderMaster += r
+
     renderMaster.render()
+
+    renderMaster -= r
 
     if (input.justReleased(KeyCode.escape)) {
       quit()
