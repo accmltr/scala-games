@@ -77,7 +77,7 @@ object MyGame extends Game {
     //   circleRenderer.vertices,
     //   circleRenderer.indices
     // )
-    window.vsync = true
+    // window.vsync = true
     shader.compile()
   }
 
@@ -89,11 +89,11 @@ object MyGame extends Game {
       shader = shader,
       transform = Matrix3
         .transform(
-          translation = Vector2(cos(Time.current) * 2, sin(Time.current) * 11),
-          rotation = cos(Time.current) * 2,
+          translation =
+            Vector2(cos(Time.current) * .2, sin(Time.current) * .11),
+          rotation = cos(Time.current) * 2f,
           scale = Vector2(1f, 1f)
-        )
-        .transposed,
+        ),
       mesh = Mesh(Circle(0.5f), 24),
       tint = Color.GRAY
     )
