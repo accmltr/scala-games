@@ -77,7 +77,7 @@ object MyGame extends Game {
     //   circleRenderer.vertices,
     //   circleRenderer.indices
     // )
-    // window.vsync = true
+    window.vsync = true
     shader.compile()
   }
 
