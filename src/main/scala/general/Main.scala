@@ -89,12 +89,14 @@ object MyGame extends Game {
       shader = shader,
       transform = Matrix3
         .transform(
-          translation =
-            Vector2(cos(Time.current) * .2, sin(Time.current) * .11),
-          rotation = cos(Time.current) * 2f,
-          scale = Vector2(1f, 1f)
+          translation = Vector2(
+            cos(1.7f * Time.current) * .2,
+            sin(2f * Time.current) * .11
+          ),
+          rotation = cos(.5f * Time.current) * 2f * pi,
+          scale = Vector2(1f, 1f) * .3f
         ),
-      mesh = Mesh(Circle(0.5f), 24),
+      mesh = Mesh(Circle(0.5f), 7),
       tint = Color.GRAY
     )
     renderMaster += r

@@ -54,26 +54,6 @@ trait RenderedElement {
   }
 }
 
-// trait WorldSpaceElement() extends RenderedElement {
-//   val position: Vector2
-//   val rotation: Float
-//   val scale: Vector2
-
-//   if uniforms.contains("position") then
-//     throw new IllegalArgumentException("Uniform name 'position' is reserved")
-//   if uniforms.contains("rotation") then
-//     throw new IllegalArgumentException("Uniform name 'rotation' is reserved")
-//   if uniforms.contains("scale") then
-//     throw new IllegalArgumentException("Uniform name 'scale' is reserved")
-
-//   private[engine] override def uploadUniforms(): Unit = {
-//     super.uploadUniforms()
-//     shader.uploadVec2f("position", position)
-//     shader.uploadFloat("rotation", rotation)
-//     shader.uploadVec2f("scale", scale)
-//   }
-// }
-
 trait SelfRenderedElement() extends RenderedElement {
   def render(): Unit
 }
