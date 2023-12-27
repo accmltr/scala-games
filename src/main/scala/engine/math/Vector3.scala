@@ -4,6 +4,11 @@ import org.joml
 
 case class Vector3(val x: Float, val y: Float, val z: Float)
     extends NearEqualsable[Vector3] {
+
+  /** Creates a 2D vector from the x- and y-components of this 3D vector.
+    */
+  def xy: Vector2 = Vector2(x, y)
+
   def +(o: Vector3) = Vector3(x + o.x, y + o.y, z + o.z)
   def -(o: Vector3) = Vector3(x - o.x, y - o.y, z - o.z)
   def *(f: Float) = Vector3(x * f, y * f, z * f)
@@ -78,6 +83,13 @@ object Vector3 {
     new Vector3(x.toFloat, y.toFloat, z.toFloat)
   def apply(x: Float, y: Float, z: Float) = new Vector3(x, y, z)
   def apply(x: Int, y: Int, z: Int) = new Vector3(x, y, z)
+  def apply(vec2: Vector2, z: Float | Int | Double): Vector3 =
+    val zf: Float = z match {
+      case i: Int    => i.toFloat
+      case i: Double => i.toFloat
+      case i: Float  => i
+    }
+    new Vector3(vec2.x, vec2.y, zf)
 
   def zero = apply(0, 0, 0)
   def one = apply(1, 1, 1)
