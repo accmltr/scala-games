@@ -10,6 +10,16 @@ final case class Matrix3(
     // format: on
 ) {
 
+  def transposed: Matrix3 = {
+    Matrix3(
+      // format: off
+      c0r0, c1r0, c2r0,  // column 0
+      c0r1, c1r1, c2r1,  // column 1
+      c0r2, c1r2, c2r2   // column 2
+      // format: on
+    )
+  }
+
   def *(v3: Vector3): Vector3 = {
     Vector3(
       (v3.x * c0r0) + (v3.y * c1r0) + (v3.z * c2r0),
