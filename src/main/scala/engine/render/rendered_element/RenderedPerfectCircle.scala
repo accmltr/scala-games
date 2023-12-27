@@ -4,6 +4,7 @@ import engine.render.Color
 import engine.render.shader.Shader
 import engine.render.render_manager.RenderManager
 import engine.math.Matrix3
+import engine.math.Vector2
 
 final case class RenderedPerfectCircle(
     val radius: Float,

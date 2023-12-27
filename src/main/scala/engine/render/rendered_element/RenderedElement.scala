@@ -12,12 +12,12 @@ import engine.render.Texture
 
 // TODO: Implement new uniform types
 type Uniforms = FloatBuffer | IntBuffer | Array[Float] | Array[Int] | Boolean |
-  Float | Int | Double | Vector2 | Vector3 |
-  Texture //| Vector4 | Matrix2 | Matrix3 | Matrix4
+  Float | Int | Double | Vector2 | Vector3 | Matrix3 | Matrix4 |
+  Texture //| Vector4 | Matrix2
 
 trait RenderedElement {
   val shader: Shader
-  val transform: Matrix3
+  val transform: Matrix3 = Matrix3.IDENTITY
   val tint: Color
   val layer: Float
   val uniforms: Map[String, Uniforms] = Map.empty
@@ -30,7 +30,7 @@ trait RenderedElement {
   def isManager(manager: RenderManager): Boolean
 
   private[engine] def uploadUniforms(): Unit = {
-    shader.uploadMat3f("transform", transform)
+    shader.uploadMatrix3("transform", transform)
     shader.uploadVec4f("tint", Vector4(tint.r, tint.g, tint.b, tint.a))
     uniforms.foreach { case (name, value) =>
       value match
@@ -38,6 +38,9 @@ trait RenderedElement {
         case _: Float   => shader.uploadFloat(name, value.asInstanceOf[Float])
         case _: Vector2 => shader.uploadVec2f(name, value.asInstanceOf[Vector2])
         case _: Vector3 => shader.uploadVec3f(name, value.asInstanceOf[Vector3])
+        case _: Matrix3 =>
+          shader.uploadMatrix3(name, value.asInstanceOf[Matrix3])
+        case _: Matrix4 => shader.uploadMat4f(name, value.asInstanceOf[Matrix4])
         case _: Array[Int] =>
           shader.uploadIntArray(name, value.asInstanceOf[Array[Int]])
         case _: Array[Float] =>
