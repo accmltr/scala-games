@@ -69,7 +69,6 @@ object MyGame extends Game {
 
   val renderMaster: RenderMaster = RenderMaster()
   val meshRenderManager: MeshRenderManager = MeshRenderManager()
-  renderMaster += meshRenderManager
 
   onInit += { (_) =>
     // val circleRenderer: CircleRenderer = CircleRenderer(Circle(0.5f), 24)

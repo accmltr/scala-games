@@ -8,18 +8,22 @@ import org.lwjgl.opengl.GL20._
 import org.lwjgl.opengl.GL30._
 import engine.render.shader.Shader
 
-trait RenderManager[T] {
+trait RenderManager[R <: RenderedElement] {
 
-  private[render] def +=(element: T): Unit
+  private[render] def +=(element: R): Unit
 
-  private[render] def -=(element: T): Unit
+  private[render] def -=(element: R): Unit
 
   private[render] def renderLayer(layer: Float): Unit
+
+  private[render] def isEmpty: Boolean
 }
 
 final case class MeshRenderManager() extends RenderManager[RenderedMesh] {
 
   private var _layerMap: Map[Float, Map[Shader, List[RenderedMesh]]] = Map.empty
+
+  private[render] def isEmpty = _layerMap.isEmpty
 
   private[render] override def +=(element: RenderedMesh): Unit = {
     // TODO: Fix the generics
