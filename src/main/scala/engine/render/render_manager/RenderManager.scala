@@ -6,6 +6,7 @@ import org.lwjgl.opengl.GL13._
 import org.lwjgl.opengl.GL15._
 import org.lwjgl.opengl.GL20._
 import org.lwjgl.opengl.GL30._
+import engine.render.shader.Shader
 
 trait RenderManager {
 
@@ -18,26 +19,57 @@ trait RenderManager {
 
 final case class MeshRenderManager() extends RenderManager {
 
-  private var _elements: List[RenderedMesh] = Nil
+  private var _layerMap: Map[Float, Map[Shader, List[RenderedMesh]]] = Map.empty
 
   private[render] override def +=(element: RenderedElement): Unit = {
     // TODO: Fix this mess
     element match {
-      case e: RenderedMesh => _elements = e :: _elements
-      case _               => throw new Exception("Invalid element type")
+      case e: RenderedMesh =>
+        val shaderMap = _layerMap.getOrElse(e.layer, Map.empty)
+        val newElements = e :: shaderMap.getOrElse(e.shader, Nil)
+        val newShaderMap =
+          if shaderMap.isEmpty
+          then _layerMap + (e.layer -> shaderMap)
+          else (_layerMap - e.layer) + (e.layer -> shaderMap)
+      case _ =>
+        throw new Exception("Invalid element type")
     }
   }
 
   private[render] override def -=(element: RenderedElement): Unit = {
     // TODO: Fix this mess
     element match {
-      case e: RenderedMesh => _elements = _elements.filterNot(_ == e)
-      case _               => throw new Exception("Invalid element type")
+      case e: RenderedMesh => {
+        val shaderMap = _layerMap.getOrElse(e.layer, Map.empty)
+        val elements = shaderMap.getOrElse(e.shader, Nil)
+
+        // If element does not exist, throw an exception:
+        if (!elements.contains(e))
+          throw new IllegalArgumentException(
+            "Trying to remove non-existant render element from render manager."
+          )
+
+        // Else, filter out the element
+        val newElements = elements.filterNot(_ == e)
+        val newShaderMap =
+          if (newElements.isEmpty)
+            shaderMap.filterNot(_._1 == e.shader)
+          else
+            shaderMap.filterNot(_._1 == e.shader) + (e.shader -> newElements)
+        val newLayerMap =
+          if (newShaderMap.isEmpty)
+            _layerMap.filterNot(_._1 == e.layer)
+          else
+            _layerMap.filterNot(_._1 == e.layer) + (e.layer -> newShaderMap)
+
+        _layerMap = newLayerMap
+      }
+      case _ => throw new Exception("Invalid element type")
     }
   }
 
   private[render] override def renderLayer(layer: Float): Unit = {
-    for (e <- _elements.filter(_.layer == layer)) {
+    for (e <- _layerMap.filter(_.layer == layer)) {
       // Create and bind a VAO
       val vaoId = glGenVertexArrays()
       glBindVertexArray(vaoId)
