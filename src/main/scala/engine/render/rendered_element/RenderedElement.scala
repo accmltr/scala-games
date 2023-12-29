@@ -23,14 +23,14 @@ trait RenderedElement {
   val layer: Float
   val uniforms: Map[String, Uniforms] = Map.empty
 
-  def newManager: RenderManager[Any]
+  def newManager: RenderManager
 
   if uniforms.contains("transform") then
     throw new IllegalArgumentException("Uniform name 'transform' is reserved")
   if uniforms.contains("tint") then
     throw new IllegalArgumentException("Uniform name 'tint' is reserved")
 
-  def isManager(manager: RenderManager[Any]): Boolean
+  def isManager(manager: RenderManager): Boolean
 
   private[engine] def uploadUniforms(): Unit = {
     shader.uploadMatrix3("transform", transform)
@@ -66,10 +66,10 @@ final case class RenderedMesh(
     override val uniforms: Map[String, Uniforms] = Map.empty
 ) extends RenderedElement {
 
-  override def newManager: RenderManager[Any] =
+  override def newManager: MeshRenderManager =
     MeshRenderManager()
 
-  override def isManager(manager: RenderManager[Any]): Boolean = {
+  override def isManager(manager: RenderManager): Boolean = {
     manager match {
       case _: MeshRenderManager => true
       case _                    => false
