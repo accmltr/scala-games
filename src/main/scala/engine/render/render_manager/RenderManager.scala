@@ -88,7 +88,7 @@ final case class MeshRenderManager() extends RenderManager {
 
     _layerMap.get(layer) match
       case None =>
-        return // assert(false, "Cannot render unknown layer") // on some layers, some managers will be empty
+        return
       case Some(shaderMap) => {
         for
           (shader, elements) <- shaderMap

@@ -1,11 +1,12 @@
 package engine.render
 import render_manager.RenderManager
 import rendered_element.RenderedElement
+import scala.collection.SortedMap
 
 class RenderMaster {
 
   private var _managers: List[RenderManager] = Nil
-  private var _layers: Map[Float, Int] = Map.empty
+  private var _layers: SortedMap[Float, Int] = SortedMap.empty
 
   def +=(element: RenderedElement): Unit = {
 
