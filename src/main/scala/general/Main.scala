@@ -98,11 +98,27 @@ object MyGame extends Game {
       mesh = Mesh(Circle(0.5f), 7),
       tint = Color.GRAY
     )
+    val r1 = RenderedMesh(
+      shader = shader,
+      transform = Matrix3
+        .transform(
+          translation = Vector2(
+            cos(1.7f * Time.current + 3f) * .2,
+            sin(2f * Time.current + 3f) * .11
+          ),
+          rotation = cos(.5f * Time.current + 3f) * 2f * pi,
+          scale = Vector2(1f, 1f) * .3f
+        ),
+      mesh = Mesh(Circle(0.5f), 7),
+      tint = Color.GREEN * .75
+    )
     renderMaster += r
+    renderMaster += r1
 
     renderMaster.render()
 
     renderMaster -= r
+    renderMaster -= r1
 
     if (input.justReleased(KeyCode.escape)) {
       quit()

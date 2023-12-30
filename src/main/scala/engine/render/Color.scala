@@ -1,13 +1,57 @@
 package engine.render
 
 import engine.math.Vector3
+import engine.math.*
 
 final case class Color(
     r: Float = 1.0f,
     g: Float = 1.0f,
     b: Float = 1.0f,
     a: Float = 1.0f
-)
+) {
+
+  if !inBounds(r, 0, 1)
+  then throw IllegalArgumentException("'r' out of bounds: [0,1]")
+  if !inBounds(g, 0, 1)
+  then throw IllegalArgumentException("'g' out of bounds: [0,1]")
+  if !inBounds(b, 0, 1)
+  then throw IllegalArgumentException("'b' out of bounds: [0,1]")
+  if !inBounds(a, 0, 1)
+  then throw IllegalArgumentException("'a' out of bounds: [0,1]")
+
+  def *(f: Float | Int | Double): Color =
+    f match
+      case i: Int =>
+        Color(
+          clamp(i.toFloat * r, 0, 1),
+          clamp(i.toFloat * g, 0, 1),
+          clamp(i.toFloat * b, 0, 1)
+        )
+      case d: Double =>
+        Color(
+          clamp(d.toFloat * r, 0, 1),
+          clamp(d.toFloat * g, 0, 1),
+          clamp(d.toFloat * b, 0, 1)
+        )
+      case f: Float =>
+        Color(clamp(f * r, 0, 1), clamp(f * g, 0, 1), clamp(f * b, 0, 1))
+
+  def *(other: Color): Color =
+    Color(
+      clamp(r * other.r, 0, 1),
+      clamp(g * other.g, 0, 1),
+      clamp(b * other.b, 0, 1),
+      clamp(a * other.a, 0, 1)
+    )
+
+  def -(other: Color): Color =
+    Color(
+      clamp(r - other.r, 0, 1),
+      clamp(g - other.g, 0, 1),
+      clamp(b - other.b, 0, 1),
+      clamp(a - other.a, 0, 1)
+    )
+}
 
 object Color {
   val WHITE: Color = Color()

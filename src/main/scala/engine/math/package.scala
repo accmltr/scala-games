@@ -28,6 +28,20 @@ package object math {
     scala.math.pow(base, exponent).toFloat
   def sqrt(n: Float): Float = joml.Math.sqrt(n)
 
+  /** Checks whether 'f' is within a lower and upper bound range [inclusive].
+    *
+    * @param f
+    * @param lowerBound
+    *   Lower bound [inclusive]
+    * @param upperBound
+    *   Upper bound [inclusive]
+    * @return
+    */
+  def inBounds(f: Float, lowerBound: Float, upperBound: Float): Boolean =
+    if lowerBound > upperBound
+    then throw new Exception("Lower bound may not be greater than upper bound")
+    else lowerBound <= f && f <= upperBound
+
   /** Checks whether two floats are equal up to a given epsilon value.
     *
     * Take note that floating point inprecisions may occur, for example:
