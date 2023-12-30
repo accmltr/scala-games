@@ -16,7 +16,6 @@ object Mesh {
     val vertices = BufferUtils.createFloatBuffer((segments + 1) * 2)
     vertices.put(0)
     vertices.put(0)
-    println(s"Added vertex: 0, 0")
     for (i <- 0 until segments) {
       val x = halfRadius * cos(angle * i)
       val y = halfRadius * sin(angle * i)
@@ -83,7 +82,6 @@ object Mesh {
     val vertices = BufferUtils.createFloatBuffer((ngon.points + 1) * 2)
     vertices.put(0)
     vertices.put(0)
-    println(s"Added vertex: 0, 0")
     for (i <- 0 until ngon.points) {
       val x = halfRadius * cos(angle * i)
       val y = halfRadius * sin(angle * i)

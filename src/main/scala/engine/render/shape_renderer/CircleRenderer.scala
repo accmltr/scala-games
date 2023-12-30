@@ -15,7 +15,6 @@ case class CircleRenderer(radius: Float, segments: Int = 32)
     val floatBuffer = BufferUtils.createFloatBuffer((segments + 1) * 2)
     floatBuffer.put(0)
     floatBuffer.put(0)
-    println(s"Added vertex: 0, 0")
     for (i <- 0 until segments) {
       val x = halfRadius * cos(angle * i)
       val y = halfRadius * sin(angle * i)
