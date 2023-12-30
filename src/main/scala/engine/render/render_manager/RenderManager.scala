@@ -7,6 +7,10 @@ import org.lwjgl.opengl.GL15._
 import org.lwjgl.opengl.GL20._
 import org.lwjgl.opengl.GL30._
 import engine.render.shader.Shader
+import engine.math.Vector3
+import engine.math.Vector2
+import org.lwjgl.BufferUtils
+import java.nio.FloatBuffer
 
 trait RenderManager {
 
@@ -90,6 +94,7 @@ final case class MeshRenderManager() extends RenderManager {
       case None =>
         return
       case Some(shaderMap) => {
+
         for
           (shader, elements) <- shaderMap
           e <- elements
@@ -122,11 +127,12 @@ final case class MeshRenderManager() extends RenderManager {
           glBindVertexArray(vaoId)
           glDrawElements(
             GL_TRIANGLES,
-            e.mesh.indices.limit(),
+            e.mesh.indices.length,
             GL_UNSIGNED_INT,
             0
           )
           glBindVertexArray(0)
+
         }
       }
 
@@ -157,7 +163,7 @@ final case class MeshRenderManager() extends RenderManager {
     //   e.uploadUniforms()
 
     //   glBindVertexArray(vaoId)
-    //   glDrawElements(GL_TRIANGLES, e.mesh.indices.limit(), GL_UNSIGNED_INT, 0)
+    //   glDrawElements(GL_TRIANGLES, e.mesh.indices.capacity(), GL_UNSIGNED_INT, 0)
     //   glBindVertexArray(0)
     // }
   }

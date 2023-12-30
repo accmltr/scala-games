@@ -33,6 +33,7 @@ import engine.math.Matrix3
 import engine.math.Matrix4
 import engine.math.Matrix3.transform
 import engine.math.pi
+import engine.math.shapes.Polygon
 
 object MyGame extends Game {
 
@@ -76,6 +77,7 @@ object MyGame extends Game {
     //   circleRenderer.vertices,
     //   circleRenderer.indices
     // )
+
     window.vsync = true
     shader.compile()
   }
@@ -112,13 +114,44 @@ object MyGame extends Game {
       mesh = Mesh(Circle(0.5f), 7),
       tint = Color.GREEN * .75
     )
+    val p1 = RenderedMesh(
+      shader = shader,
+      transform = Matrix3
+        .transform(
+          translation = Vector2(
+            cos(1.7f * Time.current + 5f) * .2,
+            sin(3f * Time.current + 3f) * .11
+          ),
+          rotation = cos(.8f * Time.current + 3f) * 2f * pi,
+          scale = Vector2(1f, 1f) * .3f
+        ),
+      mesh = Mesh(
+        Polygon(
+          Vector(
+            Vector2(0, 0),
+            Vector2(1.55, 1.95),
+            Vector2(-0.756, 2.437),
+            Vector2(-2.252, 1.084),
+            Vector2(-2.252, -1.484),
+            Vector2(-0.356, -2.437),
+            Vector2(-1.55, -1.95),
+            Vector2(2.5, 0.12),
+            Vector2(1.55, 1.95)
+          ) // strange shape with 13 points and a cavity
+        )
+      ),
+      tint = Color.YELLOW * .75
+    )
+
     renderMaster += r
     renderMaster += r1
+    renderMaster += p1
 
     renderMaster.render()
 
     renderMaster -= r
     renderMaster -= r1
+    renderMaster -= p1
 
     if (input.justReleased(KeyCode.escape)) {
       quit()
