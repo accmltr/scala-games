@@ -57,50 +57,49 @@ object Mesh {
 
     def buildIndices(
         currentLine: (Int, Int) = (0, 1),
-        closedPoints: List[Int] = Nil,
-        lines: List[(Int, Int)] = (0 to polygon.points.length by 2)
+        usedPoints: List[Int] = Nil,
+        lines: List[(Int, Int)] = (0 until polygon.points.length by 2)
           .map(index =>
             (index, if index + 1 == polygon.points.length then 0 else index + 1)
           )
           .toList,
-        openPoints: List[Int] = (0 to polygon.points.length).toList
+        openPoints: List[Int] = (0 until polygon.points.length).toList
     ): Array[Int] = {
 
-      // Find a point that doesn't cross either lines
+      // Stop if
 
-      val validPoint = openPoints.find((i: Int) => {
+      // Find a point that doesn't cross either lines of potential triangle formed between currentLine and the point
+      openPoints.find((i: Int) => {
         val vert = polygon.points(i)
         val newLine1 = Line(polygon.points(currentLine._1), vert)
         val newLine2 = Line(polygon.points(currentLine._2), vert)
 
         lines.forall(l =>
-          !(
-            Line(polygon.points(l._1), polygon.points(l._2))
-              .intersects(newLine1)
-              &&
+          if l == currentLine
+          then true
+          else
+            !(
+              Line(polygon.points(l._1), polygon.points(l._2))
+                .intersects(newLine1, false) &&
                 Line(polygon.points(l._1), polygon.points(l._2))
-                  .intersects(newLine2)
+                  .intersects(newLine2, false)
+            )
+        )
+      }) match
+        case None => throw new Exception("Invalid polygon")
+        case Some(i) =>
+          buildIndices(
+            (currentLine._2, currentLine._2 + 1),
+            i :: usedPoints,
+            lines ++ List(
+              (currentLine._1, i),
+              (currentLine._2, i)
+            ),
+            openPoints.filterNot(_ == i)
           )
-        ) match {
-          case Some(i: Int) => i
-          case None         => throw new Exception("No valid point found")
-        }
-
-        // Re this
-
-        ???
-
-      })
     }
 
-    val indices = buildIndices()
-
-    // val indices = (1 to polygon.points.length)
-    //   .foldLeft(Array[Int]())((acc, i) =>
-    //     acc ++ Array[Int](0, i, if (i == polygon.points.length) 1 else i + 1)
-    //   )
-
-    Mesh(vertices, indices)
+    Mesh(vertices, buildIndices())
   }
 
   def apply(ngon: NGon): Mesh = {
