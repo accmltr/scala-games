@@ -134,7 +134,7 @@ object MyGame extends Game {
             Vector2(-2.252, 1.084),
             Vector2(-2.252, -1.484),
             Vector2(-0.356, -2.437),
-            Vector2(-1.55, -1.95),
+            Vector2(0.55, -0.95),
             Vector2(2.5, 0.12),
             Vector2(1.55, 1.95)
           ) // strange shape with 13 points and a cavity
