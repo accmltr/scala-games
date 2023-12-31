@@ -2,31 +2,39 @@ package engine.math.geometry
 
 import engine.math.Vector2
 
-final case class Line(pointA: Vector2, pointB: Vector2) {
+final case class Line(a: Vector2, b: Vector2) {
   def intersects(line: Line, includeEndpoints: Boolean = true): Boolean =
-    if (includeEndpoints) {
-      val d1 = (pointB.x - pointA.x) * (line.pointA.y - pointA.y) -
-        (pointB.y - pointA.y) * (line.pointA.x - pointA.x)
-      val d2 = (pointB.x - pointA.x) * (line.pointB.y - pointA.y) -
-        (pointB.y - pointA.y) * (line.pointB.x - pointA.x)
-      val d3 = (line.pointB.x - line.pointA.x) * (pointA.y - line.pointA.y) -
-        (line.pointB.y - line.pointA.y) * (pointA.x - line.pointA.x)
-      val d4 = (line.pointB.x - line.pointA.x) * (pointB.y - line.pointA.y) -
-        (line.pointB.y - line.pointA.y) * (pointB.x - line.pointA.x)
-
-      d1 * d2 <= 0 && d3 * d4 <= 0
-    } else {
-      val d1 = (pointB.x - pointA.x) * (line.pointA.y - pointA.y) -
-        (pointB.y - pointA.y) * (line.pointA.x - pointA.x)
-      val d2 = (pointB.x - pointA.x) * (line.pointB.y - pointA.y) -
-        (pointB.y - pointA.y) * (line.pointB.x - pointA.x)
-      val d3 = (line.pointB.x - line.pointA.x) * (pointA.y - line.pointA.y) -
-        (line.pointB.y - line.pointA.y) * (pointA.x - line.pointA.x)
-      val d4 = (line.pointB.x - line.pointA.x) * (pointB.y - line.pointA.y) -
-        (line.pointB.y - line.pointA.y) * (pointB.x - line.pointA.x)
-
-      d1 * d2 < 0 && d3 * d4 < 0
+    intersection(line) match {
+      case Some(pt) =>
+        if includeEndpoints
+        then true
+        else pt != a && pt != b && pt != line.a && pt != line.b
+      case None =>
+        false
     }
-    // (pointA.x - pointB.x) * (line.pointA.y - line.pointB.y) -
-    //   (pointA.y - pointB.y) * (line.pointA.x - line.pointB.x) != 0
+
+  def intersection(line: Line): Option[Vector2] = {
+    val d = (a.x - b.x) * (line.a.y - line.b.y) -
+      (a.y - b.y) * (line.a.x - line.b.x)
+    if (d == 0) None
+    else {
+      val u = ((line.b.x - line.a.x) * (a.y - line.a.y) -
+        (line.b.y - line.a.y) * (a.x - line.a.x)) / d
+      val v = ((b.x - a.x) * (a.y - line.a.y) -
+        (b.y - a.y) * (a.x - line.a.x)) / d
+      if (u < 0 || u > 1 || v < 0 || v > 1) None
+      else
+        Some(
+          Vector2(
+            a.x + u * (b.x - a.x),
+            a.y + u * (b.y - a.y)
+          )
+        )
+    }
+  }
+
+  def contains(point: Vector2, includeEndpoints: Boolean = true): Boolean =
+    if !includeEndpoints && (point == a || point == b)
+    then false
+    else (point.x - a.x) * (b.y - a.y) == (point.y - a.y) * (b.x - a.x)
 }
