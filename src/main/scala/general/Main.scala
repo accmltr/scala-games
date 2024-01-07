@@ -126,27 +126,27 @@ object MyGame extends Game {
           scale = Vector2(1f, 1f) * .3f
         ),
       mesh = Mesh(
-        Polygon(
-          Vector(
-            Vector2(0, 0),
-            Vector2(1, 0),
-            Vector2(1, 1),
-            Vector2(0, 1)
-          )
-        )
         // Polygon(
         //   Vector(
         //     Vector2(0, 0),
-        //     Vector2(1.55, 1.95),
-        //     Vector2(-0.756, 2.437),
-        //     Vector2(-2.252, 1.084),
-        //     Vector2(-2.252, -1.484),
-        //     Vector2(-0.356, -2.437),
-        //     Vector2(0.55, -0.95),
-        //     Vector2(2.5, 0.12),
-        //     Vector2(1.55, 1.95)
-        //   ) // strange shape with 13 points and a cavity
+        //     Vector2(1, 0),
+        //     Vector2(1, 1),
+        //     Vector2(0, 1)
+        //   )
         // )
+        Polygon(
+          Vector(
+            Vector2(0, 0),
+            Vector2(1.55, 1.95),
+            Vector2(-0.756, 2.437),
+            Vector2(-2.252, 1.084),
+            Vector2(-2.252, -1.484),
+            Vector2(-0.356, -2.437),
+            Vector2(0.55, -0.95),
+            Vector2(2.5, 0.12),
+            Vector2(1.55, 1.95)
+          ) // strange shape with 13 points and a cavity
+        )
       ),
       tint = Color.YELLOW * .75
     )

@@ -57,7 +57,7 @@ object Mesh {
 
     def buildIndices(
         currentLine: (Int, Int) = (0, 1),
-        usedPoints: List[Int] = List(1, 0),
+        // usedPoints: List[Int] = List(1, 0),
         lines: List[(Int, Int)] = (0 until polygon.points.length)
           .map(index =>
             (index, if index + 1 == polygon.points.length then 0 else index + 1)
@@ -66,6 +66,12 @@ object Mesh {
         openPoints: List[Int] = (2 until polygon.points.length).toList,
         allPoints: List[Int] = (0 until polygon.points.length).toList
     ): Array[Int] = {
+      val usedPoints = lines
+        .foldLeft(Array[Int]())((acc, line) =>
+          acc ++ Array[Int](line._1, line._2)
+        )
+        .distinct
+      // val openPoints = allPoints
 
       // Stop if
       if openPoints.isEmpty
@@ -77,7 +83,19 @@ object Mesh {
       else
         // Find a point that does not cross either lines of potential triangle formed between currentLine and the point
         allPoints.find((i: Int) => {
-          if !(currentLine._1 == i || currentLine._2 == i)
+
+          // Skip point if it already forms a triangle with currentLine
+          val newLine1Exists = lines.exists(l =>
+            (l._1 == currentLine._1 && l._2 == i) ||
+              (l._1 == i && l._2 == currentLine._1)
+          )
+          val newLine2Exists = lines.exists(l =>
+            (l._1 == currentLine._2 && l._2 == i) ||
+              (l._1 == i && l._2 == currentLine._2)
+          )
+          if newLine1Exists && newLine2Exists
+          then true
+          else if !(currentLine._1 == i || currentLine._2 == i)
           then
             val newLine1 =
               Line(polygon.points(currentLine._1), polygon.points(i))
@@ -112,7 +130,8 @@ object Mesh {
                 if currentLine._2 + 1 == polygon.points.length then 0
                 else currentLine._2 + 1
               ),
-              i :: usedPoints, {
+              // i :: usedPoints,
+              {
                 val filtered = lines.filterNot(l =>
                   (((l._1 == currentLine._1 && l._2 == i) ||
                     (l._1 == i && l._2 == currentLine._1)) ||
@@ -126,7 +145,9 @@ object Mesh {
                 val res = filtered ++ additional
                 res
               },
-              openPoints.filterNot(_ == i),
+              openPoints.filterNot(p =>
+                p == i || p == currentLine._1 || p == currentLine._2
+              ),
               allPoints
             )
     }
