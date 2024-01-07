@@ -113,11 +113,11 @@ object Mesh {
                 else currentLine._2 + 1
               ),
               i :: usedPoints, {
-                val l1 = (currentLine._1, i)
-                val l2 = (currentLine._2, i)
                 lines.filterNot(l =>
-                  l._1 == l1._1 || l._1 == l1._2 || l._2 == l1._1 || l._2 == l1._2 ||
-                    l._1 == l2._1 || l._1 == l2._2 || l._2 == l2._1 || l._2 == l2._2
+                  !(((l._1 == currentLine._1 && l._2 == i) ||
+                    (l._1 == i && l._2 == currentLine._1)) ||
+                    ((l._1 == currentLine._2 && l._2 == i) ||
+                      (l._1 == i && l._2 == currentLine._2)))
                 ) ++ List(
                   (currentLine._1, i),
                   (currentLine._2, i)

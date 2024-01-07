@@ -42,4 +42,10 @@ final case class Line(a: Vector2, b: Vector2) {
     if !includeEndpoints && (point == a || point == b)
     then false
     else (point.x - a.x) * (b.y - a.y) == (point.y - a.y) * (b.x - a.x)
+
+  override def equals(x: Any): Boolean =
+    x match {
+      case l: Line => (l.a == a && l.b == b) || (l.a == b && l.b == a)
+      case _       => false
+    }
 }
