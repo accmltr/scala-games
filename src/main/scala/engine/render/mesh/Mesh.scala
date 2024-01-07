@@ -122,7 +122,20 @@ object Mesh {
             )
           else false
         }) match
-          case None => throw new Exception("Invalid polygon")
+          case None =>
+            buildIndices(
+              (
+                currentLine._2,
+                if currentLine._2 + 1 == polygon.points.length then 0
+                else currentLine._2 + 1
+              ),
+              // usedPoints,
+              lines,
+              openPoints.filterNot(p =>
+                p == currentLine._1 || p == currentLine._2
+              ),
+              allPoints
+            )
           case Some(i) =>
             buildIndices(
               (
