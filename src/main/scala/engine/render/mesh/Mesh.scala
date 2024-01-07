@@ -58,7 +58,7 @@ object Mesh {
     def buildIndices(
         currentLine: (Int, Int) = (0, 1),
         usedPoints: List[Int] = List(1, 0),
-        lines: List[(Int, Int)] = (0 until polygon.points.length by 2)
+        lines: List[(Int, Int)] = (0 until polygon.points.length)
           .map(index =>
             (index, if index + 1 == polygon.points.length then 0 else index + 1)
           )

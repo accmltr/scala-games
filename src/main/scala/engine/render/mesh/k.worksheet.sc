@@ -15,3 +15,7 @@ l1 contains Vector2(0.5, 0.5)
 val l3 = Line(Vector2(0, 0), Vector2(1, 1))
 
 l1 intersects l3
+
+(0 until 4)
+  .map(index => (index, if index + 1 == 4 then 0 else index + 1))
+  .toList
