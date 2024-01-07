@@ -57,46 +57,75 @@ object Mesh {
 
     def buildIndices(
         currentLine: (Int, Int) = (0, 1),
-        usedPoints: List[Int] = Nil,
+        usedPoints: List[Int] = List(1, 0),
         lines: List[(Int, Int)] = (0 until polygon.points.length by 2)
           .map(index =>
             (index, if index + 1 == polygon.points.length then 0 else index + 1)
           )
           .toList,
-        openPoints: List[Int] = (0 until polygon.points.length).toList
+        openPoints: List[Int] = (2 until polygon.points.length).toList,
+        allPoints: List[Int] = (0 until polygon.points.length).toList
     ): Array[Int] = {
 
       // Stop if
-
-      // Find a point that doesn't cross either lines of potential triangle formed between currentLine and the point
-      openPoints.find((i: Int) => {
-        val vert = polygon.points(i)
-        val newLine1 = Line(polygon.points(currentLine._1), vert)
-        val newLine2 = Line(polygon.points(currentLine._2), vert)
-
-        lines.forall(l =>
-          if l == currentLine
-          then true
-          else
-            !(
-              Line(polygon.points(l._1), polygon.points(l._2))
-                .intersects(newLine1, false) &&
-                Line(polygon.points(l._1), polygon.points(l._2))
-                  .intersects(newLine2, false)
-            )
-        )
-      }) match
-        case None => throw new Exception("Invalid polygon")
-        case Some(i) =>
-          buildIndices(
-            (currentLine._2, currentLine._2 + 1),
-            i :: usedPoints,
-            lines ++ List(
-              (currentLine._1, i),
-              (currentLine._2, i)
-            ),
-            openPoints.filterNot(_ == i)
+      if openPoints.isEmpty
+      then
+        lines
+          .foldLeft(Array[Int]())((acc, line) =>
+            acc ++ Array[Int](line._1, line._2)
           )
+      else
+        // Find a point that does not cross either lines of potential triangle formed between currentLine and the point
+        allPoints.find((i: Int) => {
+          if !(currentLine._1 == i || currentLine._2 == i)
+          then
+            val newLine1 =
+              Line(polygon.points(currentLine._1), polygon.points(i))
+            val newLine2 =
+              Line(polygon.points(currentLine._2), polygon.points(i))
+
+            var connectedLines = lines.filter(l =>
+              l._1 == currentLine._1 || l._2 == currentLine._1 ||
+                l._1 == currentLine._2 || l._2 == currentLine._2
+            )
+
+            lines.forall(l =>
+              val line = Line(polygon.points(l._1), polygon.points(l._2))
+              if l == currentLine || connectedLines.contains(l)
+              then
+                !(line.overlaps(newLine1, false) || line
+                  .overlaps(newLine2, false))
+              else
+                !(line.intersects(newLine1, false) || line
+                  .intersects(newLine2, false))
+            ) &&
+            polygon.points.forall(p =>
+              !(newLine2.contains(p, false) || newLine1.contains(p, false))
+            )
+          else false
+        }) match
+          case None => throw new Exception("Invalid polygon")
+          case Some(i) =>
+            buildIndices(
+              (
+                currentLine._2,
+                if currentLine._2 + 1 == polygon.points.length then 0
+                else currentLine._2 + 1
+              ),
+              i :: usedPoints, {
+                val l1 = (currentLine._1, i)
+                val l2 = (currentLine._2, i)
+                lines.filterNot(l =>
+                  l._1 == l1._1 || l._1 == l1._2 || l._2 == l1._1 || l._2 == l1._2 ||
+                    l._1 == l2._1 || l._1 == l2._2 || l._2 == l2._1 || l._2 == l2._2
+                ) ++ List(
+                  (currentLine._1, i),
+                  (currentLine._2, i)
+                )
+              },
+              openPoints.filterNot(_ == i),
+              allPoints
+            )
     }
 
     Mesh(vertices, buildIndices())

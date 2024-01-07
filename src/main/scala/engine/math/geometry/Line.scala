@@ -33,6 +33,11 @@ final case class Line(a: Vector2, b: Vector2) {
     }
   }
 
+  def overlaps(line: Line, includeEndpoints: Boolean = true): Boolean =
+    contains(line.a, includeEndpoints) ||
+      contains(line.b, includeEndpoints) ||
+      intersects(line, includeEndpoints)
+
   def contains(point: Vector2, includeEndpoints: Boolean = true): Boolean =
     if !includeEndpoints && (point == a || point == b)
     then false
