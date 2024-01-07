@@ -113,15 +113,18 @@ object Mesh {
                 else currentLine._2 + 1
               ),
               i :: usedPoints, {
-                lines.filterNot(l =>
-                  !(((l._1 == currentLine._1 && l._2 == i) ||
+                val filtered = lines.filterNot(l =>
+                  (((l._1 == currentLine._1 && l._2 == i) ||
                     (l._1 == i && l._2 == currentLine._1)) ||
                     ((l._1 == currentLine._2 && l._2 == i) ||
                       (l._1 == i && l._2 == currentLine._2)))
-                ) ++ List(
+                )
+                val additional = List(
                   (currentLine._1, i),
                   (currentLine._2, i)
                 )
+                val res = filtered ++ additional
+                res
               },
               openPoints.filterNot(_ == i),
               allPoints
