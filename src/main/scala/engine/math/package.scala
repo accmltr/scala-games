@@ -87,6 +87,10 @@ package object math {
     * angleInBounds(radians(45), radians(0), radians(90)) == true
     * angleInBounds(radians(45), radians(0), radians(90), true) == false
     * angleInBounds(radians(45), radians(90), radians(0), true) == true
+    *
+    * angleInBounds(radians(-315), radians(0), radians(90)) == true
+    * angleInBounds(radians(-315), radians(0), radians(-270), true) == false
+    * angleInBounds(radians(45), radians(-270), radians(0), true) == true
     * }}}
     *
     * @param angle
