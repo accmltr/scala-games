@@ -15,6 +15,26 @@ package object math {
   // ------------------------
 
   def clamp(v: Float, min: Float, max: Float) = joml.Math.clamp(v, min, max)
+
+  /** Makes sure angle is represented in positive form.
+    *
+    * E.g:
+    * {{{
+    *  positiveAngle(radians(-315)) == radians(45)
+    *  positiveAngle(raFdians(45)) == radians(45)
+    *  positiveAngle(radians(-90)) == radians(270)
+    * }}}
+    *
+    * @param rad
+    *   Angle in radians
+    * @return
+    */
+  def positiveAngle(rad: Float): Float = {
+    val modded = rad % (2 * pi)
+    if modded < 0
+    then modded + (2 * pi)
+    else modded
+  }
   def radians(deg: Float): Float = joml.Math.toRadians(deg)
   def degrees(rad: Float): Float = joml.Math.toDegrees(rad).toFloat
   def sin(rad: Float): Float = joml.Math.sin(rad)
@@ -58,6 +78,41 @@ package object math {
     * @return
     *   `true` if the floats are within epsilon of each other
     */
+
+  /** Checks whether an angle is within a lower and upper bound range, when
+    * counting counter-clockwise as the positive direction.
+    *
+    * E.g:
+    * {{{
+    * angleInBounds(radians(45), radians(0), radians(90)) == true
+    * angleInBounds(radians(45), radians(0), radians(90), true) == false
+    * angleInBounds(radians(45), radians(90), radians(0), true) == true
+    * }}}
+    *
+    * @param angle
+    *   The angle in radians
+    * @param lower
+    *   The lower bound in radians
+    * @param upper
+    *   The upper bound in radians
+    * @return
+    */
+  def angleInBounds(
+      angle: Float,
+      lower: Float,
+      upper: Float,
+      clockwise: Boolean = false
+  ): Boolean = {
+    val pa = positiveAngle(angle)
+    val pl = positiveAngle(lower)
+    val pu = positiveAngle(upper)
+    if pl > pu
+    then throw new Exception("Lower bound may not be greater than upper bound")
+    else if clockwise
+    then inBounds(pa, pu, pl)
+    else inBounds(pa, pl, pu)
+  }
+
   def nearEquals(a: Float, b: Float, epsilon: Float = 0.0001f): Boolean = {
     if (a + b) < (a + a)
     then (a + b + epsilon) >= (a + a)
