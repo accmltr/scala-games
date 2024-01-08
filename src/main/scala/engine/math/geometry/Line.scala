@@ -1,8 +1,25 @@
 package engine.math.geometry
 
 import engine.math.Vector2
+import engine.math.pi
 
 final case class Line(a: Vector2, b: Vector2) {
+
+  def angle: Float = {
+    val dx = b.x - a.x
+    val dy = b.y - a.y
+    math.atan2(dy, dx).toFloat
+  }
+
+  def angleBetween(other: Line): Float = {
+    val angle1 = angle
+    val angle2 = other.angle
+    val diff = math.abs(angle1 - angle2)
+    if diff > pi
+    then 2 * pi - diff
+    else diff
+  }
+
   def intersects(line: Line, includeEndpoints: Boolean = true): Boolean =
     intersection(line) match {
       case Some(pt) =>
