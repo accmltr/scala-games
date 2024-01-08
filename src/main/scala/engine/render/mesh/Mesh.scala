@@ -118,7 +118,7 @@ object Mesh {
 
       val ai =
         if (i - 1) == -1
-        then polygon.points.size
+        then polygon.points.size - 1
         else i - 1
       val bi =
         if (i + 1) == polygon.points.size
