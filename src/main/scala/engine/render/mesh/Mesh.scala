@@ -106,6 +106,38 @@ object Mesh {
         false
     }
 
+    /** @param i
+      *   Index of outline point of polygon in question.
+      * @param to
+      *   New point to create line in question.
+      * @return
+      *   `true` when line points into the polygon. (Does not check if line
+      *   strikes through the polygon's other side.)
+      */
+    def angledInwards(i: Int, p: Int): Boolean = {
+
+      val ai =
+        if (i - 1) == -1
+        then polygon.points.size
+        else i - 1
+      val bi =
+        if (i + 1) == polygon.points.size
+        then 0
+        else i + 1
+
+      val l = Line(polygon.points(i), polygon.points(p))
+      val a = lineFromIndices(i, ai)
+      val b = lineFromIndices(i, bi)
+
+      engine.math.angleInBounds(
+        l.angle,
+        b.angle,
+        a.angle,
+        polygon.isClockwise
+      )
+
+    }
+
     def buildIndices(
         lines: List[(Int, Int)],
         triangles: List[(Int, Int, Int)]
@@ -156,14 +188,14 @@ object Mesh {
                 else
                   !overlapsWithTris(l1i, triangles) &&
                   !overlapsWithLines(l1i, lines) &&
-                  polygon.contains(l1)
+                  angledInwards(li._1, p)
               val l2Valid =
                 if l2Exists
                 then true
                 else
                   !overlapsWithTris(l2i, triangles) &&
                   !overlapsWithLines(l2i, lines) &&
-                  polygon.contains(l2)
+                  angledInwards(li._2, p)
 
               // Valid recursion
               if l1Valid && l2Valid

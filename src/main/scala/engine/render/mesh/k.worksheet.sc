@@ -4,8 +4,17 @@ import engine.math.*
 import engine.math.shapes.Circle
 import engine.render.mesh.Mesh
 
+45 % 360
+-675 % 360
+
+degrees(Line(Vector2(0, 0), Vector2(1, 1)).angle)
+degrees(Line(Vector2(0, 0), Vector2(1, -1)).angle)
+
 val l1 = Line(Vector2(-1, -1), Vector2(1, 1))
 val l2 = Line(Vector2(0, 0), Vector2(1, 0))
+
+l1.angleBetween(l2)
+l2.angleBetween(l1)
 
 l1 intersects (l2, true)
 
