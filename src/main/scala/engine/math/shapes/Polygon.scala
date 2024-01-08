@@ -2,7 +2,7 @@ package engine.math.shapes
 
 import engine.math._
 import scala.annotation.tailrec
-import scala.util.boundary
+import scala.util.boundary, boundary.break
 import engine.math.geometry.Line
 
 case class Polygon(points: Vector[Vector2])
@@ -35,8 +35,26 @@ case class Polygon(points: Vector[Vector2])
     polygonIntersection.testPoint(point.x, point.y)
   }
 
-  def contains(line: Line): Boolean = {
-    ???
+  /** Checks whether a line is contained within this polygon.
+    *
+    * @param line
+    * @param includeEndpoints
+    *   Can be set to `false` to exclude the endpoints of `line` from the check
+    *   (I.e if `line` is insinde the polygon, but one of its endpoints is on
+    *   the boundary of the polygon, the method will return `true` if
+    *   `includeEndpoints` is `false`).
+    * @return
+    */
+  def contains(line: Line, includeEndpoints: Boolean = true): Boolean = {
+    val cwPts = if isClockwise then points else points.reverse
+
+    boundary[Boolean]:
+      for p <- points
+      do
+
+        break(false)
+
+      true
   }
 
   def scale(amount: Float): Polygon = {
