@@ -35,8 +35,8 @@ package object math {
     then modded + (2 * pi)
     else modded
   }
-  def radians(deg: Float): Float = joml.Math.toRadians(deg)
-  def degrees(rad: Float): Float = joml.Math.toDegrees(rad).toFloat
+  def rad(deg: Float): Float = joml.Math.toRadians(deg)
+  def deg(rad: Float): Float = joml.Math.toDegrees(rad).toFloat
   def sin(rad: Float): Float = joml.Math.sin(rad)
   def cos(rad: Float): Float = joml.Math.cos(rad)
   def tan(rad: Float): Float = joml.Math.tan(rad)
@@ -141,7 +141,7 @@ package object math {
   // ------------------------
 
   implicit class FloatOps(val value: Float) extends AnyVal {
-    def toRadians: Float = radians(value)
-    def toDegrees: Float = degrees(value)
+    def toRadians: Float = rad(value)
+    def toDegrees: Float = deg(value)
   }
 }

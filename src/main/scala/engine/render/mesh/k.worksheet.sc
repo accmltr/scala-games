@@ -8,8 +8,8 @@ import engine.render.mesh.Mesh
 45 % 360
 -675 % 360
 
-degrees(Line(Vector2(0, 0), Vector2(1, 1)).angle)
-degrees(Line(Vector2(0, 0), Vector2(1, -1)).angle)
+deg(Line(Vector2(0, 0), Vector2(1, 1)).angle)
+deg(Line(Vector2(0, 0), Vector2(1, -1)).angle)
 
 val l1 = Line(Vector2(-1, -1), Vector2(1, 1))
 val l2 = Line(Vector2(0, 0), Vector2(1, 0))
@@ -79,5 +79,3 @@ polygon.contains(Line(Vector2(0.1, 0), Vector2(0.5, 0.5)))
 polygon.contains(Line(Vector2(0, 0), Vector2(0.5, 0.5)))
 
 // Testing math.angleInBounds
-
-angleInBounds(radians(45), radians(0), radians(90))
