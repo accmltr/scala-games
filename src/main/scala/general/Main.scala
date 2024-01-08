@@ -156,7 +156,9 @@ object MyGame extends Game {
     renderMaster += r1
     renderMaster += p1
 
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
     renderMaster.render()
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
 
     renderMaster -= r
     renderMaster -= r1

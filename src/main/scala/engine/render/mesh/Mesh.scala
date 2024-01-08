@@ -88,39 +88,39 @@ object Mesh {
             .map(lineFromIndices)
         do
           if line.overlaps(tl, false)
-          then break(false)
-        true
+          then break(true)
+        false
     }
 
     def buildIndices(
-        remainingLines: List[(Int, Int)],
+        lines: List[(Int, Int)],
         triangles: List[(Int, Int, Int)]
     ): Array[Int] = {
 
-      if remainingLines.isEmpty
+      if lines.isEmpty
       then
         triangles.foldLeft(Array[Int]())((acc, t) =>
           acc ++ Array[Int](t._1, t._2, t._3)
         )
       else
-        val li = remainingLines.head
+        val li = lines.head
         val l = lineFromIndices(li)
 
         boundary[Array[Int]]:
           // Try to form a valid triangle
-          for p <- 0 until polygon.points.length
+          for p <- 0 until polygon.points.length if !(p == li._1 || p == li._2)
           do
             // Useful Locals
             val l1i = (li._1, p)
             val l2i = (li._2, p)
-            val l1 = lineFromIndices(l2i)
+            val l1 = lineFromIndices(l1i)
             val l2 = lineFromIndices(l2i)
             val tri = (li._1, li._2, p)
 
             // Checks
-            val triExists = triangles.contains(trisEq(tri, _))
-            val l1Exists = triangles.contains(isLineInTri(l1i, _))
-            val l2Exists = triangles.contains(isLineInTri(l2i, _))
+            val triExists = !triangles.forall(!trisEq(tri, _))
+            val l1Exists = !triangles.forall(!isLineInTri(l1i, _))
+            val l2Exists = !triangles.forall(!isLineInTri(l2i, _))
 
             // See if new lines are valid
 
@@ -134,8 +134,10 @@ object Mesh {
               then true
               else !overlapsWithTris(l2i, triangles)
 
-            if l1Valid && l2Valid
-            then break(buildIndices(remainingLines.tail, tri :: triangles))
+            if triExists
+            then break(buildIndices(lines.tail, triangles))
+            else if l1Valid && l2Valid
+            then break(buildIndices(lines.tail, tri :: triangles))
 
           // Throw and error if none found
           throw new Exception("Polygon could not be triangulated")
