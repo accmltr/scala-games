@@ -30,31 +30,24 @@ case class Polygon(points: Vector[Vector2])
   def rotate(degrees: Float): Polygon = ???
   def rotateAround(degrees: Float, point: Vector2): Polygon = ???
 
-  // use joml for contains
+  /** Returns true if `point` is inside of polygon (excluding the polygon
+    * outline).
+    *
+    * @param point
+    * @return
+    */
   override def contains(point: Vector2): Boolean = {
     polygonIntersection.testPoint(point.x, point.y)
   }
 
-  /** Checks whether a line is contained within this polygon.
+  /** Returns true when both points of `line` are inside this polygon (excluding
+    * polygon outline)
     *
     * @param line
-    * @param includeEndpoints
-    *   Can be set to `false` to exclude the endpoints of `line` from the check
-    *   (I.e if `line` is insinde the polygon, but one of its endpoints is on
-    *   the boundary of the polygon, the method will return `true` if
-    *   `includeEndpoints` is `false`).
     * @return
     */
-  def contains(line: Line, includeEndpoints: Boolean = true): Boolean = {
-    val cwPts = if isClockwise then points else points.reverse
-
-    boundary[Boolean]:
-      for p <- points
-      do
-
-        break(false)
-
-      true
+  def contains(line: Line): Boolean = {
+    contains(line.a) && contains(line.b)
   }
 
   def scale(amount: Float): Polygon = {

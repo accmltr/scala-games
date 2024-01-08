@@ -50,3 +50,20 @@ def trisEq(t1: (Int, Int, Int), t2: (Int, Int, Int)): Boolean = {
 trisEq((3, 0, 1), (3, 0, 1))
 trisEq((3, 0, 1), (0, 3, 1))
 trisEq((3, 0, 1), (1, 3, 0))
+
+// Square polygon
+val polygon = Polygon(
+  Vector(
+    Vector2(0, 0),
+    Vector2(1, 0),
+    Vector2(1, 1),
+    Vector2(0, 1)
+  )
+)
+
+polygon.contains(Vector2(0.5, 0.5))
+polygon.contains(Vector2(0, 0))
+
+polygon.contains(Line(Vector2(0.1, 0.1), Vector2(0.5, 0.5)))
+polygon.contains(Line(Vector2(0.1, 0), Vector2(0.5, 0.5)))
+polygon.contains(Line(Vector2(0, 0), Vector2(0.5, 0.5)))
