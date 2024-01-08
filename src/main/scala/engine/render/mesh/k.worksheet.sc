@@ -1,6 +1,7 @@
 import engine.math.geometry.Line
 import engine.math.shapes.Polygon
 import engine.math.*
+import engine.math
 import engine.math.shapes.Circle
 import engine.render.mesh.Mesh
 
@@ -76,3 +77,7 @@ polygon.contains(Vector2(0, 0))
 polygon.contains(Line(Vector2(0.1, 0.1), Vector2(0.5, 0.5)))
 polygon.contains(Line(Vector2(0.1, 0), Vector2(0.5, 0.5)))
 polygon.contains(Line(Vector2(0, 0), Vector2(0.5, 0.5)))
+
+// Testing math.angleInBounds
+
+angleInBounds(radians(45), radians(0), radians(90))

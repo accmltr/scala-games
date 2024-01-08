@@ -112,8 +112,15 @@ package object math {
     val pu = positiveAngle(upper)
 
     if clockwise
-    then inBounds(pa, pu, pl)
-    else inBounds(pa, pl, pu)
+    then {
+      if pl < pu
+      then inBounds(pa, pl, pu)
+      else !inBounds(pa, pu, pl)
+    } else {
+      if pu < pl
+      then inBounds(pa, pu, pl)
+      else !inBounds(pa, pl, pu)
+    }
   }
 
   def nearEquals(a: Float, b: Float, epsilon: Float = 0.0001f): Boolean = {
