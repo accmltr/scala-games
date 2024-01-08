@@ -19,3 +19,5 @@ l1 intersects l3
 (0 until 4)
   .map(index => (index, if index + 1 == 4 then 0 else index + 1))
   .toList
+
+(1, 3, 2, 5).toList
