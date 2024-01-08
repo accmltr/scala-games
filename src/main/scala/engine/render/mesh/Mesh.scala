@@ -76,6 +76,20 @@ object Mesh {
       isLineInTri((t1._3, t1._1), t2)
     }
 
+    def overlapsWithLines(
+        l: (Int, Int),
+        lines: List[(Int, Int)]
+    ): Boolean = {
+      boundary[Boolean]:
+        for cl <- lines
+        do
+          val l1 = lineFromIndices(l)
+          val l2 = lineFromIndices(cl)
+          if l1.overlaps(l2, false)
+          then break(true)
+        false
+    }
+
     def overlapsWithTris(
         l: (Int, Int),
         triangles: List[(Int, Int, Int)]
@@ -117,27 +131,43 @@ object Mesh {
             val l2 = lineFromIndices(l2i)
             val tri = (li._1, li._2, p)
 
-            // Checks
             val triExists = !triangles.forall(!trisEq(tri, _))
-            val l1Exists = !triangles.forall(!isLineInTri(l1i, _))
-            val l2Exists = !triangles.forall(!isLineInTri(l2i, _))
-
-            // See if new lines are valid
-
-            val l1Valid =
-              if l1Exists
-              then true
-              else !overlapsWithTris(l1i, triangles)
-
-            val l2Valid =
-              if l2Exists
-              then true
-              else !overlapsWithTris(l2i, triangles)
 
             if triExists
             then break(buildIndices(lines.tail, triangles))
-            else if l1Valid && l2Valid
-            then break(buildIndices(lines.tail, tri :: triangles))
+            else
+
+              // Check if lines already exist within 'triangles' or 'lines'
+              val l1Exists = {
+                val existsInLines = !lines.forall(!linesEq(l1i, _))
+                val existsInTris = !triangles.forall(!isLineInTri(l1i, _))
+                existsInLines || existsInTris
+              }
+              val l2Exists = {
+                val existsInLines = !lines.forall(!linesEq(l2i, _))
+                val existsInTris = !triangles.forall(!isLineInTri(l2i, _))
+                existsInLines || existsInTris
+              }
+
+              // Validity checks
+              val l1Valid =
+                if l1Exists
+                then true
+                else
+                  !overlapsWithTris(l1i, triangles) &&
+                  !overlapsWithLines(l1i, lines) &&
+                  polygon.contains(l1)
+              val l2Valid =
+                if l2Exists
+                then true
+                else
+                  !overlapsWithTris(l2i, triangles) &&
+                  !overlapsWithLines(l2i, lines) &&
+                  polygon.contains(l2)
+
+              // Valid recursion
+              if l1Valid && l2Valid
+              then break(buildIndices(lines.tail, tri :: triangles))
 
           // Throw and error if none found
           throw new Exception("Polygon could not be triangulated")

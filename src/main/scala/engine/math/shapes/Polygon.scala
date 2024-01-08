@@ -3,6 +3,7 @@ package engine.math.shapes
 import engine.math._
 import scala.annotation.tailrec
 import scala.util.boundary
+import engine.math.geometry.Line
 
 case class Polygon(points: Vector[Vector2])
     extends Shape2D
@@ -32,6 +33,10 @@ case class Polygon(points: Vector[Vector2])
   // use joml for contains
   override def contains(point: Vector2): Boolean = {
     polygonIntersection.testPoint(point.x, point.y)
+  }
+
+  def contains(line: Line): Boolean = {
+    ???
   }
 
   def scale(amount: Float): Polygon = {
