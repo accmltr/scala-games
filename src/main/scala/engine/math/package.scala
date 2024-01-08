@@ -110,9 +110,8 @@ package object math {
     val pa = positiveAngle(angle)
     val pl = positiveAngle(lower)
     val pu = positiveAngle(upper)
-    if pl > pu
-    then throw new Exception("Lower bound may not be greater than upper bound")
-    else if clockwise
+
+    if clockwise
     then inBounds(pa, pu, pl)
     else inBounds(pa, pl, pu)
   }
