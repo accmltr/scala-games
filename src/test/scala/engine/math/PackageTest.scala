@@ -15,10 +15,14 @@ class PackageTest extends AnyFreeSpec {
 
   "angleInBounds" - {
     "should be true for angles in bounds" in {
-      assert(angleInBounds(rad(45), rad(0), rad(90)))
-      assert(angleInBounds(rad(45), rad(90), rad(0), true))
-      assert(angleInBounds(rad(-315), rad(0), rad(90)))
-      assert(angleInBounds(rad(-315), rad(0), rad(-270), true))
+      assert(angleInBounds(1, 0, 2))
+      assert(angleInBounds(1, 2, 0, true))
+
+      assert(!angleInBounds(1, 2, 0))
+      assert(angleInBounds(2.5, 2, 0))
+
+      assert(angleInBounds(1, 2, 0, true))
+      assert(!angleInBounds(2.5, 2, 0, true))
     }
   }
 }
