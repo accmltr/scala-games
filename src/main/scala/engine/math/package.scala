@@ -8,7 +8,7 @@ package object math {
   // ------------------------
   // constants
   // ------------------------
-  val pi: Float = scala.math.Pi.toFloat
+  inline val pi = 3.141592653589793f
 
   // ------------------------
   // operations
@@ -16,7 +16,9 @@ package object math {
 
   def clamp(v: Float, min: Float, max: Float) = joml.Math.clamp(v, min, max)
 
-  /** Makes sure angle is represented in positive form.
+  /** Makes sure angle is represented in positive form. Returns a number between
+    * 0[inclusive] and 2*PI[non-inclusive], i.e. returns 2*PI radians as 0
+    * radians.
     *
     * E.g:
     * {{{
@@ -31,9 +33,11 @@ package object math {
     */
   def positiveAngle(rad: Float): Float = {
     val modded = rad % (2 * pi)
-    if modded < 0
-    then modded + (2 * pi)
-    else modded
+    val pos =
+      if modded < 0
+      then modded + (2 * pi)
+      else modded
+    if pos == 2 * pi then 0 else pos
   }
   def rad(deg: Float): Float = joml.Math.toRadians(deg)
   def deg(rad: Float): Float = joml.Math.toDegrees(rad).toFloat
@@ -102,25 +106,25 @@ package object math {
     * @return
     */
   def angleInBounds(
-      angle: Float,
-      lower: Float,
-      upper: Float,
+      k: Float,
+      a: Float,
+      b: Float,
       clockwise: Boolean = false
   ): Boolean = {
-    val pa = positiveAngle(angle)
-    val pl = positiveAngle(lower)
-    val pu = positiveAngle(upper)
+    val kp = positiveAngle(k)
+    val ap = positiveAngle(a)
+    val bp = positiveAngle(b)
 
-    if clockwise
-    then {
-      if pl < pu
-      then inBounds(pa, pl, pu)
-      else !inBounds(pa, pu, pl)
+    if (ap < bp) {
+      if !clockwise
+      then inBounds(kp, ap, bp)
+      else !inBounds(kp, ap, bp)
     } else {
-      if pu < pl
-      then inBounds(pa, pu, pl)
-      else !inBounds(pa, pl, pu)
+      if !clockwise
+      then !inBounds(kp, bp, ap)
+      else inBounds(kp, bp, ap)
     }
+
   }
 
   def nearEquals(a: Float, b: Float, epsilon: Float = 0.0001f): Boolean = {
