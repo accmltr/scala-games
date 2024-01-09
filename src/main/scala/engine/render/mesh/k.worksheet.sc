@@ -79,3 +79,21 @@ polygon.contains(Line(Vector2(0.1, 0), Vector2(0.5, 0.5)))
 polygon.contains(Line(Vector2(0, 0), Vector2(0.5, 0.5)))
 
 // Testing math.angleInBounds
+
+// def intersects(l: Line, line: Line, includeEndpoints: Boolean = true): Boolean =
+//   line.intersection(line) match {
+//     case Some(pt) =>
+//       println("Some")
+//       if includeEndpoints
+//       then true
+//       else pt != l.a && pt != l.b && pt != line.a && pt != line.b
+//     case None =>
+//       false
+//   }
+
+val line1 = Line(Vector2(1, 0), Vector2(1, 1))
+val line2 = Line(Vector2(1, 1), Vector2(2, 2))
+
+line1.intersection(line2)
+line1.intersects(line2)
+line1.intersects(line2, false)

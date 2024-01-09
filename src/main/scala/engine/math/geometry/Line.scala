@@ -36,7 +36,7 @@ final case class Line(a: Vector2, b: Vector2) {
   def intersection(line: Line): Option[Vector2] = {
     val d = (a.x - b.x) * (line.a.y - line.b.y) -
       (a.y - b.y) * (line.a.x - line.b.x)
-    if (d == 0) None
+    if (d == 0) None // parallel
     else {
       val u = ((line.b.x - line.a.x) * (a.y - line.a.y) -
         (line.b.y - line.a.y) * (a.x - line.a.x)) / d
