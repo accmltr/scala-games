@@ -125,14 +125,14 @@ object Mesh {
         then 0
         else i + 1
 
-      val l = Line(polygon.points(i), polygon.points(p))
-      val a = lineFromIndices(i, ai)
-      val b = lineFromIndices(i, bi)
+      val a = lineFromIndices(i, ai).angle
+      val k = lineFromIndices(i, p).angle
+      val b = lineFromIndices(i, bi).angle
 
       engine.math.angleInBounds(
-        l.angle,
-        b.angle,
-        a.angle,
+        k,
+        b,
+        a,
         polygon.isClockwise
       )
 
