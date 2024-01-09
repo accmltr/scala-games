@@ -88,6 +88,28 @@ class ShapeTest extends AnyFreeSpec {
         .09f
       )
     }
+    "clockwise should be 'true'" in {
+      Polygon(
+        Vector(
+          Vector2(0, 0),
+          Vector2(1, 0),
+          Vector2(1, 1),
+          Vector2(0, 1),
+          Vector2(0.4, 0.5)
+        ).reverse
+      )
+    }
+    "clockwise should be 'false'" in {
+      Polygon(
+        Vector(
+          Vector2(0, 0),
+          Vector2(1, 0),
+          Vector2(1, 1),
+          Vector2(0, 1),
+          Vector2(0.4, 0.5)
+        )
+      )
+    }
   }
   // "Rectangle to Polygon" - {
   //   "should equal" in {
