@@ -23,6 +23,11 @@ class PackageTest extends AnyFreeSpec {
 
       assert(angleInBounds(1, 2, 0, true))
       assert(!angleInBounds(2.5, 2, 0, true))
+
+      assert(angleInBounds(2, 2, 0, true))
+      assert(!angleInBounds(2, 0, 2, true))
+      assert(!angleInBounds(2, 2, 0))
+      assert(angleInBounds(2, 0, 2))
     }
   }
 }
