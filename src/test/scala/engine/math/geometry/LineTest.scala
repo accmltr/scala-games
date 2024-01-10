@@ -16,6 +16,40 @@ class LineTest extends AnyFlatSpec with Matchers {
       case Some(value) => assertNearEquals(value, Vector2(0.5f, 0.5f))
   }
 
+  it should "return the intersection point of two lines with negative coordinates" in {
+    val line1 = Line(Vector2(-1, -1), Vector2(1, 1))
+    val line2 = Line(Vector2(-1, 1), Vector2(1, -1))
+    val istn = line1.intersection(line2)
+    istn.match
+      case None        => fail()
+      case Some(value) => assertNearEquals(value, Vector2(0, 0))
+  }
+
+  it should "return the intersection of one endpoint on another line" in {
+    val line1 = Line(Vector2(0, 0), Vector2(1, 1))
+    val line2 = Line(Vector2(-1, 0), Vector2(1, 0))
+    val istn = line1.intersection(line2)
+    istn.match
+      case None        => fail()
+      case Some(value) => assertNearEquals(value, Vector2(0, 0))
+  }
+
+  it should "return the intersection for two non-parallel endpoints" in {
+    val line1 = Line(Vector2(0, 0), Vector2(1, 0))
+    val line2 = Line(Vector2(0, 0), Vector2(0, 1))
+    line1.intersection(line2) shouldBe Some(Vector2(0, 0))
+    val line3 = Line(Vector2(1, 0), Vector2(1, 1))
+    line1.intersection(line3) shouldBe Some(Vector2(1, 0))
+  }
+
+  it should "return None for two parallel endpoints on same position" in {
+    val line1 = Line(Vector2(0, 0), Vector2(1, 0))
+    val line2 = Line(Vector2(0, 0), Vector2(1, 0))
+    line1.intersection(line2) shouldBe None
+    val line3 = Line(Vector2(1, 0), Vector2(2, 0))
+    line1.intersection(line3) shouldBe None
+  }
+
   it should "return None for non-intersecting lines" in {
     val line1 = Line(Vector2(0, 0), Vector2(1, 1))
     val line2 = Line(Vector2(0, 1), Vector2(1, 2))
