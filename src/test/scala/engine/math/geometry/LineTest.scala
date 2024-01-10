@@ -7,7 +7,7 @@ import engine.math.Vector2
 
 class LineTest extends AnyFlatSpec with Matchers {
 
-  "Line.intersection" should "return the intersection point of two lines" in {
+  "intersection" should "return the intersection point of two lines" in {
     val line1 = Line(Vector2(0, 0), Vector2(1, 1))
     val line2 = Line(Vector2(0, 1), Vector2(1, 0))
     val istn = line1.intersection(line2)
@@ -77,10 +77,12 @@ class LineTest extends AnyFlatSpec with Matchers {
     val line = Line(Vector2(0, 0), Vector2(1, 1))
     assert(!line.contains(Vector2(0, 1)))
     assert(!line.contains(Vector2(1, 0)))
+    assert(!line.contains(Vector2(3, 2)))
     assert(!line.contains(Vector2(-10, -10)))
+    assert(!line.contains(Vector2(2, 2)))
   }
 
-  "Line.intersects" should "return true when crossing" in {
+  "intersects" should "return true when crossing" in {
     val line1 = Line(Vector2(0, 0), Vector2(1, 1))
     val line2 = Line(Vector2(0, 1), Vector2(1, 0))
     assert(line1.intersects(line2, false))
@@ -129,7 +131,7 @@ class LineTest extends AnyFlatSpec with Matchers {
     assert(line1.intersects(line2, true))
   }
 
-  "Line.overlap" should "return true when crossing" in {
+  "overlap" should "return true when crossing" in {
     val line1 = Line(Vector2(0, 0), Vector2(1, 1))
     val line2 = Line(Vector2(0, 1), Vector2(1, 0))
     assert(line1.overlaps(line2, false))

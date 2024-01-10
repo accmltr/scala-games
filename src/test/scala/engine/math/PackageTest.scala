@@ -13,6 +13,13 @@ class PackageTest extends AnyFreeSpec {
     }
   }
 
+  "inBounds" - {
+    "should be true for values in bounds" in {
+      assert(inBounds(1, 0, 2))
+      assert(inBounds(1, 2, 0))
+    }
+  }
+
   "angleInBounds" - {
     "should be true for angles in bounds" in {
       assert(angleInBounds(1, 0, 2))

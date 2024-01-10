@@ -3,6 +3,11 @@ package engine.math.geometry
 import engine.math.Vector2
 import engine.math.pi
 
+/** The order of 'a' and 'b' matters for some operations, e.g. 'Line.angle'.
+  *
+  * @param a
+  * @param b
+  */
 final case class Line(a: Vector2, b: Vector2) {
 
   def length: Float = a.distance(b)
@@ -61,7 +66,19 @@ final case class Line(a: Vector2, b: Vector2) {
   def contains(point: Vector2, includeEndpoints: Boolean = true): Boolean =
     if !includeEndpoints && (point == a || point == b)
     then false
-    else (point.x - a.x) * (b.y - a.y) == (point.y - a.y) * (b.x - a.x)
+    else if ((point.x - a.x) * (b.y - a.y) == (point.y - a.y) * (b.x - a.x)) {
+      val x = point.x
+      val y = point.y
+      val x1 = a.x
+      val y1 = a.y
+      val x2 = b.x
+      val y2 = b.y
+      if (x1 == x2) {
+        y1 <= y && y <= y2 || y2 <= y && y <= y1
+      } else {
+        x1 <= x && x <= x2 || x2 <= x && x <= x1
+      }
+    } else false
 
   override def equals(x: Any): Boolean =
     x match {

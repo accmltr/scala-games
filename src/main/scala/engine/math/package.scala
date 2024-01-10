@@ -52,19 +52,24 @@ package object math {
     scala.math.pow(base, exponent).toFloat
   def sqrt(n: Float): Float = joml.Math.sqrt(n)
 
-  /** Checks whether 'f' is within a lower and upper bound range [inclusive].
+  /** Checks whether 'k' is within two bounds [inclusive].
     *
-    * @param f
-    * @param lowerBound
-    *   Lower bound [inclusive]
-    * @param upperBound
-    *   Upper bound [inclusive]
-    * @return
+    * E.g:
+    * {{{
+    * inBounds(1, 0, 2) == true
+    * inBounds(1, 1, 2) == true
+    * }}}
+    *
+    * Automacitally determines order of bounds. E.g:
+    * {{{
+    * inBounds(1, 0, 2) == true
+    * inBounds(1, 2, 0) == true
+    * }}}
     */
-  def inBounds(f: Float, lowerBound: Float, upperBound: Float): Boolean =
-    if lowerBound > upperBound
-    then throw new Exception("Lower bound may not be greater than upper bound")
-    else lowerBound <= f && f <= upperBound
+  def inBounds(k: Float, b1: Float, b2: Float): Boolean =
+    if b1 > b2
+    then b2 <= k && k <= b1
+    else b1 <= k && k <= b2
 
   /** Checks whether two floats are equal up to a given epsilon value.
     *
