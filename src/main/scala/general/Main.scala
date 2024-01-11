@@ -37,9 +37,6 @@ import engine.math.shapes.Polygon
 
 object MyGame extends Game {
 
-  // TEMP: For Practice
-  // var polygonRenderer: PolygonRenderer = _
-
   title = "MyGame"
 
   val shader = Shader(
@@ -72,11 +69,6 @@ object MyGame extends Game {
   val meshRenderManager: MeshRenderManager = MeshRenderManager()
 
   onInit += { (_) =>
-    // val circleRenderer: CircleRenderer = CircleRenderer(Circle(0.5f), 24)
-    // polygonRenderer = PolygonRenderer(
-    //   circleRenderer.vertices,
-    //   circleRenderer.indices
-    // )
 
     window.vsync = true
     shader.compile()
@@ -161,39 +153,7 @@ object MyGame extends Game {
     //   "position",
     //   Vector2(sin(Time.current), .5 * cos(Time.current))
     // )
-    // polygonRenderer.render(shader)
   }
 
   run()
-}
-
-class PolygonRenderer(
-    vertices: FloatBuffer,
-    indices: IntBuffer
-) {
-// Create and bind a VAO
-  val vaoId = glGenVertexArrays()
-  glBindVertexArray(vaoId)
-
-  // Create and bind a VBO for the vertices
-  val vboId = glGenBuffers()
-  glBindBuffer(GL_ARRAY_BUFFER, vboId)
-  glBufferData(GL_ARRAY_BUFFER, vertices, GL_STATIC_DRAW)
-  glVertexAttribPointer(0, 2, GL_FLOAT, false, 0, 0)
-  glEnableVertexAttribArray(0)
-
-  // Create and bind a VBO for the indices
-  val eboId = glGenBuffers()
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboId)
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices, GL_STATIC_DRAW)
-
-  // Unbind the VAO
-  glBindVertexArray(0)
-
-  def render(shader: Shader): Unit = {
-    shader.use()
-    glBindVertexArray(vaoId)
-    glDrawElements(GL_TRIANGLES, indices.limit(), GL_UNSIGNED_INT, 0)
-    glBindVertexArray(0)
-  }
 }
