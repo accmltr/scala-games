@@ -7,7 +7,6 @@ import engine.input.MouseCode
 import engine.render.window.{Resolution, FpsStats}
 import engine.Node
 import engine.Component
-import engine.render.shader.Shader
 import org.lwjgl.opengl.GL11._
 import org.lwjgl.opengl.GL13._
 import org.lwjgl.opengl.GL15._
@@ -15,7 +14,7 @@ import org.lwjgl.opengl.GL20._
 import org.lwjgl.opengl.GL30._
 import org.lwjgl.BufferUtils
 import engine.math.Vector3
-import engine.render.shader.Shader
+import engine.render.shader_classes.Shader
 import org.joml.Matrix4f
 import java.nio.IntBuffer
 import java.nio.FloatBuffer
