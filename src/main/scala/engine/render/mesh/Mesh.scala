@@ -93,10 +93,7 @@ object Mesh {
           val l1 = lineFromIndices(l)
           val l2 = lineFromIndices(cl)
           if l1.overlaps(l2, false)
-          then
-            println(s"$l overlaps with line: $cl")
-            println(s"l1: $l1, l2: $l2")
-            break(true)
+          then break(true)
         false
     }
 
