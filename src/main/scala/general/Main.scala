@@ -148,7 +148,7 @@ object MyGame extends Game {
     renderMaster += p1
     renderMaster += l
 
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
+    // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
     renderMaster.render()
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
 

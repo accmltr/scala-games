@@ -26,11 +26,18 @@ final case class Line(
       case _: render_manager.Line => true
       case _                      => false
 
-  def vertices: Array[Float] =
+  def vertices: Array[Float] = Line.pointsToRectVerts(points, width)
+
+  def indices: Array[Int] = Line.rectTriIndices(points.size)
+
+}
+
+object Line {
+  def pointsToRectVerts(points: Array[Vector2], width: Float): Array[Float] = {
     (for i <- 0 until points.length - 1
     yield
       val line = geoLine(points(i), points(i + 1))
-      val offset = line.normal * width
+      val offset = line.normal * width * 0.5f
       val p1 = line.a + offset // bottom left
       val p2 = line.a - offset // bottom right
       val p3 = line.b - offset // top left
@@ -38,10 +45,12 @@ final case class Line(
       // View 'p' to 'p + 1' as the forwards direction:
       Array(p1.x, p1.y, p2.x, p2.y, p3.x, p3.y, p4.x, p4.y)
     ).flatten.toArray
+  }
 
-  def indices: Array[Int] =
-    (0 until points.length - 1).foldLeft(Array[Int]())((acc, i) =>
+  def rectTriIndices(pointCount: Int): Array[Int] = {
+    (0 until pointCount - 1).foldLeft(Array[Int]())((acc, i) =>
       acc ++ Array(i, i + 1, i + 3, i + 3, i + 1, i + 2)
     )
+  }
 
 }
