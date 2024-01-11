@@ -129,18 +129,33 @@ object MyGame extends Game {
       ),
       tint = Color.YELLOW * .75
     )
+    val l = engine.render.rendered_element.Line(
+      points = Array(
+        Vector2(0, 0),
+        Vector2(-1, -1),
+        Vector2(100, -100)
+        // Vector2(0, -1),
+        // Vector2(-1, -1),
+        // Vector2(-3, 1),
+        // Vector2(0, 10)
+      ).map(_ * .8),
+      width = 0.07,
+      shader = shader
+    )
 
     renderMaster += r
     renderMaster += r1
     renderMaster += p1
+    renderMaster += l
 
-    // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
     renderMaster.render()
-    // glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
 
     renderMaster -= r
     renderMaster -= r1
     renderMaster -= p1
+    renderMaster -= l
 
     if (input.justReleased(KeyCode.escape)) {
       quit()

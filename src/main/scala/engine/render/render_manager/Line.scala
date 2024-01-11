@@ -15,31 +15,33 @@ import java.nio.FloatBuffer
 
 final case class Line() extends RenderManager {
 
-  private var _layerMap: Map[Float, Map[Shader, List[RenderedMesh]]] = Map.empty
+  private var _layerMap
+      : Map[Float, Map[Shader, List[engine.render.rendered_element.Line]]] =
+    Map.empty
 
   private[render] def isEmpty = _layerMap.isEmpty
 
   private[render] override def +=(element: RenderedElement): Unit = {
     // TODO: Fix the generics
     element match {
-      case e: RenderedMesh =>
-        val shdrs = _layerMap.getOrElse(e.layer, Map.empty)
-        val elmnts = shdrs.getOrElse(e.shader, Nil)
+      case l: engine.render.rendered_element.Line =>
+        val shdrs = _layerMap.getOrElse(l.layer, Map.empty)
+        val elmnts = shdrs.getOrElse(l.shader, Nil)
 
-        if (elmnts.contains(e))
+        if (elmnts.contains(l))
           throw new Exception("Element already added to manager")
 
         if shdrs.isEmpty
-        then _layerMap = _layerMap + (e.layer -> (Map(e.shader -> (e :: Nil))))
+        then _layerMap = _layerMap + (l.layer -> (Map(l.shader -> (l :: Nil))))
         else if elmnts.isEmpty
         then
-          _layerMap = (_layerMap - e.layer) + (e.layer -> (shdrs + (
-            e.shader -> (e :: Nil)
+          _layerMap = (_layerMap - l.layer) + (l.layer -> (shdrs + (
+            l.shader -> (l :: Nil)
           )))
         else
           _layerMap =
-            (_layerMap - e.layer) + (e.layer -> ((shdrs - e.shader) + (
-              e.shader -> (e :: elmnts)
+            (_layerMap - l.layer) + (l.layer -> ((shdrs - l.shader) + (
+              l.shader -> (l :: elmnts)
             )))
       case _ =>
         throw new Exception("Invalid element type")
@@ -49,28 +51,28 @@ final case class Line() extends RenderManager {
   private[render] override def -=(element: RenderedElement): Unit = {
     // TODO: Fix this mess
     element match {
-      case e: RenderedMesh => {
-        val shaderMap = _layerMap.getOrElse(e.layer, Map.empty)
-        val elements = shaderMap.getOrElse(e.shader, Nil)
+      case l: engine.render.rendered_element.Line => {
+        val shaderMap = _layerMap.getOrElse(l.layer, Map.empty)
+        val elements = shaderMap.getOrElse(l.shader, Nil)
 
         // If element does not exist, throw an exception:
-        if (!elements.contains(e))
+        if (!elements.contains(l))
           throw new IllegalArgumentException(
             "Trying to remove non-existant render element from render manager."
           )
 
         // Else, filter out the element
-        val newElements = elements.filterNot(_ == e)
+        val newElements = elements.filterNot(_ == l)
         val newShaderMap =
           if (newElements.isEmpty)
-            shaderMap.filterNot(_._1 == e.shader)
+            shaderMap.filterNot(_._1 == l.shader)
           else
-            shaderMap.filterNot(_._1 == e.shader) + (e.shader -> newElements)
+            shaderMap.filterNot(_._1 == l.shader) + (l.shader -> newElements)
         val newLayerMap =
           if (newShaderMap.isEmpty)
-            _layerMap.filterNot(_._1 == e.layer)
+            _layerMap.filterNot(_._1 == l.layer)
           else
-            _layerMap.filterNot(_._1 == e.layer) + (e.layer -> newShaderMap)
+            _layerMap.filterNot(_._1 == l.layer) + (l.layer -> newShaderMap)
 
         _layerMap = newLayerMap
       }
@@ -87,7 +89,7 @@ final case class Line() extends RenderManager {
 
         for
           (shader, elements) <- shaderMap
-          e <- elements
+          l <- elements
         do {
 
           // Create and bind a VAO
@@ -97,27 +99,27 @@ final case class Line() extends RenderManager {
           // Create and bind a VBO for the vertices
           val vboId = glGenBuffers()
           glBindBuffer(GL_ARRAY_BUFFER, vboId)
-          glBufferData(GL_ARRAY_BUFFER, e.mesh.vertices, GL_STATIC_DRAW)
+          glBufferData(GL_ARRAY_BUFFER, l.vertices, GL_STATIC_DRAW)
           glVertexAttribPointer(0, 2, GL_FLOAT, false, 0, 0)
           glEnableVertexAttribArray(0)
 
           // Create and bind a VBO for the indices
           val eboId = glGenBuffers()
           glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboId)
-          glBufferData(GL_ELEMENT_ARRAY_BUFFER, e.mesh.indices, GL_STATIC_DRAW)
+          glBufferData(GL_ELEMENT_ARRAY_BUFFER, l.indices, GL_STATIC_DRAW)
 
           // Unbind the VAO
           glBindVertexArray(0)
 
-          e.shader.use()
+          l.shader.use()
 
           // Upload uniforms
-          e.uploadUniforms()
+          l.uploadUniforms()
 
           glBindVertexArray(vaoId)
           glDrawElements(
             GL_TRIANGLES,
-            e.mesh.indices.length,
+            l.indices.length,
             GL_UNSIGNED_INT,
             0
           )
