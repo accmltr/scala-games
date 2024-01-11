@@ -3,7 +3,7 @@ package engine.render.rendered_element
 import engine.render.render_manager.*
 import java.nio.{FloatBuffer, IntBuffer}
 import engine.render.Color
-import engine.render.shader.Shader
+import engine.render.shader_classes.Shader
 import engine.math.shapes.*
 import engine.math.*
 import org.lwjgl.BufferUtils

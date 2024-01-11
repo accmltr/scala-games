@@ -1,4 +1,5 @@
 package engine.render.render_manager
+
 import engine.render.rendered_element.RenderedElement
 import engine.render.rendered_element.RenderedMesh
 import org.lwjgl.opengl.GL11._
@@ -12,18 +13,7 @@ import engine.math.Vector2
 import org.lwjgl.BufferUtils
 import java.nio.FloatBuffer
 
-trait RenderManager {
-
-  private[render] def +=(element: RenderedElement): Unit
-
-  private[render] def -=(element: RenderedElement): Unit
-
-  private[render] def renderLayer(layer: Float): Unit
-
-  private[render] def isEmpty: Boolean
-}
-
-final case class MeshRenderManager() extends RenderManager {
+final case class Line() extends RenderManager {
 
   private var _layerMap: Map[Float, Map[Shader, List[RenderedMesh]]] = Map.empty
 
@@ -135,36 +125,5 @@ final case class MeshRenderManager() extends RenderManager {
 
         }
       }
-
-    // {
-
-    //   // Create and bind a VAO
-    //   val vaoId = glGenVertexArrays()
-    //   glBindVertexArray(vaoId)
-
-    //   // Create and bind a VBO for the vertices
-    //   val vboId = glGenBuffers()
-    //   glBindBuffer(GL_ARRAY_BUFFER, vboId)
-    //   glBufferData(GL_ARRAY_BUFFER, e.mesh.vertices, GL_STATIC_DRAW)
-    //   glVertexAttribPointer(0, 2, GL_FLOAT, false, 0, 0)
-    //   glEnableVertexAttribArray(0)
-
-    //   // Create and bind a VBO for the indices
-    //   val eboId = glGenBuffers()
-    //   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboId)
-    //   glBufferData(GL_ELEMENT_ARRAY_BUFFER, e.mesh.indices, GL_STATIC_DRAW)
-
-    //   // Unbind the VAO
-    //   glBindVertexArray(0)
-
-    //   e.shader.use()
-
-    //   // Upload uniforms
-    //   e.uploadUniforms()
-
-    //   glBindVertexArray(vaoId)
-    //   glDrawElements(GL_TRIANGLES, e.mesh.indices.capacity(), GL_UNSIGNED_INT, 0)
-    //   glBindVertexArray(0)
-    // }
   }
 }
