@@ -48,6 +48,7 @@ class LineTest extends AnyFlatSpec with Matchers {
     line1.intersection(line2) shouldBe None
     val line3 = Line(Vector2(1, 0), Vector2(2, 0))
     line1.intersection(line3) shouldBe None
+    line2.intersection(line1) shouldBe None
   }
 
   it should "return None for non-intersecting lines" in {
@@ -62,15 +63,18 @@ class LineTest extends AnyFlatSpec with Matchers {
     assert(line1.intersection(line2).isEmpty)
   }
 
-  "Line.contains(Vector2)" should "return true when the point is on the line" in {
+  "contains(Vector2)" should "return true when the point is on the line" in {
     val line = Line(Vector2(0, 0), Vector2(1, 1))
     assert(line.contains(Vector2(0.5f, 0.5f)))
   }
 
   it should "return false when endpoints are excluded" in {
-    val line = Line(Vector2(0, 0), Vector2(1, 1))
-    assert(!line.contains(Vector2(0, 0), false))
-    assert(!line.contains(Vector2(1, 1), false))
+    val line1 = Line(Vector2(0, 0), Vector2(1, 1))
+    assert(!line1.contains(Vector2(0, 0), false))
+    assert(!line1.contains(Vector2(1, 1), false))
+    val line2 = Line(Vector2(1.000000, 1.000000), Vector2(0.400000, 0.500000))
+    assert(!line2.contains(Vector2(1.000000, 1.000000), false))
+    assert(!line2.contains(Vector2(0.400000, 0.500000), false))
   }
 
   it should "return false for points not on the line" in {
@@ -123,6 +127,11 @@ class LineTest extends AnyFlatSpec with Matchers {
     val line1 = Line(Vector2(0.5, 0), Vector2(1, 1))
     val line2 = Line(Vector2(1, 1), Vector2(2, 2))
     assert(!line1.intersects(line2, false))
+    assert(!line2.intersects(line1, false))
+    val line3 = Line(Vector2(1.000000, 1.000000), Vector2(0.400000, 0.500000))
+    val line4 = Line(Vector2(0.000000, 1.000000), Vector2(0.400000, 0.500000))
+    assert(!line3.intersects(line4, false))
+    assert(!line4.intersects(line3, false))
   }
 
   it should "include endpoints when 'includeEndpoints' is true" in {
@@ -141,8 +150,15 @@ class LineTest extends AnyFlatSpec with Matchers {
     val line1 = Line(Vector2(0, 0), Vector2(1, 1))
     val line2 = Line(Vector2(1, 1), Vector2(2, 2))
     assert(!line1.overlaps(line2, false))
+    assert(!line2.overlaps(line1, false))
     val line3 = Line(Vector2(0, 3), Vector2(1, 1))
     assert(!line1.overlaps(line3, false))
+    assert(!line3.overlaps(line1, false))
+
+    val line4 = Line(Vector2(1.000000, 1.000000), Vector2(0.400000, 0.500000))
+    val line5 = Line(Vector2(0.000000, 1.000000), Vector2(0.400000, 0.500000))
+    assert(!line4.overlaps(line5, false))
+    assert(!line5.overlaps(line4, false))
   }
 
   it should "include endpoints when 'includeEndpoints' is true" in {

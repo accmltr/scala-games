@@ -29,14 +29,13 @@ final case class Line(a: Vector2, b: Vector2) {
   }
 
   def intersects(line: Line, includeEndpoints: Boolean = true): Boolean =
-    intersection(line) match {
-      case Some(pt) =>
-        if includeEndpoints
-        then true
-        else pt != a && pt != b && pt != line.a && pt != line.b
-      case None =>
-        false
-    }
+    if !includeEndpoints && (line.a == a || line.a == b || line.b == a || line.b == b)
+    then false
+    else
+      intersection(line) match {
+        case Some(pt) => true
+        case None     => false
+      }
 
   def intersection(line: Line): Option[Vector2] = {
     val d = (a.x - b.x) * (line.a.y - line.b.y) -
