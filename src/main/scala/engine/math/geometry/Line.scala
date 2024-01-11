@@ -19,6 +19,8 @@ final case class Line(a: Vector2, b: Vector2) {
     math.atan2(dy, dx).toFloat
   }
 
+  def normal = Vector2(a.y - b.y, b.x - a.x).normalize
+
   def angleBetween(other: Line): Float = {
     val angle1 = angle
     val angle2 = other.angle
