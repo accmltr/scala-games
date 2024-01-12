@@ -1,6 +1,5 @@
 package engine.render.render_manager
-import engine.render.rendered_element.RenderedElement
-import engine.render.rendered_element.RenderedMesh
+import engine.render.rendered_element.{RenderedElement, RenderedMesh}
 import org.lwjgl.opengl.GL11._
 import org.lwjgl.opengl.GL13._
 import org.lwjgl.opengl.GL15._

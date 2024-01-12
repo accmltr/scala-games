@@ -25,7 +25,7 @@ import engine.Time
 import engine.math.cos
 import engine.render.RenderMaster
 import engine.render.render_manager.MeshRenderManager
-import engine.render.rendered_element.RenderedMesh
+import engine.render.rendered_element.{RenderedMesh, LineRenderedElement}
 import engine.render.mesh.Mesh
 import engine.render.Color
 import engine.math.Matrix3
@@ -131,7 +131,7 @@ object MyGame extends Game {
       ),
       tint = Color.YELLOW * .75
     )
-    val l = engine.render.rendered_element.LineRenderedElement(
+    val l = LineRenderedElement(
       points = Array(
         Vector2(0, 0),
         Vector2(-1, -1) * .5,

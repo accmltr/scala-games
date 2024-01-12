@@ -1,7 +1,6 @@
 package engine.render.render_manager
 
-import engine.render.rendered_element.RenderedElement
-import engine.render.rendered_element.RenderedMesh
+import engine.render.rendered_element.{RenderedElement, LineRenderedElement}
 import org.lwjgl.opengl.GL11._
 import org.lwjgl.opengl.GL13._
 import org.lwjgl.opengl.GL15._
@@ -16,7 +15,7 @@ import java.nio.FloatBuffer
 final case class LineRenderManager() extends RenderManager {
 
   private var _layerMap: Map[Float, Map[Shader, List[
-    engine.render.rendered_element.LineRenderedElement
+    LineRenderedElement
   ]]] =
     Map.empty
 
@@ -25,7 +24,7 @@ final case class LineRenderManager() extends RenderManager {
   private[render] override def +=(element: RenderedElement): Unit = {
     // TODO: Fix the generics
     element match {
-      case l: engine.render.rendered_element.LineRenderedElement =>
+      case l: LineRenderedElement =>
         val shdrs = _layerMap.getOrElse(l.layer, Map.empty)
         val elmnts = shdrs.getOrElse(l.shader, Nil)
 
@@ -52,7 +51,7 @@ final case class LineRenderManager() extends RenderManager {
   private[render] override def -=(element: RenderedElement): Unit = {
     // TODO: Fix this mess
     element match {
-      case l: engine.render.rendered_element.LineRenderedElement => {
+      case l: LineRenderedElement => {
         val shaderMap = _layerMap.getOrElse(l.layer, Map.empty)
         val elements = shaderMap.getOrElse(l.shader, Nil)
 
