@@ -8,6 +8,7 @@ import engine.render.mesh.Mesh
 import engine.render.render_manager
 import engine.math.Vector2
 import engine.math.geometry.Line as geoLine
+import scala.util.boundary, boundary.break
 
 final case class Line(
     val points: Array[Vector2],
@@ -19,6 +20,17 @@ final case class Line(
     override val uniforms: Map[String, Uniforms] = Map.empty
 ) extends RenderedElement {
 
+  if points.length < 2 then
+    throw new Exception("Line must have at least 2 points")
+  if width <= 0 then throw new Exception("Line width must be positive")
+  if boundary[Boolean]:
+      for i <- 0 until points.length - 1
+      do
+        if points(i) == points(i + 1)
+        then break(true)
+      false
+  then throw new Exception("Line may not have 0 length segments")
+
   override def newManager: RenderManager = render_manager.Line()
 
   override def isManager(manager: RenderManager): Boolean =
@@ -28,7 +40,7 @@ final case class Line(
 
   def vertices: Array[Float] = Line.pointsToRectVerts(points, width)
 
-  def indices: Array[Int] = Line.rectTriIndices(points.size)
+  def indices: Array[Int] = Line.lineIndices(points.size)
 
 }
 
@@ -36,20 +48,20 @@ object Line {
   def pointsToRectVerts(points: Array[Vector2], width: Float): Array[Float] = {
     (for i <- 0 until points.length - 1
     yield
+      // Note: View 'p' to 'p + 1' as the forwards direction.
       val line = geoLine(points(i), points(i + 1))
       val offset = line.normal * width * 0.5f
       val p1 = line.a + offset // bottom left
       val p2 = line.a - offset // bottom right
-      val p3 = line.b - offset // top left
-      val p4 = line.b + offset // top right
-      // View 'p' to 'p + 1' as the forwards direction:
+      val p3 = line.b + offset // top left
+      val p4 = line.b - offset // top right
       Array(p1.x, p1.y, p2.x, p2.y, p3.x, p3.y, p4.x, p4.y)
     ).flatten.toArray
   }
 
-  def rectTriIndices(pointCount: Int): Array[Int] = {
-    (0 until pointCount - 1).foldLeft(Array[Int]())((acc, i) =>
-      acc ++ Array(i, i + 1, i + 3, i + 3, i + 1, i + 2)
+  def lineIndices(pointCount: Int): Array[Int] = {
+    (0 until 4 * (pointCount - 1) by 4).foldLeft(Array[Int]())((acc, i) =>
+      acc ++ Array(i, i + 1, i + 2, i + 2, i + 1, i + 3)
     )
   }
 

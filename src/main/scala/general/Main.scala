@@ -68,7 +68,7 @@ object MyGame extends Game {
   val meshRenderManager: MeshRenderManager = MeshRenderManager()
 
   onInit += { (_) =>
-
+    // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
     window.vsync = true
     shader.compile()
   }
@@ -114,7 +114,7 @@ object MyGame extends Game {
             sin(3f * Time.current + 3f) * .11
           ),
           rotation = cos(.8f * Time.current + 3f) * 2f * pi,
-          scale = Vector2(1f, 1f) * .3f
+          scale = Vector2(1f, 1f) * (.2f + .1f * (cos(.8f * Time.current) + 1))
         ),
       mesh = Mesh(
         Polygon(
@@ -123,8 +123,10 @@ object MyGame extends Game {
             Vector2(1, 0),
             Vector2(1, 1),
             Vector2(0, 1),
-            Vector2(0.7, 0.5)
-          )
+            Vector2(0, .8),
+            Vector2(0.35, 0.5),
+            Vector2(0, .2)
+          ).map(v => Vector2(v.x - .5, v.y - .5))
         )
       ),
       tint = Color.YELLOW * .75
@@ -132,8 +134,9 @@ object MyGame extends Game {
     val l = engine.render.rendered_element.Line(
       points = Array(
         Vector2(0, 0),
-        Vector2(-1, -1),
-        Vector2(100, -100)
+        Vector2(-1, -1) * .5,
+        Vector2(1, -1) * .5,
+        Vector2(1, 1) * .5
         // Vector2(0, -1),
         // Vector2(-1, -1),
         // Vector2(-3, 1),
@@ -148,9 +151,7 @@ object MyGame extends Game {
     renderMaster += p1
     renderMaster += l
 
-    // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
     renderMaster.render()
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
 
     renderMaster -= r
     renderMaster -= r1
