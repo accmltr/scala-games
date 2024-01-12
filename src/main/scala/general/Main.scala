@@ -7,7 +7,6 @@ import engine.input.MouseCode
 import engine.render.window.{Resolution, FpsStats}
 import engine.Node
 import engine.Component
-import engine.render.shader.Shader
 import org.lwjgl.opengl.GL11._
 import org.lwjgl.opengl.GL13._
 import org.lwjgl.opengl.GL15._
@@ -15,7 +14,7 @@ import org.lwjgl.opengl.GL20._
 import org.lwjgl.opengl.GL30._
 import org.lwjgl.BufferUtils
 import engine.math.Vector3
-import engine.render.shader.Shader
+import engine.render.shader_classes.Shader
 import org.joml.Matrix4f
 import java.nio.IntBuffer
 import java.nio.FloatBuffer
@@ -26,7 +25,7 @@ import engine.Time
 import engine.math.cos
 import engine.render.RenderMaster
 import engine.render.render_manager.MeshRenderManager
-import engine.render.rendered_element.RenderedMesh
+import engine.render.rendered_element.{RenderedMesh, LineRenderedElement}
 import engine.render.mesh.Mesh
 import engine.render.Color
 import engine.math.Matrix3
@@ -42,6 +41,10 @@ object MyGame extends Game {
   val shader = Shader(
     "src/main/scala/general/shaders/experiment.vert",
     "src/main/scala/general/shaders/experiment.frag"
+  )
+  val lineShader = Shader(
+    "src/main/scala/engine/render/shaders/line/line.vert",
+    "src/main/scala/engine/render/shaders/line/line.frag"
   )
 
   root = {
@@ -69,9 +72,10 @@ object MyGame extends Game {
   val meshRenderManager: MeshRenderManager = MeshRenderManager()
 
   onInit += { (_) =>
-
+    // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
     window.vsync = true
     shader.compile()
+    lineShader.compile()
   }
 
   onUpdate += { (delta: Float) =>
@@ -115,7 +119,7 @@ object MyGame extends Game {
             sin(3f * Time.current + 3f) * .11
           ),
           rotation = cos(.8f * Time.current + 3f) * 2f * pi,
-          scale = Vector2(1f, 1f) * .3f
+          scale = Vector2(1f, 1f) * (.2f + .1f * (cos(.8f * Time.current) + 1))
         ),
       mesh = Mesh(
         Polygon(
@@ -124,24 +128,40 @@ object MyGame extends Game {
             Vector2(1, 0),
             Vector2(1, 1),
             Vector2(0, 1),
-            Vector2(0.7, 0.5)
-          )
+            Vector2(0, .8),
+            Vector2(0.35, 0.5),
+            Vector2(0, .2)
+          ).map(v => Vector2(v.x - .5, v.y - .5))
         )
       ),
       tint = Color.YELLOW * .75
+    )
+    val l = LineRenderedElement(
+      shader = lineShader,
+      points = Array(
+        Vector2(0, 0),
+        Vector2(-1, -1) * .5,
+        Vector2(1, -1) * .5,
+        Vector2(1, 1) * .5
+        // Vector2(0, -1),
+        // Vector2(-1, -1),
+        // Vector2(-3, 1),
+        // Vector2(0, 10)
+      ).map(_ * .8),
+      width = 0.07
     )
 
     renderMaster += r
     renderMaster += r1
     renderMaster += p1
+    renderMaster += l
 
-    // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
     renderMaster.render()
-    // glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
 
     renderMaster -= r
     renderMaster -= r1
     renderMaster -= p1
+    renderMaster -= l
 
     if (input.justReleased(KeyCode.escape)) {
       quit()

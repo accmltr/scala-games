@@ -7,6 +7,12 @@ import engine.math.Vector2
 
 class LineTest extends AnyFlatSpec with Matchers {
 
+  "default constructor" should "create a line with the correct endpoints" in {
+    val line = Line(Vector2(0, 0), Vector2(1, 1))
+    assertNearEquals(line.a, Vector2(0, 0))
+    assertNearEquals(line.b, Vector2(1, 1))
+  }
+
   "normal" should "return the normal of a line" in {
     val line1 = Line(Vector2(0, 0), Vector2(1, 0))
     assertNearEquals(line1.normal, Vector2(0, 1))

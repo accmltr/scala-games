@@ -17,7 +17,11 @@ case class Vector2(val x: Float, val y: Float) extends NearEqualsable[Vector2] {
     *   length of this `Vector2` squared
     */
   def lengthSquared: Float = joml.Vector2f.lengthSquared(x, y)
-  def normalize = this / length
+  def normalize = {
+    val len = length
+    if len == 0 then Vector2.zero
+    else Vector2(x / len, y / len)
+  }
   def distance(other: Vector2) = joml.Vector2f.distance(x, y, other.x, other.y)
 
   /** More efficient than the `distance` method, because it doesn't do the
