@@ -71,6 +71,18 @@ class Vector2Test extends AnyFreeSpec {
       val angle = pi / 4
       assertNearEquals(Vector2.fromAngle(angle, 1), Vector2(.707107, .707107))
     }
+    "should normalize" in {
+      val vector = Vector2(3, 4)
+      assertNearEquals(vector.normalize, Vector2(3f / 5f, 4f / 5f))
+    }
+    "should normalize without exception" in {
+      val vector = Vector2(0, 0)
+      assert(vector.normalize == Vector2.zero)
+    }
+    "should rotate" in {
+      val vector = Vector2(1, 0)
+      assertNearEquals(vector.rotated(pi / 2f), Vector2(0, 1))
+    }
     "should nearEquals" in {
       val vector1 = Vector2(0, .5)
       val vector2 = Vector2(0, 0)
