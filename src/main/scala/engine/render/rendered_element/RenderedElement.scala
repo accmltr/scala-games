@@ -15,9 +15,9 @@ type Uniforms = FloatBuffer | IntBuffer | Array[Float] | Array[Int] | Boolean |
   Float | Int | Double | Vector2 | Vector3 | Matrix3 | Matrix4 |
   Texture //| Vector4 | Matrix2
 
-trait RenderedElement {
+trait RenderedElement(val shader: Shader) {
 
-  val shader: Shader
+  // val shader: Shader = _shader
   val transform: Matrix3 = Matrix3.IDENTITY
   val tint: Color
   val layer: Float
@@ -25,6 +25,8 @@ trait RenderedElement {
 
   def newManager: RenderManager
 
+  if shader == null then
+    throw new IllegalArgumentException("'shader' not provided")
   if uniforms.contains("transform") then
     throw new IllegalArgumentException("Uniform name 'transform' is reserved")
   if uniforms.contains("tint") then
@@ -64,7 +66,7 @@ final case class RenderedMesh(
     override val layer: Float = 0,
     override val tint: Color = Color.WHITE,
     override val uniforms: Map[String, Uniforms] = Map.empty
-) extends RenderedElement {
+) extends RenderedElement(shader) {
 
   override def newManager: MeshRenderManager =
     MeshRenderManager()

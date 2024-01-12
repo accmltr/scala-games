@@ -6,6 +6,34 @@ import engine.test_utils.assertNearEquals
 import engine.math.Vector2
 
 class LineRenderedElementTest extends AnyFlatSpec with Matchers {
+
+  "default constructor" should "throw an exception when points is empty" in {
+    assertThrows[Exception] {
+      LineRenderedElement(Array.empty)
+    }
+  }
+
+  it should "throw an exception when points has only one element" in {
+    assertThrows[Exception] {
+      LineRenderedElement(Array(Vector2(0, 0)))
+    }
+  }
+
+  it should "throw an exception when width is 0 or negative" in {
+    assertThrows[Exception] {
+      LineRenderedElement(Array(Vector2(0, 0), Vector2(1, 1)), -1)
+    }
+    assertThrows[Exception] {
+      LineRenderedElement(Array(Vector2(0, 0), Vector2(1, 1)), 0)
+    }
+  }
+
+  it should "throw an exception when points has a 0 length segment" in {
+    assertThrows[Exception] {
+      LineRenderedElement(Array(Vector2(0, 0), Vector2(0, 0), Vector2(1, 1)))
+    }
+  }
+
   "pointsToRectVerts" should "create rect" in {
 
     val points1 = Array(Vector2(0, 0), Vector2(0, 1))
@@ -31,15 +59,16 @@ class LineRenderedElementTest extends AnyFlatSpec with Matchers {
 
   it should "create a rect for each line made by points" in {
     val points1 =
-      Array(Vector2(0, 0), Vector2(1, 0), Vector2(1, 0), Vector2(1, 2))
-
-    vertToVect(
-      LineRenderedElement.pointsToRectVerts(points1, 2)
-    ) shouldBe vertToVect(
+      Array(Vector2(0, 0), Vector2(1, 0), Vector2(1, 2))
+    val vertsExpected = vertToVect(
       Array[Float](0, 1, 0, -1, 1, 1, 1, -1, 0, 0, 2, 0, 0, 2, 2, 2)
     )
-    // Line.pointsToRectVerts(points1, 1) shouldBe Array[Float](-0.5, 0, 0.5, 0,
-    //   -0.5, 1, 0.5, 1, 0.5, 0, 1.5, 0, 0.5, 2, 1.5, 2)
+    val vertsFound = vertToVect(
+      LineRenderedElement.pointsToRectVerts(points1, 2)
+    )
+
+    vertsFound.size shouldBe vertsExpected.size
+    vertsFound shouldBe vertsExpected
   }
 
   "lineIndices" should "create indices" in {

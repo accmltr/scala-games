@@ -42,6 +42,10 @@ object MyGame extends Game {
     "src/main/scala/general/shaders/experiment.vert",
     "src/main/scala/general/shaders/experiment.frag"
   )
+  val lineShader = Shader(
+    "src/main/scala/engine/render/shaders/line/line.vert",
+    "src/main/scala/engine/render/shaders/line/line.frag"
+  )
 
   root = {
     val node = Node()
@@ -71,6 +75,7 @@ object MyGame extends Game {
     // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
     window.vsync = true
     shader.compile()
+    lineShader.compile()
   }
 
   onUpdate += { (delta: Float) =>
@@ -132,6 +137,7 @@ object MyGame extends Game {
       tint = Color.YELLOW * .75
     )
     val l = LineRenderedElement(
+      shader = lineShader,
       points = Array(
         Vector2(0, 0),
         Vector2(-1, -1) * .5,
@@ -142,8 +148,7 @@ object MyGame extends Game {
         // Vector2(-3, 1),
         // Vector2(0, 10)
       ).map(_ * .8),
-      width = 0.07,
-      shader = shader
+      width = 0.07
     )
 
     renderMaster += r

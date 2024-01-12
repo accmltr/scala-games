@@ -14,12 +14,25 @@ import engine.render.render_manager.LineRenderManager
 final case class LineRenderedElement(
     val points: Array[Vector2],
     val width: Float = 1,
-    override val shader: Shader,
+    override val shader: Shader = Shader(
+      "src/main/scala/engine/render/shaders/line/line.vert",
+      "src/main/scala/engine/render/shaders/line/line.frag"
+    ),
     override val transform: Matrix3 = Matrix3.IDENTITY,
     override val layer: Float = 0,
     override val tint: Color = Color.WHITE,
     override val uniforms: Map[String, Uniforms] = Map.empty
-) extends RenderedElement {
+) extends RenderedElement(
+      shader
+      // shader = Shader(
+      //   "src/main/scala/general/shaders/experiment.vert",
+      //   "src/main/scala/general/shaders/experiment.frag"
+      // )
+      //   Shader(
+      //   "src/main/scala/engine/render/shaders/line/line.vert",
+      //   "src/main/scala/engine/render/shaders/line/line.frag"
+      // )
+    ) {
 
   if points.length < 2 then
     throw new Exception("Line must have at least 2 points")
