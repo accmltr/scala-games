@@ -1,5 +1,5 @@
 ## DISCLAIMER
-***This project and it's design is in early stages. I am currently working on finishing a stable rendering pipeline, which should be the first major component of the engine that will be complete.***
+***This project and its design is in early stages. I am currently working on finishing a stable rendering pipeline, which should be the first major component of the engine that will be complete.***
 
 # scala-games
 A minimalistic game engine for rapid prototyping using Scala 3.
