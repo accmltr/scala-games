@@ -131,7 +131,7 @@ object MyGame extends Game {
       ),
       tint = Color.YELLOW * .75
     )
-    val l = engine.render.rendered_element.Line(
+    val l = engine.render.rendered_element.LineRenderedElement(
       points = Array(
         Vector2(0, 0),
         Vector2(-1, -1) * .5,

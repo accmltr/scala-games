@@ -9,8 +9,9 @@ import engine.render.render_manager
 import engine.math.Vector2
 import engine.math.geometry.Line as geoLine
 import scala.util.boundary, boundary.break
+import engine.render.render_manager.LineRenderManager
 
-final case class Line(
+final case class LineRenderedElement(
     val points: Array[Vector2],
     val width: Float = 1,
     override val shader: Shader,
@@ -31,20 +32,21 @@ final case class Line(
       false
   then throw new Exception("Line may not have 0 length segments")
 
-  override def newManager: RenderManager = render_manager.Line()
+  override def newManager: RenderManager = LineRenderManager()
 
   override def isManager(manager: RenderManager): Boolean =
     manager match
-      case _: render_manager.Line => true
-      case _                      => false
+      case _: render_manager.LineRenderManager => true
+      case _                                   => false
 
-  def vertices: Array[Float] = Line.pointsToRectVerts(points, width)
+  def vertices: Array[Float] =
+    LineRenderedElement.pointsToRectVerts(points, width)
 
-  def indices: Array[Int] = Line.lineIndices(points.size)
+  def indices: Array[Int] = LineRenderedElement.lineIndices(points.size)
 
 }
 
-object Line {
+object LineRenderedElement {
   def pointsToRectVerts(points: Array[Vector2], width: Float): Array[Float] = {
     (for i <- 0 until points.length - 1
     yield

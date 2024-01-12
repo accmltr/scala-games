@@ -13,10 +13,11 @@ import engine.math.Vector2
 import org.lwjgl.BufferUtils
 import java.nio.FloatBuffer
 
-final case class Line() extends RenderManager {
+final case class LineRenderManager() extends RenderManager {
 
-  private var _layerMap
-      : Map[Float, Map[Shader, List[engine.render.rendered_element.Line]]] =
+  private var _layerMap: Map[Float, Map[Shader, List[
+    engine.render.rendered_element.LineRenderedElement
+  ]]] =
     Map.empty
 
   private[render] def isEmpty = _layerMap.isEmpty
@@ -24,7 +25,7 @@ final case class Line() extends RenderManager {
   private[render] override def +=(element: RenderedElement): Unit = {
     // TODO: Fix the generics
     element match {
-      case l: engine.render.rendered_element.Line =>
+      case l: engine.render.rendered_element.LineRenderedElement =>
         val shdrs = _layerMap.getOrElse(l.layer, Map.empty)
         val elmnts = shdrs.getOrElse(l.shader, Nil)
 
@@ -51,7 +52,7 @@ final case class Line() extends RenderManager {
   private[render] override def -=(element: RenderedElement): Unit = {
     // TODO: Fix this mess
     element match {
-      case l: engine.render.rendered_element.Line => {
+      case l: engine.render.rendered_element.LineRenderedElement => {
         val shaderMap = _layerMap.getOrElse(l.layer, Map.empty)
         val elements = shaderMap.getOrElse(l.shader, Nil)
 

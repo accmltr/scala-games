@@ -3,25 +3,28 @@ package engine.render.rendered_element
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import engine.test_utils.assertNearEquals
-import engine.render.rendered_element.LineRenderedElement
 import engine.math.Vector2
 
-class LineRenderedElement extends AnyFlatSpec with Matchers {
+class LineRenderedElementTest extends AnyFlatSpec with Matchers {
   "pointsToRectVerts" should "create rect" in {
 
     val points1 = Array(Vector2(0, 0), Vector2(0, 1))
 
-    Line.pointsToRectVerts(points1, 2) shouldBe Array[Float](-1, 0, 1, 0, -1, 1,
-      1, 1)
-    Line.pointsToRectVerts(points1, 1) shouldBe Array[Float](-0.5, 0, 0.5, 0,
-      -0.5, 1, 0.5, 1)
+    LineRenderedElement.pointsToRectVerts(points1, 2) shouldBe Array[Float](-1,
+      0, 1, 0, -1, 1, 1, 1)
+    LineRenderedElement.pointsToRectVerts(points1, 1) shouldBe Array[Float](
+      -0.5, 0, 0.5, 0, -0.5, 1, 0.5, 1)
 
     val points2 = Array(Vector2(1, 0), Vector2(1, 2))
 
-    vertToVect(Line.pointsToRectVerts(points2, 2)) shouldBe vertToVect(
+    vertToVect(
+      LineRenderedElement.pointsToRectVerts(points2, 2)
+    ) shouldBe vertToVect(
       Array[Float](0, 0, 2, 0, 0, 2, 2, 2)
     )
-    vertToVect(Line.pointsToRectVerts(points2, 1)) shouldBe vertToVect(
+    vertToVect(
+      LineRenderedElement.pointsToRectVerts(points2, 1)
+    ) shouldBe vertToVect(
       Array[Float](0.5, 0, 1.5, 0, 0.5, 2, 1.5, 2)
     )
   }
@@ -30,7 +33,9 @@ class LineRenderedElement extends AnyFlatSpec with Matchers {
     val points1 =
       Array(Vector2(0, 0), Vector2(1, 0), Vector2(1, 0), Vector2(1, 2))
 
-    vertToVect(Line.pointsToRectVerts(points1, 2)) shouldBe vertToVect(
+    vertToVect(
+      LineRenderedElement.pointsToRectVerts(points1, 2)
+    ) shouldBe vertToVect(
       Array[Float](0, 1, 0, -1, 1, 1, 1, -1, 0, 0, 2, 0, 0, 2, 2, 2)
     )
     // Line.pointsToRectVerts(points1, 1) shouldBe Array[Float](-0.5, 0, 0.5, 0,
@@ -38,8 +43,9 @@ class LineRenderedElement extends AnyFlatSpec with Matchers {
   }
 
   "lineIndices" should "create indices" in {
-    Line.lineIndices(2) shouldBe Array[Int](0, 1, 2, 2, 1, 3)
-    Line.lineIndices(3) shouldBe Array[Int](0, 1, 2, 2, 1, 3, 4, 5, 6, 6, 5, 7)
+    LineRenderedElement.lineIndices(2) shouldBe Array[Int](0, 1, 2, 2, 1, 3)
+    LineRenderedElement.lineIndices(3) shouldBe Array[Int](0, 1, 2, 2, 1, 3, 4,
+      5, 6, 6, 5, 7)
   }
 
   def vertToVect(verts: Array[Float]): Array[Vector2] = {
