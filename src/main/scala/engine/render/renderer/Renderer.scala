@@ -2,6 +2,6 @@ package engine.render.renderer
 
 import engine.render.window.Window
 
-final case class Renderer(
-    val window: Window
-) {}
+trait Renderer(val window: Window) {
+  def render(element: List[RenderData]): Unit
+}
