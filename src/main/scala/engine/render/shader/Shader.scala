@@ -22,16 +22,12 @@ import engine.render.shader.Uniform
   *   Path to fragment source file.
   */
 final case class Shader(val vertPath: String, val fragPath: String) {
-  private var _shaderProgramID: Int = 0
-  private var _beingUsed: Boolean = false
   val vertexSource: String = engine.io.readTextFile(vertPath)
   val fragmentSource: String = engine.io.readTextFile(fragPath)
 
-  def compiled: Boolean = _shaderProgramID != 0
-  def shaderProgramID: Int = _shaderProgramID
-  def beingUsed: Boolean = _beingUsed
+  val id: Int = compile()
 
-  def compile(): Unit = {
+  private def compile(): Int =
     // Compile and link vertex shader
     val vertexID = glCreateShader(GL_VERTEX_SHADER)
     glShaderSource(vertexID, vertexSource)
@@ -59,44 +55,41 @@ final case class Shader(val vertPath: String, val fragPath: String) {
     }
 
     // Create shader program and link shaders
-    _shaderProgramID = glCreateProgram()
-    glAttachShader(_shaderProgramID, vertexID)
-    glAttachShader(_shaderProgramID, fragmentID)
-    glLinkProgram(_shaderProgramID)
+    val programId = glCreateProgram()
+    glAttachShader(programId, vertexID)
+    glAttachShader(programId, fragmentID)
+    glLinkProgram(programId)
 
     // Delete vertex and fragment shaders
     glDeleteShader(vertexID)
     glDeleteShader(fragmentID)
 
-    if (glGetProgrami(_shaderProgramID, GL_LINK_STATUS) == 0) {
-      println(glGetShaderInfoLog(_shaderProgramID, 1024))
+    if (glGetProgrami(programId, GL_LINK_STATUS) == 0) {
+      println(glGetShaderInfoLog(programId, 1024))
       assert(
         false,
         "Error: Vertex and/or fragment shader failed to link with GL program."
       )
     }
 
-    glValidateProgram(_shaderProgramID)
-    if (glGetProgrami(_shaderProgramID, GL_VALIDATE_STATUS) == 0) {
-      println(glGetShaderInfoLog(_shaderProgramID, 1024))
+    glValidateProgram(programId)
+    if (glGetProgrami(programId, GL_VALIDATE_STATUS) == 0) {
+      println(glGetShaderInfoLog(programId, 1024))
       assert(
         false,
         "Error: Shader program validation failed. Check vertex and fragment shaders for errors."
       )
     }
-  }
+
+    programId
 
   def use(): Unit = {
-    if (!_beingUsed) {
-      // Bind shader program
-      glUseProgram(_shaderProgramID)
-      _beingUsed = true
-    }
+    // Bind shader program
+    glUseProgram(id)
   }
 
   def detach(): Unit = {
     glUseProgram(0)
-    _beingUsed = false
   }
 
   /** Uploads a map of uniforms to the shader by matching each uniform to its
@@ -131,7 +124,7 @@ final case class Shader(val vertPath: String, val fragPath: String) {
 
   def uploadMat4f(varName: String, mat4: Matrix4): Unit = {
     val jomlMat4f: Matrix4f = mat4.toJomlMatrix4f
-    val varLocation: Int = glGetUniformLocation(_shaderProgramID, varName)
+    val varLocation: Int = glGetUniformLocation(id, varName)
     use()
     val matBuffer: FloatBuffer = BufferUtils.createFloatBuffer(16)
     jomlMat4f.get(matBuffer)
@@ -140,7 +133,7 @@ final case class Shader(val vertPath: String, val fragPath: String) {
 
   def uploadMatrix3(varName: String, mat3: Matrix3): Unit = {
     val jomlMat3f = mat3.toJomlMatrix3f
-    val varLocation: Int = glGetUniformLocation(_shaderProgramID, varName)
+    val varLocation: Int = glGetUniformLocation(id, varName)
     use()
     val matBuffer: FloatBuffer = BufferUtils.createFloatBuffer(9)
     jomlMat3f.get(matBuffer)
@@ -148,61 +141,61 @@ final case class Shader(val vertPath: String, val fragPath: String) {
   }
 
   def uploadVec4f(varName: String, vec: Vector4): Unit = {
-    val varLocation: Int = glGetUniformLocation(_shaderProgramID, varName)
+    val varLocation: Int = glGetUniformLocation(id, varName)
     use()
     glUniform4f(varLocation, vec.x, vec.y, vec.z, vec.w)
   }
 
   def uploadVec3f(varName: String, vec: Vector3): Unit = {
-    val varLocation: Int = glGetUniformLocation(_shaderProgramID, varName)
+    val varLocation: Int = glGetUniformLocation(id, varName)
     use()
     glUniform3f(varLocation, vec.x, vec.y, vec.z)
   }
 
   def uploadVec2f(varName: String, vec: Vector2): Unit = {
-    val varLocation: Int = glGetUniformLocation(_shaderProgramID, varName)
+    val varLocation: Int = glGetUniformLocation(id, varName)
     use()
     glUniform2f(varLocation, vec.x, vec.y)
   }
 
   def uploadFloat(varName: String, value: Float): Unit = {
-    val varLocation: Int = glGetUniformLocation(_shaderProgramID, varName)
+    val varLocation: Int = glGetUniformLocation(id, varName)
     use()
     glUniform1f(varLocation, value)
   }
 
   def uploadInt(varName: String, value: Int): Unit = {
-    val varLocation: Int = glGetUniformLocation(_shaderProgramID, varName)
+    val varLocation: Int = glGetUniformLocation(id, varName)
     use()
     glUniform1i(varLocation, value)
   }
 
   def uploadTexture(varName: String, slot: Int): Unit = {
-    val varLocation: Int = glGetUniformLocation(_shaderProgramID, varName)
+    val varLocation: Int = glGetUniformLocation(id, varName)
     use()
     glUniform1i(varLocation, slot)
   }
 
   def uploadIntBuffer(varName: String, buffer: IntBuffer): Unit = {
-    val varLocation: Int = glGetUniformLocation(_shaderProgramID, varName)
+    val varLocation: Int = glGetUniformLocation(id, varName)
     use()
     glUniform1iv(varLocation, buffer)
   }
 
   def uploadFloatBuffer(varName: String, buffer: FloatBuffer): Unit = {
-    val varLocation: Int = glGetUniformLocation(_shaderProgramID, varName)
+    val varLocation: Int = glGetUniformLocation(id, varName)
     use()
     glUniform1fv(varLocation, buffer)
   }
 
   def uploadIntArray(varName: String, array: Array[Int]): Unit = {
-    val varLocation: Int = glGetUniformLocation(_shaderProgramID, varName)
+    val varLocation: Int = glGetUniformLocation(id, varName)
     use()
     glUniform1iv(varLocation, array)
   }
 
   def uploadFloatArray(varName: String, array: Array[Float]): Unit = {
-    val varLocation: Int = glGetUniformLocation(_shaderProgramID, varName)
+    val varLocation: Int = glGetUniformLocation(id, varName)
     use()
     glUniform1fv(varLocation, array)
   }
