@@ -44,11 +44,11 @@ final case class DefaultRenderer(
 
       // Upload uniforms
       d.shader.uploadUniforms(
-        d.uniforms ++ Map[String, Uniform](
+        d.extraUniforms ++ Map[String, Uniform](
           "aspect" -> window.aspect,
           "resolution" -> window.resolution.toVector2,
           "layer" -> d.layer,
-          "tint" -> Vector4(d.tint.r, d.tint.g, d.tint.b, d.tint.a),
+          "tint" -> Vector4(d.color.r, d.color.g, d.color.b, d.color.a),
           "transform" -> d.transform
         )
       )

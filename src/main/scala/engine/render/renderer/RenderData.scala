@@ -3,69 +3,124 @@ package engine.render.renderer
 import engine.render.shader.{Uniform, Shader}
 import engine.render.Color
 import engine.math.Matrix3
-import engine.math.Vector2
-import engine.math.geometry.Line
 import scala.util.boundary, boundary.break
 import render_data_util.{indicesFromPolygon, verticesFromPolygon}
 
-inline def defaultShader: Shader = Shader(
+// Currently left as `def` since shader is compiled upon construction, which may cause errors if created before OpenGL context is created.
+inline def colorFillShader: Shader = Shader(
   "src/main/scala/engine/render/shaders/default/default.vert",
   "src/main/scala/engine/render/shaders/default/default.frag"
 )
 
+/** @param vertices
+  *   The vertices passed to OpenGL.
+  * @param indices
+  *   The indices passed to OpenGL.
+  * @param layer
+  * @param color
+  * @param transform
+  *   The transform matrix passed to the shader.
+  * @param shaderOverride
+  *   Optionally used to override the `RenderData.defaultShader` property.
+  * @param extraUniforms
+  *   These are uniforms passed to the shader in addition to the default
+  *   uniforms provided by the renderer.
+  */
 case class RenderData(
     val vertices: Array[Float],
     val indices: Array[Int],
-    val uniforms: Map[String, Uniform] = Map.empty,
-    val shader: Shader,
     val layer: Float = 0,
-    val tint: Color = Color.WHITE,
-    val transform: Matrix3 = Matrix3.IDENTITY
+    val color: Color = Color.WHITE,
+    val transform: Matrix3 = Matrix3.IDENTITY,
+    val shaderOverride: Option[Shader] = None,
+    val extraUniforms: Map[String, Uniform] = Map.empty
 ) {
 
+  /** The default shader used when `shaderOverride` is `None`.
+    */
+  val defaultShader: Shader = colorFillShader
+
   // Exceptions
-  if shader == null
-  then throw new IllegalArgumentException("'shader' cannot be null")
-  if tint == null
-  then throw new IllegalArgumentException("'tint' cannot be null")
+  if defaultShader == null
+  then
+    throw new IllegalArgumentException(
+      "'defaultShader' cannot be null, make sure to override it with a valid shader when extending the RenderData class"
+    )
+  if shaderOverride == null
+  then
+    throw new IllegalArgumentException(
+      "'shaderOverride' cannot be null, use 'None' instead"
+    )
+  if vertices == null
+  then throw new IllegalArgumentException("'vertices' cannot be null")
+  if indices == null
+  then throw new IllegalArgumentException("'indices' cannot be null")
+  if layer.isNaN
+  then throw new IllegalArgumentException("'layer' cannot be NaN")
+  if color == null
+  then throw new IllegalArgumentException("'color' cannot be null")
   if transform == null
   then throw new IllegalArgumentException("'transform' cannot be null")
   if vertices.length < 3
   then throw new IllegalArgumentException("At least 3 vertices are required")
   if indices.length < 3
   then throw new IllegalArgumentException("At least 3 indices are required")
-  if uniforms.contains("layer")
-  then throw new IllegalArgumentException("Uniform 'layer' is reserved")
-  if uniforms.contains("tint")
-  then throw new IllegalArgumentException("Uniform 'tint' is reserved")
-  if uniforms.contains("transform")
-  then throw new IllegalArgumentException("Uniform 'transform' is reserved")
+  if extraUniforms.contains("layer")
+  then throw new IllegalArgumentException("Uniform name 'layer' is reserved")
+  if extraUniforms.contains("tint")
+  then throw new IllegalArgumentException("Uniform name 'tint' is reserved")
+  if extraUniforms.contains("transform")
+  then
+    throw new IllegalArgumentException("Uniform name 'transform' is reserved")
 
+  final def shader: Shader = {
+    shaderOverride match {
+      case Some(shader) => shader
+      case None         => defaultShader
+    }
+  }
 }
 
 object RenderData {
   import engine.math.shapes.*
 
+  /** @param polygon
+    *   The polygon to create the vertices and indices from for the render data.
+    * @param layer
+    * @param color
+    * @param transform
+    * @param shaderOverride
+    *   Optionally used to override the `RenderData.defaultShader` property. (In
+    *   this case it uses the `color_fill` shader as the default shader)
+    * @param extraUniforms
+    *   These are uniforms passed to the shader in addition to the default
+    *   uniforms provided by the renderer.
+    * @return
+    *   A new `RenderData` instance with the vertices and indices created from
+    *   the provided polygon.
+    */
   def fromPolygon(
       polygon: Polygon,
-      uniforms: Map[String, Uniform] = Map.empty,
-      shader: Shader = defaultShader,
+      extraUniforms: Map[String, Uniform] = Map.empty,
       layer: Float = 0,
-      tint: Color = Color.WHITE,
-      transform: Matrix3 = Matrix3.IDENTITY
+      color: Color = Color.WHITE,
+      transform: Matrix3 = Matrix3.IDENTITY,
+      shaderOverride: Option[Shader] = None
   ): RenderData = {
     // Exceptions
     if polygon == null
-    then throw new IllegalArgumentException("'points' cannot be null")
+    then throw new IllegalArgumentException("'polygon' cannot be null")
     // Result
     new RenderData(
       vertices = verticesFromPolygon(polygon),
       indices = indicesFromPolygon(polygon),
-      uniforms = uniforms,
-      shader = shader,
       layer = layer,
-      tint = tint,
-      transform = transform
-    )
+      color = color,
+      transform = transform,
+      shaderOverride = shaderOverride,
+      extraUniforms = extraUniforms
+    ) {
+      override val defaultShader: Shader = colorFillShader
+    }
   }
 }
