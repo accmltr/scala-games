@@ -101,6 +101,64 @@ def indicesFromPolygon(polygon: Polygon): Array[Int] = {
 
   }
 
+  def findValidPoint(
+      remaining: List[(Int, Int)],
+      triangles: List[(Int, Int, Int)]
+  ): Option[Int] = {
+    val li = remaining.head
+    val l = lineFromIndices(li)
+
+    boundary[Option[Int]]:
+      // Try to form a valid triangle
+      for p <- 0 until polygon.points.length if !(p == li._1 || p == li._2)
+      do
+        // Useful Locals
+        val l1i = (li._1, p)
+        val l2i = (li._2, p)
+        val l1 = lineFromIndices(l1i)
+        val l2 = lineFromIndices(l2i)
+        val tri = (li._1, li._2, p)
+
+        val triExists = !triangles.forall(!trisEq(tri, _))
+
+        if triExists
+        then break(Option(p))
+        else
+
+          // Check if lines already exist within 'triangles' or 'lines'
+          val l1Exists = {
+            val existsInLines = !remaining.forall(!linesEq(l1i, _))
+            val existsInTris = !triangles.forall(!isLineInTri(l1i, _))
+            existsInLines || existsInTris
+          }
+          val l2Exists = {
+            val existsInLines = !remaining.forall(!linesEq(l2i, _))
+            val existsInTris = !triangles.forall(!isLineInTri(l2i, _))
+            existsInLines || existsInTris
+          }
+
+          // Validity checks
+          val l1Valid =
+            if l1Exists
+            then true
+            else
+              !overlapsWithTris(l1i, triangles) &&
+              !overlapsWithLines(l1i, remaining) &&
+              angledInwards(li._1, p)
+          val l2Valid =
+            if l2Exists
+            then true
+            else
+              !overlapsWithTris(l2i, triangles) &&
+              !overlapsWithLines(l2i, remaining) &&
+              angledInwards(li._2, p)
+
+          // Valid recursion
+          if l1Valid && l2Valid
+          then break(Option(p))
+      break(None)
+  }
+
   def buildIndices(
       remaining: List[(Int, Int)],
       triangles: List[(Int, Int, Int)]
@@ -108,64 +166,26 @@ def indicesFromPolygon(polygon: Polygon): Array[Int] = {
 
     if remaining.isEmpty
     then
+
+      // Close last triangle if 2 new lines exist between 1st and last outline lines
+
+      // Convert triangles to indices
       triangles.foldLeft(Array[Int]())((acc, t) =>
         acc ++ Array[Int](t._1, t._2, t._3)
       )
     else
-      val li = remaining.head
-      val l = lineFromIndices(li)
 
-      boundary[Array[Int]]:
-        // Try to form a valid triangle
-        for p <- 0 until polygon.points.length if !(p == li._1 || p == li._2)
-        do
-          // Useful Locals
-          val l1i = (li._1, p)
-          val l2i = (li._2, p)
-          val l1 = lineFromIndices(l1i)
-          val l2 = lineFromIndices(l2i)
+      // Find a valid point to create a new triangle
+      findValidPoint(remaining, triangles) match
+        case Some(p) =>
+          val li = remaining.head
           val tri = (li._1, li._2, p)
-
           val triExists = !triangles.forall(!trisEq(tri, _))
-
           if triExists
-          then break(buildIndices(remaining.tail, triangles))
-          else
-
-            // Check if lines already exist within 'triangles' or 'lines'
-            val l1Exists = {
-              val existsInLines = !remaining.forall(!linesEq(l1i, _))
-              val existsInTris = !triangles.forall(!isLineInTri(l1i, _))
-              existsInLines || existsInTris
-            }
-            val l2Exists = {
-              val existsInLines = !remaining.forall(!linesEq(l2i, _))
-              val existsInTris = !triangles.forall(!isLineInTri(l2i, _))
-              existsInLines || existsInTris
-            }
-
-            // Validity checks
-            val l1Valid =
-              if l1Exists
-              then true
-              else
-                !overlapsWithTris(l1i, triangles) &&
-                !overlapsWithLines(l1i, remaining) &&
-                angledInwards(li._1, p)
-            val l2Valid =
-              if l2Exists
-              then true
-              else
-                !overlapsWithTris(l2i, triangles) &&
-                !overlapsWithLines(l2i, remaining) &&
-                angledInwards(li._2, p)
-
-            // Valid recursion
-            if l1Valid && l2Valid
-            then break(buildIndices(remaining.tail, tri :: triangles))
-
-        // Throw and error if none found
-        throw new Exception("Polygon could not be triangulated")
+          then buildIndices(remaining.tail, triangles)
+          else buildIndices(remaining.tail, tri :: triangles)
+        case None =>
+          throw new Exception("Polygon could not be triangulated")
   }
 
   // indices
