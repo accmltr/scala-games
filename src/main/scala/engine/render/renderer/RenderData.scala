@@ -37,6 +37,11 @@ case class RenderData(
     "src/main/scala/engine/render/shaders/fragment/color_fill.frag"
   )
 
+  final val shader = shaderOverride match {
+    case Some(shader) => shader
+    case None         => defaultShader
+  }
+
   // Exceptions
   if defaultShader == null
   then
@@ -70,12 +75,6 @@ case class RenderData(
   then
     throw new IllegalArgumentException("Uniform name 'transform' is reserved")
 
-  final def shader: Shader = {
-    shaderOverride match {
-      case Some(shader) => shader
-      case None         => defaultShader
-    }
-  }
 }
 
 object RenderData {
