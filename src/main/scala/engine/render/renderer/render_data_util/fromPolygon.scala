@@ -159,6 +159,19 @@ def indicesFromPolygon(polygon: Polygon): Array[Int] = {
       break(None)
   }
 
+  def findConnectingEdges(
+      tri: (Int, Int, Int),
+      p: Int
+  ): Option[List[((Int, Int))]] = {
+    if (tri._1 == 0)
+      Option(List((tri._1, tri._2), (tri._1, tri._3)))
+    else if (tri._2 == 0)
+      Option(List((tri._2, tri._1), (tri._2, tri._3)))
+    else if (tri._3 == 0)
+      Option(List((tri._3, tri._1), (tri._3, tri._2)))
+    else None
+  }
+
   def buildIndices(
       remaining: List[(Int, Int)],
       triangles: List[(Int, Int, Int)]
@@ -167,12 +180,38 @@ def indicesFromPolygon(polygon: Polygon): Array[Int] = {
     if remaining.isEmpty
     then
 
-      // Close last triangle if 2 new lines exist between 1st and last outline lines
+      val result = // Convert triangles to indices to return final result for 'buildIndices'
+        triangles.foldLeft(Array[Int]())((acc, t) =>
+          acc ++ Array[Int](t._1, t._2, t._3)
+        )
 
-      // Convert triangles to indices
-      triangles.foldLeft(Array[Int]())((acc, t) =>
-        acc ++ Array[Int](t._1, t._2, t._3)
-      )
+      // Close last triangle if 2 inner lines exist between 1st and last outline lines
+      val outlinesToConsider =
+        List((0, 1), (polygon.points.length - 1, 0))
+      val innerLines = triangles
+        .flatMap(findConnectingEdges(_, 0))
+        .flatten
+        .filter(innerLine =>
+          outlinesToConsider.forall(outterLine =>
+            !linesEq(outterLine, innerLine)
+          )
+        )
+
+      print("Inner lines: " + innerLines)
+
+      if innerLines.length == 2
+      then
+        print("Closing last triangle")
+        findValidPoint(List(innerLines.head), triangles) match
+          case Some(p) =>
+            val tri = (innerLines.head._1, innerLines.head._2, p)
+            val triExists = !triangles.forall(!trisEq(tri, _))
+            if triExists
+            then result
+            else result ++ Array[Int](tri._1, tri._2, tri._3)
+          case None =>
+            throw new Exception("Polygon could not be triangulated")
+      else result
     else
 
       // Find a valid point to create a new triangle
