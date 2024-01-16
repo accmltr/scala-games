@@ -11,5 +11,8 @@ trait Renderer(val window: Window) {
     *   Unordered list of RenderData objects. Ordering is done automatically
     *   within this method.
     */
-  def render(renderDatas: List[RenderData]): Unit
+  def render(
+      renderDatas: List[RenderData],
+      wireframeMode: Boolean = false
+  ): Unit
 }

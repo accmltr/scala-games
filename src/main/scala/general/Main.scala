@@ -59,42 +59,90 @@ object MyGame extends Game {
   window.fpsStats.showAvg = true
 
   var polygonRenderData: RenderData = _
+  var polygonRenderData_no2: RenderData = _
+  var polygonRenderData_no3: RenderData = _
+  var polygonRenderData_no4: RenderData = _
 
   onInit += { (_) =>
-    // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
     window.vsync = true
+    val polygon = Polygon(
+      Vector(
+        Vector2(0, 0),
+        Vector2(1, 0),
+        Vector2(1, 1),
+        Vector2(0, 1),
+        Vector2(0, .8),
+        Vector2(0.35, 0.5),
+        Vector2(0, .2)
+      ).map(v => Vector2(v.x - .5, v.y - .5))
+    )
     polygonRenderData = RenderData.fromPolygon(
+      polygon = polygon,
+      layer = 0,
+      color = Color.YELLOW * .75
+    )
+    polygonRenderData_no2 = RenderData.fromPolygon(
       polygon = Polygon(
         Vector(
           Vector2(0, 0),
           Vector2(1, 0),
           Vector2(1, 1),
+          Vector2(0.5, 1.3),
           Vector2(0, 1),
           Vector2(0, .8),
-          Vector2(0.35, 0.5),
-          Vector2(0, .2)
+          Vector2(0.35, 0.2)
         ).map(v => Vector2(v.x - .5, v.y - .5))
       ),
-      layer = 0,
-      color = Color.YELLOW * .75
+      color = Color(Color.GREEN.r, Color.GREEN.g, Color.GREEN.b, 0.1),
+      transform = Matrix3.transform(
+        translation = Vector2(0.5, 0.5),
+        rotation = 0,
+        scale = Vector2(1, 1) * 0.5
+      )
+    )
+    polygonRenderData_no3 = RenderData.fromPolygon(
+      polygon = Polygon(polygon.points.take(4)),
+      color = Color.BLUE * .75,
+      transform = Matrix3.transform(
+        translation = Vector2(-0.5, 0.5),
+        rotation = 0,
+        scale = Vector2(1, 1) * 0.5
+      )
+    )
+    polygonRenderData_no4 = RenderData.fromPolygon(
+      polygon = Polygon(polygon.points.take(3)),
+      color = Color.RED * .75,
+      transform = Matrix3.transform(
+        translation = Vector2(0, -0.5),
+        rotation = 0,
+        scale = Vector2(1, 1) * 0.5
+      )
     )
   }
 
   onUpdate += { (delta: Float) =>
 
-    polygonRenderData = polygonRenderData.copy(
-      transform = Matrix3
-        .transform(
-          translation = Vector2(
-            cos(1.7f * Time.current + 5f) * .2,
-            sin(3f * Time.current + 3f) * .11
-          ),
-          rotation = cos(.8f * Time.current + 3f) * 2f * pi,
-          scale = Vector2(1f, 1f) * (.2f + .1f * (cos(.8f * Time.current) + 1))
-        )
-    )
+    // polygonRenderData = polygonRenderData.copy(
+    //   transform = Matrix3
+    //     .transform(
+    //       translation = Vector2(
+    //         cos(1.7f * Time.current + 5f) * .2,
+    //         sin(3f * Time.current + 3f) * .11
+    //       ),
+    //       rotation = cos(.8f * Time.current + 3f) * 2f * pi,
+    //       scale = Vector2(1f, 1f) * (.2f + .1f * (cos(.8f * Time.current) + 1))
+    //     )
+    // )
 
-    renderer.render(List(polygonRenderData))
+    renderer.render(
+      List(
+        polygonRenderData,
+        polygonRenderData_no2,
+        polygonRenderData_no3,
+        polygonRenderData_no4
+      ),
+      wireframeMode = false // true
+    )
 
     // val r = RenderedMesh(
     //   shader = shader,

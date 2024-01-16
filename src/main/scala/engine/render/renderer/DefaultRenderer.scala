@@ -16,7 +16,10 @@ import engine.math.Vector4
 final case class DefaultRenderer(
     override val window: Window
 ) extends Renderer(window) {
-  override def render(renderDatas: List[RenderData]): Unit = {
+  override def render(
+      renderDatas: List[RenderData],
+      wireframeMode: Boolean = false
+  ): Unit = {
     for d <- renderDatas.sortBy(_.layer)
     do {
 
@@ -52,6 +55,10 @@ final case class DefaultRenderer(
           "transform" -> d.transform
         )
       )
+
+      // Set wireframe mode
+      if wireframeMode
+      then glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
 
       // Draw
       glBindVertexArray(vaoId)
