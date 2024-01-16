@@ -63,17 +63,12 @@ object MyGame extends Game {
   window.maximized = false
   window.fpsStats.showAvg = true
 
-//   val renderMaster: RenderMaster = RenderMaster()
-//   val meshRenderManager: MeshRenderManager = MeshRenderManager()
+  var polygonRenderData: PolygonRenderData = _
 
   onInit += { (_) =>
     // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
     window.vsync = true
-  }
-
-  onUpdate += { (delta: Float) =>
-
-    val polygonRenderData = PolygonRenderData(
+    polygonRenderData = PolygonRenderData(
       points = Vector(
         Vector2(0, 0),
         Vector2(1, 0),
@@ -83,6 +78,14 @@ object MyGame extends Game {
         Vector2(0.35, 0.5),
         Vector2(0, .2)
       ).map(v => Vector2(v.x - .5, v.y - .5)),
+      layer = 0,
+      tint = Color.YELLOW * .75
+    )
+  }
+
+  onUpdate += { (delta: Float) =>
+
+    polygonRenderData = polygonRenderData.copy(
       transform = Matrix3
         .transform(
           translation = Vector2(
@@ -91,97 +94,95 @@ object MyGame extends Game {
           ),
           rotation = cos(.8f * Time.current + 3f) * 2f * pi,
           scale = Vector2(1f, 1f) * (.2f + .1f * (cos(.8f * Time.current) + 1))
-        ),
-      layer = 0,
-      tint = Color.YELLOW * .75
+        )
     )
 
     renderer.render(List(polygonRenderData))
 
-  // val r = RenderedMesh(
-  //   shader = shader,
-  //   transform = Matrix3
-  //     .transform(
-  //       translation = Vector2(
-  //         cos(1.7f * Time.current) * .2,
-  //         sin(2f * Time.current) * .11
-  //       ),
-  //       rotation = cos(.5f * Time.current) * 2f * pi,
-  //       scale = Vector2(1f, 1f) * .3f
-  //     ),
-  //   mesh = Mesh(Circle(0.5f), 7),
-  //   tint = Color.GRAY
-  // )
-  // val r1 = RenderedMesh(
-  //   shader = shader,
-  //   transform = Matrix3
-  //     .transform(
-  //       translation = Vector2(
-  //         cos(1.7f * Time.current + 3f) * .2,
-  //         sin(2f * Time.current + 3f) * .11
-  //       ),
-  //       rotation = cos(.5f * Time.current + 3f) * 2f * pi,
-  //       scale = Vector2(1f, 1f) * .3f
-  //     ),
-  //   mesh = Mesh(Circle(0.5f), 7),
-  //   tint = Color.GREEN * .75
-  // )
-  // val p1 = RenderedMesh(
-  //   shader = shader,
-  //   transform = Matrix3
-  //     .transform(
-  //       translation = Vector2(
-  //         cos(1.7f * Time.current + 5f) * .2,
-  //         sin(3f * Time.current + 3f) * .11
-  //       ),
-  //       rotation = cos(.8f * Time.current + 3f) * 2f * pi,
-  //       scale = Vector2(1f, 1f) * (.2f + .1f * (cos(.8f * Time.current) + 1))
-  //     ),
-  //   mesh = Mesh(
-  //     Polygon(
-  //       Vector(
-  //         Vector2(0, 0),
-  //         Vector2(1, 0),
-  //         Vector2(1, 1),
-  //         Vector2(0, 1),
-  //         Vector2(0, .8),
-  //         Vector2(0.35, 0.5),
-  //         Vector2(0, .2)
-  //       ).map(v => Vector2(v.x - .5, v.y - .5))
-  //     )
-  //   ),
-  //   tint = Color.YELLOW * .75
-  // )
-  // val l = LineRenderedElement(
-  //   shader = lineShader,
-  //   points = Array(
-  //     Vector2(0, 0),
-  //     Vector2(-1, -1) * .5,
-  //     Vector2(1, -1) * .5,
-  //     Vector2(1, 1) * .5
-  //     // Vector2(0, -1),
-  //     // Vector2(-1, -1),
-  //     // Vector2(-3, 1),
-  //     // Vector2(0, 10)
-  //   ).map(_ * .8),
-  //   width = 0.07
-  // )
+    // val r = RenderedMesh(
+    //   shader = shader,
+    //   transform = Matrix3
+    //     .transform(
+    //       translation = Vector2(
+    //         cos(1.7f * Time.current) * .2,
+    //         sin(2f * Time.current) * .11
+    //       ),
+    //       rotation = cos(.5f * Time.current) * 2f * pi,
+    //       scale = Vector2(1f, 1f) * .3f
+    //     ),
+    //   mesh = Mesh(Circle(0.5f), 7),
+    //   tint = Color.GRAY
+    // )
+    // val r1 = RenderedMesh(
+    //   shader = shader,
+    //   transform = Matrix3
+    //     .transform(
+    //       translation = Vector2(
+    //         cos(1.7f * Time.current + 3f) * .2,
+    //         sin(2f * Time.current + 3f) * .11
+    //       ),
+    //       rotation = cos(.5f * Time.current + 3f) * 2f * pi,
+    //       scale = Vector2(1f, 1f) * .3f
+    //     ),
+    //   mesh = Mesh(Circle(0.5f), 7),
+    //   tint = Color.GREEN * .75
+    // )
+    // val p1 = RenderedMesh(
+    //   shader = shader,
+    //   transform = Matrix3
+    //     .transform(
+    //       translation = Vector2(
+    //         cos(1.7f * Time.current + 5f) * .2,
+    //         sin(3f * Time.current + 3f) * .11
+    //       ),
+    //       rotation = cos(.8f * Time.current + 3f) * 2f * pi,
+    //       scale = Vector2(1f, 1f) * (.2f + .1f * (cos(.8f * Time.current) + 1))
+    //     ),
+    //   mesh = Mesh(
+    //     Polygon(
+    //       Vector(
+    //         Vector2(0, 0),
+    //         Vector2(1, 0),
+    //         Vector2(1, 1),
+    //         Vector2(0, 1),
+    //         Vector2(0, .8),
+    //         Vector2(0.35, 0.5),
+    //         Vector2(0, .2)
+    //       ).map(v => Vector2(v.x - .5, v.y - .5))
+    //     )
+    //   ),
+    //   tint = Color.YELLOW * .75
+    // )
+    // val l = LineRenderedElement(
+    //   shader = lineShader,
+    //   points = Array(
+    //     Vector2(0, 0),
+    //     Vector2(-1, -1) * .5,
+    //     Vector2(1, -1) * .5,
+    //     Vector2(1, 1) * .5
+    //     // Vector2(0, -1),
+    //     // Vector2(-1, -1),
+    //     // Vector2(-3, 1),
+    //     // Vector2(0, 10)
+    //   ).map(_ * .8),
+    //   width = 0.07
+    // )
 
-  // renderMaster += r
-  // renderMaster += r1
-  // renderMaster += p1
-  // renderMaster += l
+    // renderMaster += r
+    // renderMaster += r1
+    // renderMaster += p1
+    // renderMaster += l
 
-  // renderMaster.render()
+    // renderMaster.render()
 
-  // renderMaster -= r
-  // renderMaster -= r1
-  // renderMaster -= p1
-  // renderMaster -= l
+    // renderMaster -= r
+    // renderMaster -= r1
+    // renderMaster -= p1
+    // renderMaster -= l
 
-  if (input.justReleased(KeyCode.escape)) {
-    quit()
-  }
+    if (input.justReleased(KeyCode.escape)) {
+      quit()
+    }
 
   // shader.uploadFloat("aspect", window.aspect)
   // shader.uploadVec2f("resolution", window.resolution.toVector2)
