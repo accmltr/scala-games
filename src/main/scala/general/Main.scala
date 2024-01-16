@@ -22,10 +22,6 @@ import engine.render.shape_renderer.CircleRenderer
 import engine.math.sin
 import engine.Time
 import engine.math.cos
-// import engine.render.RenderMaster
-// import engine.render.render_manager.MeshRenderManager
-// import engine.render.rendered_element.{RenderedMesh, LineRenderedElement}
-// import engine.render.shader_classes.Shader
 import engine.render.mesh.Mesh
 import engine.render.Color
 import engine.math.Matrix3
@@ -33,8 +29,7 @@ import engine.math.Matrix4
 import engine.math.Matrix3.transform
 import engine.math.pi
 import engine.math.shapes.Polygon
-import engine.render.renderer.DefaultRenderer
-import engine.render.renderer.PolygonRenderData
+import engine.render.renderer.*
 
 object MyGame extends Game {
 
@@ -63,21 +58,23 @@ object MyGame extends Game {
   window.maximized = false
   window.fpsStats.showAvg = true
 
-  var polygonRenderData: PolygonRenderData = _
+  var polygonRenderData: RenderData = _
 
   onInit += { (_) =>
     // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
     window.vsync = true
-    polygonRenderData = PolygonRenderData(
-      points = Vector(
-        Vector2(0, 0),
-        Vector2(1, 0),
-        Vector2(1, 1),
-        Vector2(0, 1),
-        Vector2(0, .8),
-        Vector2(0.35, 0.5),
-        Vector2(0, .2)
-      ).map(v => Vector2(v.x - .5, v.y - .5)),
+    polygonRenderData = RenderData.fromPolygon(
+      polygon = Polygon(
+        Vector(
+          Vector2(0, 0),
+          Vector2(1, 0),
+          Vector2(1, 1),
+          Vector2(0, 1),
+          Vector2(0, .8),
+          Vector2(0.35, 0.5),
+          Vector2(0, .2)
+        ).map(v => Vector2(v.x - .5, v.y - .5))
+      ),
       layer = 0,
       tint = Color.YELLOW * .75
     )
