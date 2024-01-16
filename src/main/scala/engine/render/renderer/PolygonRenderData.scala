@@ -28,8 +28,11 @@ final case class PolygonRenderData(
 object PolygonRenderData {
   def apply(
       points: Vector[Vector2],
-      uniforms: Map[String, Uniform],
-      shader: Shader,
+      uniforms: Map[String, Uniform] = Map.empty,
+      shader: Shader = Shader(
+        "src/main/scala/engine/render/shaders/default/default.vert",
+        "src/main/scala/engine/render/shaders/default/default.frag"
+      ),
       layer: Float = 0,
       tint: Color = Color.WHITE,
       transform: Matrix3 = Matrix3.IDENTITY
