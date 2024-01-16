@@ -11,7 +11,10 @@ import render_data_util.{indicesFromPolygon, verticesFromPolygon}
   * @param indices
   *   The indices passed to OpenGL.
   * @param layer
+  *   The layer value determines the order in which objects are drawn, with
+  *   lower values being drawn first.
   * @param color
+  *   The value of the 'color' uniform.
   * @param transform
   *   The transform matrix passed to the shader.
   * @param shaderOverride
