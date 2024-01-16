@@ -122,17 +122,17 @@ object MyGame extends Game {
 
   onUpdate += { (delta: Float) =>
 
-    // polygonRenderData = polygonRenderData.copy(
-    //   transform = Matrix3
-    //     .transform(
-    //       translation = Vector2(
-    //         cos(1.7f * Time.current + 5f) * .2,
-    //         sin(3f * Time.current + 3f) * .11
-    //       ),
-    //       rotation = cos(.8f * Time.current + 3f) * 2f * pi,
-    //       scale = Vector2(1f, 1f) * (.2f + .1f * (cos(.8f * Time.current) + 1))
-    //     )
-    // )
+    polygonRenderData = polygonRenderData.copy(
+      transform = Matrix3
+        .transform(
+          translation = Vector2(
+            2f * (input.mousePosition.x / window.resolution.width) - 1,
+            2f * (-input.mousePosition.y / window.resolution.height) + 1
+          ),
+          rotation = cos(.8f * Time.current + 3f) * 2f * pi,
+          scale = Vector2(1f, 1f) * (.2f + .1f * (cos(.8f * Time.current) + 1))
+        )
+    )
 
     renderer.render(
       List(
