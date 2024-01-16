@@ -6,12 +6,6 @@ import engine.math.Matrix3
 import scala.util.boundary, boundary.break
 import render_data_util.{indicesFromPolygon, verticesFromPolygon}
 
-// Currently left as `def` since shader is compiled upon construction, which may cause errors if created before OpenGL context is created.
-inline def colorFillShader: Shader = Shader(
-  "src/main/scala/engine/render/shaders/default/default.vert",
-  "src/main/scala/engine/render/shaders/default/default.frag"
-)
-
 /** @param vertices
   *   The vertices passed to OpenGL.
   * @param indices
@@ -38,7 +32,10 @@ case class RenderData(
 
   /** The default shader used when `shaderOverride` is `None`.
     */
-  val defaultShader: Shader = colorFillShader
+  val defaultShader: Shader = Shader(
+    "src/main/scala/engine/render/shaders/vertex/default.vert",
+    "src/main/scala/engine/render/shaders/fragment/color_fill.frag"
+  )
 
   // Exceptions
   if defaultShader == null
@@ -119,8 +116,6 @@ object RenderData {
       transform = transform,
       shaderOverride = shaderOverride,
       extraUniforms = extraUniforms
-    ) {
-      override val defaultShader: Shader = colorFillShader
-    }
+    )
   }
 }

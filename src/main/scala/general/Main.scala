@@ -76,7 +76,7 @@ object MyGame extends Game {
         ).map(v => Vector2(v.x - .5, v.y - .5))
       ),
       layer = 0,
-      tint = Color.YELLOW * .75
+      color = Color.YELLOW * .75
     )
   }
 
