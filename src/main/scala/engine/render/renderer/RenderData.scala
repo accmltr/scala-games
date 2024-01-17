@@ -29,7 +29,7 @@ case class RenderData(
     val layer: Float = 0,
     val color: Color = Color.WHITE,
     val transform: Matrix3 = Matrix3.IDENTITY,
-    val shaderOverride: Option[Shader] = None,
+    val shaderOverride: Shader = null,
     val extraUniforms: Map[String, Uniform] = Map.empty
 ) {
 
@@ -40,21 +40,16 @@ case class RenderData(
     "src/main/scala/engine/render/shaders/fragment/color_fill.frag"
   )
 
-  final val shader = shaderOverride match {
-    case Some(shader) => shader
-    case None         => defaultShader
-  }
+  final val shader =
+    if shaderOverride == null
+    then defaultShader
+    else shaderOverride
 
   // Exceptions
   if defaultShader == null
   then
     throw new IllegalArgumentException(
       "'defaultShader' cannot be null, make sure to override it with a valid shader when extending the RenderData class"
-    )
-  if shaderOverride == null
-  then
-    throw new IllegalArgumentException(
-      "'shaderOverride' cannot be null, use 'None' instead"
     )
   if vertices == null
   then throw new IllegalArgumentException("'vertices' cannot be null")
@@ -104,7 +99,7 @@ object RenderData {
       layer: Float = 0,
       color: Color = Color.WHITE,
       transform: Matrix3 = Matrix3.IDENTITY,
-      shaderOverride: Option[Shader] = None
+      shaderOverride: Shader = null
   ): RenderData = {
     // Exceptions
     if polygon == null
