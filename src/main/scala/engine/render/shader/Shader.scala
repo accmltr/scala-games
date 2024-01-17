@@ -26,11 +26,18 @@ final case class Shader(val vertPath: String, val fragPath: String) {
   val vertexSource: String = engine.io.readTextFile(vertPath)
   val fragmentSource: String = engine.io.readTextFile(fragPath)
 
-  val id: Int = compile()
+  private var _id: Int = -1
+
+  def compiled: Boolean = _id != -1
+  def id: Int = _id
 
   def isUsed(): Boolean = glGetInteger(GL_CURRENT_PROGRAM) == id
 
-  private def compile(): Int =
+  private def _autoCompile(): Unit = {
+    if !compiled then compile()
+  }
+
+  private[engine] def compile(): Unit = {
     _glcontextCheck()
 
     // Compile and link vertex shader
@@ -86,10 +93,12 @@ final case class Shader(val vertPath: String, val fragPath: String) {
       )
     }
 
-    programId
+    _id = programId
+  }
 
   def use(): Unit = {
     _glcontextCheck()
+    _autoCompile()
 
     // Bind shader program
     glUseProgram(id)
@@ -97,6 +106,7 @@ final case class Shader(val vertPath: String, val fragPath: String) {
 
   def detach(): Unit = {
     _glcontextCheck()
+    _autoCompile()
 
     glUseProgram(0)
   }
