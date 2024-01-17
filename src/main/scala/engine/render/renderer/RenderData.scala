@@ -41,9 +41,7 @@ case class RenderData(
   )
 
   final val shader =
-    if shaderOverride == null
-    then defaultShader
-    else shaderOverride
+    Option(shaderOverride).getOrElse(defaultShader)
 
   // Exceptions
   if defaultShader == null
