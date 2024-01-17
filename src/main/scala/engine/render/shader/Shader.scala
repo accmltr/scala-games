@@ -3,6 +3,7 @@ package engine.render.shader
 import engine.io._
 import java.io.IOException
 import java.nio.FloatBuffer
+import org.lwjgl.glfw.GLFW._
 import org.joml._
 import org.lwjgl.BufferUtils
 import org.lwjgl.opengl.GL11._
@@ -27,7 +28,11 @@ final case class Shader(val vertPath: String, val fragPath: String) {
 
   val id: Int = compile()
 
+  def isUsed(): Boolean = glGetInteger(GL_CURRENT_PROGRAM) == id
+
   private def compile(): Int =
+    _glcontextCheck()
+
     // Compile and link vertex shader
     val vertexID = glCreateShader(GL_VERTEX_SHADER)
     glShaderSource(vertexID, vertexSource)
@@ -84,12 +89,23 @@ final case class Shader(val vertPath: String, val fragPath: String) {
     programId
 
   def use(): Unit = {
+    _glcontextCheck()
+
     // Bind shader program
     glUseProgram(id)
   }
 
   def detach(): Unit = {
+    _glcontextCheck()
+
     glUseProgram(0)
+  }
+
+  private def _glcontextCheck(): Unit = {
+    if glfwGetCurrentContext() == 0L then
+      throw new Exception(
+        "Error: Game has not yet been initialized."
+      )
   }
 
   /** Uploads a map of uniforms to the shader by matching each uniform to its
@@ -124,6 +140,7 @@ final case class Shader(val vertPath: String, val fragPath: String) {
   }
 
   def uploadMat4f(varName: String, mat4: Matrix4): Unit = {
+    _uniformUsedCheck()
     val jomlMat4f: Matrix4f = mat4.toJomlMatrix4f
     val varLocation: Int = glGetUniformLocation(id, varName)
     use()
@@ -133,6 +150,7 @@ final case class Shader(val vertPath: String, val fragPath: String) {
   }
 
   def uploadMatrix3(varName: String, mat3: Matrix3): Unit = {
+    _uniformUsedCheck()
     val jomlMat3f = mat3.toJomlMatrix3f
     val varLocation: Int = glGetUniformLocation(id, varName)
     use()
@@ -142,62 +160,79 @@ final case class Shader(val vertPath: String, val fragPath: String) {
   }
 
   def uploadVec4f(varName: String, vec: Vector4): Unit = {
+    _uniformUsedCheck()
     val varLocation: Int = glGetUniformLocation(id, varName)
     use()
     glUniform4f(varLocation, vec.x, vec.y, vec.z, vec.w)
   }
 
   def uploadVec3f(varName: String, vec: Vector3): Unit = {
+    _uniformUsedCheck()
     val varLocation: Int = glGetUniformLocation(id, varName)
     use()
     glUniform3f(varLocation, vec.x, vec.y, vec.z)
   }
 
   def uploadVec2f(varName: String, vec: Vector2): Unit = {
+    _uniformUsedCheck()
     val varLocation: Int = glGetUniformLocation(id, varName)
     use()
     glUniform2f(varLocation, vec.x, vec.y)
   }
 
   def uploadFloat(varName: String, value: Float): Unit = {
+    _uniformUsedCheck()
     val varLocation: Int = glGetUniformLocation(id, varName)
     use()
     glUniform1f(varLocation, value)
   }
 
   def uploadInt(varName: String, value: Int): Unit = {
+    _uniformUsedCheck()
     val varLocation: Int = glGetUniformLocation(id, varName)
     use()
     glUniform1i(varLocation, value)
   }
 
   def uploadTexture(varName: String, slot: Int): Unit = {
+    _uniformUsedCheck()
     val varLocation: Int = glGetUniformLocation(id, varName)
     use()
     glUniform1i(varLocation, slot)
   }
 
   def uploadIntBuffer(varName: String, buffer: IntBuffer): Unit = {
+    _uniformUsedCheck()
     val varLocation: Int = glGetUniformLocation(id, varName)
     use()
     glUniform1iv(varLocation, buffer)
   }
 
   def uploadFloatBuffer(varName: String, buffer: FloatBuffer): Unit = {
+    _uniformUsedCheck()
     val varLocation: Int = glGetUniformLocation(id, varName)
     use()
     glUniform1fv(varLocation, buffer)
   }
 
   def uploadIntArray(varName: String, array: Array[Int]): Unit = {
+    _uniformUsedCheck()
     val varLocation: Int = glGetUniformLocation(id, varName)
     use()
     glUniform1iv(varLocation, array)
   }
 
   def uploadFloatArray(varName: String, array: Array[Float]): Unit = {
+    _uniformUsedCheck()
     val varLocation: Int = glGetUniformLocation(id, varName)
     use()
     glUniform1fv(varLocation, array)
+  }
+
+  private def _uniformUsedCheck(): Unit = {
+    if !isUsed() then
+      throw new Exception(
+        "Error: Shader must be bound before uploading uniforms."
+      )
   }
 }

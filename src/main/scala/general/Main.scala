@@ -30,6 +30,7 @@ import engine.math.Matrix3.transform
 import engine.math.pi
 import engine.math.shapes.Polygon
 import engine.render.renderer.*
+import engine.render.shader.Shader
 
 object MyGame extends Game {
 
