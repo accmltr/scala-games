@@ -15,10 +15,10 @@ package object io {
         result
       } catch {
         case e: Exception =>
-          throw new IOException(s"Error reading shader file: $e")
+          throw new IOException(s"Error reading file: $e")
       }
     } else {
-      throw new IOException(s"Shader file does not exist: $path")
+      throw new IOException(s"File does not exist: $path")
     }
   }
 }
