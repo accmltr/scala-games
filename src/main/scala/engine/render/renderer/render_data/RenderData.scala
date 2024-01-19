@@ -42,34 +42,37 @@ case class RenderData(
   final val shader =
     Option(shaderOverride).getOrElse(defaultShader)
 
-  // Exceptions
-  if defaultShader == null
-  then
-    throw new IllegalArgumentException(
-      "'defaultShader' cannot be null, make sure to override it with a valid shader when extending the RenderData class"
-    )
-  if vertices == null
-  then throw new IllegalArgumentException("'vertices' cannot be null")
-  if indices == null
-  then throw new IllegalArgumentException("'indices' cannot be null")
-  if layer.isNaN
-  then throw new IllegalArgumentException("'layer' cannot be NaN")
-  if color == null
-  then throw new IllegalArgumentException("'color' cannot be null")
-  if transform == null
-  then throw new IllegalArgumentException("'transform' cannot be null")
-  if vertices.length < 3
-  then throw new IllegalArgumentException("At least 3 vertices are required")
-  if indices.length < 3
-  then throw new IllegalArgumentException("At least 3 indices are required")
-  for u <- engine.render.renderer.BuiltInUniforms.values
-  do
-    if extraUniforms.contains(s"$u")
+  // Throw exceptions if arguments are invalid
+  _checkForExceptions()
+
+  private def _checkForExceptions(): Unit = {
+    if defaultShader == null
     then
       throw new IllegalArgumentException(
-        s"Uniform name '$u' is reserved"
+        "'defaultShader' cannot be null, make sure to override it with a valid shader when extending the RenderData class"
       )
-
+    if vertices == null
+    then throw new IllegalArgumentException("'vertices' cannot be null")
+    if indices == null
+    then throw new IllegalArgumentException("'indices' cannot be null")
+    if layer.isNaN
+    then throw new IllegalArgumentException("'layer' cannot be NaN")
+    if color == null
+    then throw new IllegalArgumentException("'color' cannot be null")
+    if transform == null
+    then throw new IllegalArgumentException("'transform' cannot be null")
+    if vertices.length < 3
+    then throw new IllegalArgumentException("At least 3 vertices are required")
+    if indices.length < 3
+    then throw new IllegalArgumentException("At least 3 indices are required")
+    for u <- engine.render.renderer.BuiltInUniforms.values
+    do
+      if extraUniforms.contains(s"$u")
+      then
+        throw new IllegalArgumentException(
+          s"Uniform name '$u' is reserved"
+        )
+  }
 }
 
 object RenderData {

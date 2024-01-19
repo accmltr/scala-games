@@ -80,7 +80,6 @@ object MyGame extends Game {
     )
     polygonRenderData = RenderData.fromPolygon(
       polygon = polygon,
-      layer = 0,
       color = Color.YELLOW * .75
     )
     polygonRenderData_no2 = RenderData.fromPolygon(
@@ -100,6 +99,9 @@ object MyGame extends Game {
         translation = Vector2(0.5, 0.5),
         rotation = 0,
         scale = Vector2(1, 1) * 0.5
+      ),
+      extraUniforms = Map(
+        "uTimeMult" -> .2f
       ),
       layer = -10
     )

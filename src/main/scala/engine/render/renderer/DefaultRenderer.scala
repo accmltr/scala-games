@@ -13,6 +13,7 @@ import org.lwjgl.opengl.GL30._
 import engine.math.Vector3
 import engine.math.Vector4
 import render_data.RenderData
+import engine.Time
 
 final case class DefaultRenderer(
     override val window: Window
@@ -57,7 +58,8 @@ final case class DefaultRenderer(
             rd.color.b,
             rd.color.a
           ),
-          BuiltInUniforms.uTrans.toString() -> rd.transform
+          BuiltInUniforms.uTrans.toString() -> rd.transform,
+          BuiltInUniforms.uTime.toString() -> Time.current
         )
       )
 

@@ -1,7 +1,11 @@
-import engine.render.renderer.BuiltInUniforms
-Option[Float](Float.NaN)
+enum MyLayer(val value: Float):
+  case Background extends MyLayer(0)
+  case Foreground extends MyLayer(10)
+  case UI extends MyLayer(100)
+  case UI_Overlay extends MyLayer(100.1)
 
-engine.render.renderer.BuiltInUniforms.uRes.toString()
-s"Uniform name '${BuiltInUniforms.uRes}' is reserved"
+// Print the name and value of the 'Background' layer
+val name: String = MyLayer.Background.toString
+val value: Float = MyLayer.Background.value
 
-for u <- BuiltInUniforms.values do println(u)
+println(s"Name: $name, Value: $value")

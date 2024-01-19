@@ -5,4 +5,5 @@ enum BuiltInUniforms {
   case uLayer
   case uColor
   case uTrans
+  case uTime
 }
