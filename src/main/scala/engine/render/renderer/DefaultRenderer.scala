@@ -20,7 +20,7 @@ final case class DefaultRenderer(
       renderDatas: List[RenderData],
       wireframeMode: Boolean = false
   ): Unit = {
-    for d <- renderDatas.sortBy(_.layer)
+    for rd <- renderDatas.sortBy(_.layer)
     do {
 
       // Create and bind a VAO
@@ -30,33 +30,33 @@ final case class DefaultRenderer(
       // Create and bind a VBO for the vertices
       val vboId = glGenBuffers()
       glBindBuffer(GL_ARRAY_BUFFER, vboId)
-      glBufferData(GL_ARRAY_BUFFER, d.vertices, GL_STATIC_DRAW)
+      glBufferData(GL_ARRAY_BUFFER, rd.vertices, GL_STATIC_DRAW)
       glVertexAttribPointer(0, 2, GL_FLOAT, false, 0, 0)
       glEnableVertexAttribArray(0)
 
       // Create and bind a VBO for the indices
       val eboId = glGenBuffers()
       glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboId)
-      glBufferData(GL_ELEMENT_ARRAY_BUFFER, d.indices, GL_STATIC_DRAW)
+      glBufferData(GL_ELEMENT_ARRAY_BUFFER, rd.indices, GL_STATIC_DRAW)
 
       // Unbind the VAO
       glBindVertexArray(0)
 
       // Bind shader program
-      d.shader.use()
+      rd.shader.use()
 
       // Upload uniforms
-      d.shader.uploadUniforms(
-        d.extraUniforms ++ Map[String, Uniform](
+      rd.shader.uploadUniforms(
+        rd.extraUniforms ++ Map[String, Uniform](
           BuiltInUniforms.uRes.toString() -> window.resolution.toVector2,
-          BuiltInUniforms.uLayer.toString() -> d.layer,
+          BuiltInUniforms.uLayer.toString() -> rd.layer,
           BuiltInUniforms.uColor.toString() -> Vector4(
-            d.color.r,
-            d.color.g,
-            d.color.b,
-            d.color.a
+            rd.color.r,
+            rd.color.g,
+            rd.color.b,
+            rd.color.a
           ),
-          BuiltInUniforms.uTrans.toString() -> d.transform
+          BuiltInUniforms.uTrans.toString() -> rd.transform
         )
       )
 
@@ -68,7 +68,7 @@ final case class DefaultRenderer(
       glBindVertexArray(vaoId)
       glDrawElements(
         GL_TRIANGLES,
-        d.indices.length,
+        rd.indices.length,
         GL_UNSIGNED_INT,
         0
       )
