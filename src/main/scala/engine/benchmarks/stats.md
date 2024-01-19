@@ -15,3 +15,4 @@
 
 - D1
   - Black Screen: 4050 fps
+  - Viewport Res: 1920x1080
