@@ -23,8 +23,23 @@ import engine.render.shader.Uniform
   *   Path to fragment source file.
   */
 final case class Shader(val vertPath: String, val fragPath: String) {
-  val vertexSource: String = engine.io.readTextFile(vertPath)
-  val fragmentSource: String = engine.io.readTextFile(fragPath)
+
+  val vertexSource: String = engine.io
+    .readTextFile(vertPath)
+    .match
+      case Some(source) => source
+      case None =>
+        throw new IllegalArgumentException(
+          s"Vertex shader not found: $vertPath"
+        )
+  val fragmentSource: String = engine.io
+    .readTextFile(fragPath)
+    .match
+      case Some(source) => source
+      case None =>
+        throw new IllegalArgumentException(
+          s"Fragment shader not found: $fragPath"
+        )
 
   private var _id: Int = -1
 
@@ -244,5 +259,11 @@ final case class Shader(val vertPath: String, val fragPath: String) {
       throw new Exception(
         "Error: Shader must be bound before uploading uniforms."
       )
+  }
+
+  override def equals(x: Any): Boolean = x match {
+    case Shader(vertPath, fragPath) =>
+      this.vertPath == vertPath && this.fragPath == fragPath
+    case _ => false
   }
 }
