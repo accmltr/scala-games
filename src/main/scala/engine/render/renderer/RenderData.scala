@@ -63,13 +63,13 @@ case class RenderData(
   then throw new IllegalArgumentException("At least 3 vertices are required")
   if indices.length < 3
   then throw new IllegalArgumentException("At least 3 indices are required")
-  if extraUniforms.contains("layer")
-  then throw new IllegalArgumentException("Uniform name 'layer' is reserved")
-  if extraUniforms.contains("color")
-  then throw new IllegalArgumentException("Uniform name 'color' is reserved")
-  if extraUniforms.contains("transform")
-  then
-    throw new IllegalArgumentException("Uniform name 'transform' is reserved")
+  for u <- BuiltInUniforms.values
+  do
+    if extraUniforms.contains(s"$u")
+    then
+      throw new IllegalArgumentException(
+        s"Uniform name '$u' is reserved"
+      )
 
 }
 
