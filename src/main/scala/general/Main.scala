@@ -100,7 +100,8 @@ object MyGame extends Game {
         translation = Vector2(0.5, 0.5),
         rotation = 0,
         scale = Vector2(1, 1) * 0.5
-      )
+      ),
+      layer = -10
     )
     polygonRenderData_no3 = RenderData.fromPolygon(
       polygon = Polygon(polygon.points.take(4)),

@@ -78,6 +78,9 @@ object RenderData {
   /** @param polygon
     *   The polygon to create the vertices and indices from for the render data.
     * @param layer
+    *   The layer value determines the order in which objects are drawn, with
+    *   lower values being drawn first. Values include all real numbers, meaning
+    *   that negative values can be used as well.
     * @param color
     * @param transform
     * @param shaderOverride
