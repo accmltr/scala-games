@@ -12,7 +12,7 @@ import engine.math.Matrix3
 class RenderDataTest extends AnyFlatSpec {
   "RenderData" should "throw an exception if a reserved uniform name is used in 'extraUniforms'" in {
     assertThrows[Exception] {
-      RenderData.fromPolygon(
+      render_data.RenderData.fromPolygon(
         polygon = Polygon(
           Vector(Vector2(0, 0), Vector2(0, 1), Vector2(1, 1), Vector2(1, 0))
         ),
@@ -20,7 +20,7 @@ class RenderDataTest extends AnyFlatSpec {
       )
     }
     assertThrows[Exception] {
-      RenderData.fromPolygon(
+      render_data.RenderData.fromPolygon(
         polygon = Polygon(
           Vector(Vector2(0, 0), Vector2(0, 1), Vector2(1, 1), Vector2(1, 0))
         ),
@@ -28,7 +28,7 @@ class RenderDataTest extends AnyFlatSpec {
       )
     }
     assertThrows[Exception] {
-      RenderData.fromPolygon(
+      render_data.RenderData.fromPolygon(
         polygon = Polygon(
           Vector(Vector2(0, 0), Vector2(0, 1), Vector2(1, 1), Vector2(1, 0))
         ),
@@ -36,7 +36,7 @@ class RenderDataTest extends AnyFlatSpec {
       )
     }
     assertThrows[Exception] {
-      RenderData.fromPolygon(
+      render_data.RenderData.fromPolygon(
         polygon = Polygon(
           Vector(Vector2(0, 0), Vector2(0, 1), Vector2(1, 1), Vector2(1, 0))
         ),
@@ -46,7 +46,7 @@ class RenderDataTest extends AnyFlatSpec {
 
   }
   it should "not thow an exception if non-reserved uniforms are added to 'extraUniforms" in {
-    RenderData.fromPolygon(
+    render_data.RenderData.fromPolygon(
       polygon = Polygon(
         Vector(Vector2(0, 0), Vector2(0, 1), Vector2(1, 1), Vector2(1, 0))
       ),

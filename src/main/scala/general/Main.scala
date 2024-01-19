@@ -31,6 +31,7 @@ import engine.math.pi
 import engine.math.shapes.Polygon
 import engine.render.renderer.*
 import engine.render.shader.Shader
+import engine.render.renderer.render_data.RenderData
 
 object MyGame extends Game {
 

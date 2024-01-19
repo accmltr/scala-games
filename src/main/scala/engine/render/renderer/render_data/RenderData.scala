@@ -1,10 +1,14 @@
-package engine.render.renderer
+package engine.render.renderer.render_data
 
 import engine.render.shader.{Uniform, Shader}
 import engine.render.Color
 import engine.math.Matrix3
 import scala.util.boundary, boundary.break
 import render_data_util.{indicesFromPolygon, verticesFromPolygon}
+import engine.render.renderer.render_data.render_data_util.{
+  indicesFromPolygon,
+  verticesFromPolygon
+}
 
 /** @param vertices
   *   The vertices passed to OpenGL.
@@ -63,7 +67,7 @@ case class RenderData(
   then throw new IllegalArgumentException("At least 3 vertices are required")
   if indices.length < 3
   then throw new IllegalArgumentException("At least 3 indices are required")
-  for u <- BuiltInUniforms.values
+  for u <- engine.render.renderer.BuiltInUniforms.values
   do
     if extraUniforms.contains(s"$u")
     then

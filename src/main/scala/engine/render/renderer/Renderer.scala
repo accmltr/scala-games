@@ -1,6 +1,7 @@
 package engine.render.renderer
 
 import engine.render.window.Window
+import render_data.RenderData
 
 trait Renderer(val window: Window) {
 

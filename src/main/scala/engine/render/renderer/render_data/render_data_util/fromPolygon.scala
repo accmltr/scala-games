@@ -1,4 +1,4 @@
-package engine.render.renderer.render_data_util
+package engine.render.renderer.render_data.render_data_util
 
 import engine.math.shapes.Polygon
 import scala.util.boundary, boundary.break
