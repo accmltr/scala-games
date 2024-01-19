@@ -48,15 +48,15 @@ final case class DefaultRenderer(
       // Upload uniforms
       d.shader.uploadUniforms(
         d.extraUniforms ++ Map[String, Uniform](
-          s"${BuiltInUniforms.uRes}" -> window.resolution.toVector2,
-          s"${BuiltInUniforms.uLayer}" -> d.layer,
-          s"${BuiltInUniforms.uColor}" -> Vector4(
+          BuiltInUniforms.uRes.toString() -> window.resolution.toVector2,
+          BuiltInUniforms.uLayer.toString() -> d.layer,
+          BuiltInUniforms.uColor.toString() -> Vector4(
             d.color.r,
             d.color.g,
             d.color.b,
             d.color.a
           ),
-          s"${BuiltInUniforms.uTrans}" -> d.transform
+          BuiltInUniforms.uTrans.toString() -> d.transform
         )
       )
 
