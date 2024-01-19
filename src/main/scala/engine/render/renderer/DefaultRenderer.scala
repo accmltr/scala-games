@@ -51,7 +51,7 @@ final case class DefaultRenderer(
           "aspect" -> window.aspect,
           "resolution" -> window.resolution.toVector2,
           "layer" -> d.layer,
-          "tint" -> Vector4(d.color.r, d.color.g, d.color.b, d.color.a),
+          "color" -> Vector4(d.color.r, d.color.g, d.color.b, d.color.a),
           "transform" -> d.transform
         )
       )

@@ -65,8 +65,8 @@ case class RenderData(
   then throw new IllegalArgumentException("At least 3 indices are required")
   if extraUniforms.contains("layer")
   then throw new IllegalArgumentException("Uniform name 'layer' is reserved")
-  if extraUniforms.contains("tint")
-  then throw new IllegalArgumentException("Uniform name 'tint' is reserved")
+  if extraUniforms.contains("color")
+  then throw new IllegalArgumentException("Uniform name 'color' is reserved")
   if extraUniforms.contains("transform")
   then
     throw new IllegalArgumentException("Uniform name 'transform' is reserved")
