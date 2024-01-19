@@ -4,11 +4,6 @@ import engine.render.shader.{Uniform, Shader}
 import engine.render.Color
 import engine.math.Matrix3
 import scala.util.boundary, boundary.break
-import render_data_util.{indicesFromPolygon, verticesFromPolygon}
-import engine.render.renderer.render_data.render_data_util.{
-  indicesFromPolygon,
-  verticesFromPolygon
-}
 
 /** @param vertices
   *   The vertices passed to OpenGL.
