@@ -197,11 +197,8 @@ def indicesFromPolygon(polygon: Polygon): Array[Int] = {
           )
         )
 
-      print("Inner lines: " + innerLines)
-
       if innerLines.length == 2
       then
-        print("Closing last triangle")
         findValidPoint(List(innerLines.head), triangles) match
           case Some(p) =>
             val tri = (innerLines.head._1, innerLines.head._2, p)
