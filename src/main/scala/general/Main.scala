@@ -22,7 +22,6 @@ import engine.render.shape_renderer.CircleRenderer
 import engine.math.sin
 import engine.Time
 import engine.math.cos
-import engine.render.mesh.Mesh
 import engine.render.Color
 import engine.math.Matrix3
 import engine.math.Matrix4
@@ -33,6 +32,7 @@ import engine.render.renderer.*
 import engine.render.shader.Shader
 import engine.render.renderer.render_data.RenderData
 import engine.math.geometry.Polyline
+import engine.math.shapes.NGon
 
 object MyGame extends Game {
 
@@ -66,9 +66,22 @@ object MyGame extends Game {
   var polygonRenderData_no3: RenderData = _
   var polygonRenderData_no4: RenderData = _
   var polylineRenderData: RenderData = _
+  var ngonRenderData: RenderData = _
+  var ngonRenderData_no2: RenderData = _
 
   onInit += { (_) =>
     window.vsync = true
+
+    val ngon = NGon(0.5f, 7)
+    ngonRenderData = RenderData.fromNGon(ngon, color = Color.YELLOW)
+    ngonRenderData_no2 = RenderData.fromNGon(
+      NGon(0.2f, 300),
+      color = Color.RED,
+      transform = Matrix3.transform(
+        translation = Vector2(-0.2, -0.3),
+        rotation = 0
+      )
+    )
 
     val polyline = Polyline(
       List(
@@ -158,6 +171,8 @@ object MyGame extends Game {
 
     renderer.render(
       List(
+        ngonRenderData,
+        ngonRenderData_no2,
         polylineRenderData,
         polygonRenderData,
         polygonRenderData_no2,

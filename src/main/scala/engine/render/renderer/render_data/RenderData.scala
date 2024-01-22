@@ -99,11 +99,11 @@ object RenderData {
     */
   def fromPolygon(
       polygon: Polygon,
-      extraUniforms: Map[String, Uniform] = Map.empty,
       layer: Float = 0,
       color: Color = Color.WHITE,
       transform: Matrix3 = Matrix3.IDENTITY,
-      shaderOverride: Shader = null
+      shaderOverride: Shader = null,
+      extraUniforms: Map[String, Uniform] = Map.empty
   ): RenderData = {
     // Exceptions
     if polygon == null
@@ -123,17 +123,41 @@ object RenderData {
   def fromPolyline(
       polyline: Polyline,
       width: Float,
-      extraUniforms: Map[String, Uniform] = Map.empty,
       layer: Float = 0,
       color: Color = Color.WHITE,
       transform: Matrix3 = Matrix3.IDENTITY,
-      shaderOverride: Shader = null
+      shaderOverride: Shader = null,
+      extraUniforms: Map[String, Uniform] = Map.empty
   ): RenderData = {
     // Exceptions
     if polyline == null
     then throw new IllegalArgumentException("'polyline' cannot be null")
     // Result
     val (vertices, indices) = vertsAndIndicesFromPolyline(polyline, width)
+    new RenderData(
+      vertices = vertices,
+      indices = indices,
+      layer = layer,
+      color = color,
+      transform = transform,
+      shaderOverride = shaderOverride,
+      extraUniforms = extraUniforms
+    )
+  }
+
+  def fromNGon(
+      ngon: NGon,
+      layer: Float = 0,
+      color: Color = Color.WHITE,
+      transform: Matrix3 = Matrix3.IDENTITY,
+      shaderOverride: Shader = null,
+      extraUniforms: Map[String, Uniform] = Map.empty
+  ): RenderData = {
+    // Exceptions
+    if ngon == null
+    then throw new IllegalArgumentException("'ngon' cannot be null")
+    // Result
+    val (vertices, indices) = vertsAndIndicesFromNGon(ngon)
     new RenderData(
       vertices = vertices,
       indices = indices,
