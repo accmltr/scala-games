@@ -18,7 +18,6 @@ import org.joml.Matrix4f
 import java.nio.IntBuffer
 import java.nio.FloatBuffer
 import engine.math.shapes.Circle
-import engine.render.shape_renderer.CircleRenderer
 import engine.math.sin
 import engine.Time
 import engine.math.cos
