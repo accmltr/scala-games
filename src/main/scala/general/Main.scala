@@ -32,6 +32,7 @@ import engine.math.shapes.Polygon
 import engine.render.renderer.*
 import engine.render.shader.Shader
 import engine.render.renderer.render_data.RenderData
+import engine.math.geometry.Polyline
 
 object MyGame extends Game {
 
@@ -64,9 +65,25 @@ object MyGame extends Game {
   var polygonRenderData_no2: RenderData = _
   var polygonRenderData_no3: RenderData = _
   var polygonRenderData_no4: RenderData = _
+  var polylineRenderData: RenderData = _
 
   onInit += { (_) =>
     window.vsync = true
+
+    val polyline = Polyline(
+      List(
+        Vector2(0, 0),
+        Vector2(1, 0),
+        Vector2(1, 1),
+        Vector2(0, 1),
+        Vector2(0, .8),
+        Vector2(0.35, 0.5),
+        Vector2(0, .2),
+        Vector2(0, 0)
+      ).map(v => Vector2(v.x - .5, v.y - .5))
+    )
+    polylineRenderData = RenderData.fromPolyline(polyline, 0.01f)
+
     val polygon = Polygon(
       Vector(
         Vector2(0, 0),
@@ -141,6 +158,7 @@ object MyGame extends Game {
 
     renderer.render(
       List(
+        polylineRenderData,
         polygonRenderData,
         polygonRenderData_no2,
         polygonRenderData_no3,
