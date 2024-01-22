@@ -4,6 +4,7 @@ import engine.render.shader.{Uniform, Shader}
 import engine.render.Color
 import engine.math.Matrix3
 import scala.util.boundary, boundary.break
+import engine.math.geometry.Polyline
 
 /** @param vertices
   *   The vertices passed to OpenGL.
@@ -111,6 +112,31 @@ object RenderData {
     new RenderData(
       vertices = verticesFromPolygon(polygon),
       indices = indicesFromPolygon(polygon),
+      layer = layer,
+      color = color,
+      transform = transform,
+      shaderOverride = shaderOverride,
+      extraUniforms = extraUniforms
+    )
+  }
+
+  def fromPolyline(
+      polyline: Polyline,
+      width: Float,
+      extraUniforms: Map[String, Uniform] = Map.empty,
+      layer: Float = 0,
+      color: Color = Color.WHITE,
+      transform: Matrix3 = Matrix3.IDENTITY,
+      shaderOverride: Shader = null
+  ): RenderData = {
+    // Exceptions
+    if polyline == null
+    then throw new IllegalArgumentException("'polyline' cannot be null")
+    // Result
+    val (vertices, indices) = vertsAndIndicesFromPolyline(polyline, width)
+    new RenderData(
+      vertices = vertices,
+      indices = indices,
       layer = layer,
       color = color,
       transform = transform,
