@@ -5,20 +5,24 @@ import java.nio.FloatBuffer
 import java.nio.file.{Files, Paths}
 
 package object io {
-  def readTextFile(path: String): String = {
-    if (Files.exists(Paths.get(path))) {
-      try {
+
+  def fileExists(path: String): Boolean = Files.exists(Paths.get(path))
+
+  def readTextFile(path: String): Option[String] = {
+    if fileExists(path)
+    then
+      try
         val source = scala.io.Source.fromFile(path)
         val lines = source.getLines
         val result = lines.mkString("\n")
         source.close()
-        result
-      } catch {
+        Option(result)
+      catch
         case e: Exception =>
-          throw new IOException(s"Error reading shader file: $e")
-      }
-    } else {
-      throw new IOException(s"Shader file does not exist: $path")
-    }
+          // throw new IOException(s"Error reading file: $e")
+          None
+    else
+      // throw new IOException(s"File does not exist: $path")
+      None
   }
 }
