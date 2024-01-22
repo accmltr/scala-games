@@ -4,13 +4,19 @@ import engine.math.shapes.Polygon
 import scala.util.boundary, boundary.break
 import engine.math.geometry.Line
 
-def verticesFromPolygon(polygon: Polygon): Array[Float] =
+private[render_data] def vertsAndIndicesFromPolygon(
+    polygon: Polygon
+): (Array[Float], Array[Int]) = {
+  (verticesFromPolygon(polygon), indicesFromPolygon(polygon))
+}
+
+private def verticesFromPolygon(polygon: Polygon): Array[Float] =
   polygon.points
     .foldLeft(Array[Float]())((acc, point) =>
       acc ++ Array[Float](point.x, point.y)
     )
 
-def indicesFromPolygon(polygon: Polygon): Array[Int] = {
+private def indicesFromPolygon(polygon: Polygon): Array[Int] = {
 
   def lineFromIndices(i: (Int, Int)): Line = {
     Line(polygon.points(i._1), polygon.points(i._2))

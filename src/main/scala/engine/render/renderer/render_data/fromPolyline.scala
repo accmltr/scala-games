@@ -3,7 +3,7 @@ package engine.render.renderer.render_data
 import engine.math.geometry.{Polyline, Line}
 import engine.math.Vector2
 
-def vertsAndIndicesFromPolyline(
+private[render_data] def vertsAndIndicesFromPolyline(
     polyline: Polyline,
     width: Float
 ): (Array[Float], Array[Int]) = {

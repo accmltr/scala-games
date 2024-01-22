@@ -3,7 +3,7 @@ package engine.render.renderer.render_data
 import engine.math.*
 import engine.math.shapes.NGon
 
-def vertsAndIndicesFromNGon(
+private[render_data] def vertsAndIndicesFromNGon(
     ngon: NGon
 ): (Array[Float], Array[Int]) = {
   val angle = (2 * pi) / ngon.segments

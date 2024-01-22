@@ -109,9 +109,10 @@ object RenderData {
     if polygon == null
     then throw new IllegalArgumentException("'polygon' cannot be null")
     // Result
+    val (vertices, indices) = vertsAndIndicesFromPolygon(polygon)
     new RenderData(
-      vertices = verticesFromPolygon(polygon),
-      indices = indicesFromPolygon(polygon),
+      vertices = vertices,
+      indices = indices,
       layer = layer,
       color = color,
       transform = transform,
