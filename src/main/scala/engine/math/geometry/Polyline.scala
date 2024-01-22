@@ -2,7 +2,7 @@ package engine.math.geometry
 
 import engine.math.Vector2
 
-final case class PolyLine(points: List[Vector2]) {
+final case class Polyline(points: List[Vector2]) {
 
   def count: Int = points.length
   def isEmpty = points.isEmpty
