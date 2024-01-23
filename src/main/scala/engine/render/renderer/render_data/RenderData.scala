@@ -23,28 +23,71 @@ import engine.math.geometry.Polyline
   *   These are uniforms passed to the shader in addition to the default
   *   uniforms provided by the renderer.
   */
-case class RenderData(
-    val vertices: Array[Float],
-    val indices: Array[Int],
-    val layer: Float = 0,
-    val color: Color = Color.WHITE,
-    val transform: Matrix3 = Matrix3.IDENTITY,
-    val shaderOverride: Shader = null,
-    val extraUniforms: Map[String, Uniform] = Map.empty
+trait RenderData(
+    private var _vertices: Array[Float],
+    private var _indices: Array[Int],
+    private var _layer: Float = 0,
+    private var _color: Color = Color.WHITE,
+    private var _transform: Matrix3 = Matrix3.IDENTITY,
+    private var _shaderOverride: Shader = null,
+    private var _extraUniforms: Map[String, Uniform] = Map.empty
 ) {
 
-  /** The default shader used when `shaderOverride` is `None`.
+  // Throw exceptions if arguments are invalid
+  _checkForExceptions()
+
+  def vertices: Array[Float] = _vertices
+  def vertices_=(value: Array[Float]): Unit = {
+    _vertices = value
+    _checkForExceptions()
+  }
+
+  def indices: Array[Int] = _indices
+  def indices_=(value: Array[Int]): Unit = {
+    _indices = value
+    _checkForExceptions()
+  }
+
+  def layer: Float = _layer
+  def layer_=(value: Float): Unit = {
+    _layer = value
+    _checkForExceptions()
+  }
+
+  def color: Color = _color
+  def color_=(value: Color): Unit = {
+    _color = value
+    _checkForExceptions()
+  }
+
+  def transform: Matrix3 = _transform
+  def transform_=(value: Matrix3): Unit = {
+    _transform = value
+    _checkForExceptions()
+  }
+
+  def shaderOverride: Shader = _shaderOverride
+  def shaderOverride_=(value: Shader): Unit = {
+    _shaderOverride = value
+    _checkForExceptions()
+  }
+
+  def extraUniforms: Map[String, Uniform] = _extraUniforms
+  def extraUniforms_=(value: Map[String, Uniform]): Unit = {
+    _extraUniforms = value
+    _checkForExceptions()
+  }
+
+  /** The default shader used by this subclass of `RenderData` when
+    * `shaderOverride` is `None`.
     */
   val defaultShader: Shader = Shader(
     "src/main/scala/engine/render/shaders/vertex/default.vert",
     "src/main/scala/engine/render/shaders/fragment/color_fill.frag"
   )
 
-  final val shader =
+  def shader =
     Option(shaderOverride).getOrElse(defaultShader)
-
-  // Throw exceptions if arguments are invalid
-  _checkForExceptions()
 
   private def _checkForExceptions(): Unit = {
     if defaultShader == null
@@ -111,13 +154,13 @@ object RenderData {
     // Result
     val (vertices, indices) = vertsAndIndicesFromPolygon(polygon)
     new RenderData(
-      vertices = vertices,
-      indices = indices,
-      layer = layer,
-      color = color,
-      transform = transform,
-      shaderOverride = shaderOverride,
-      extraUniforms = extraUniforms
+      _vertices = vertices,
+      _indices = indices,
+      _layer = layer,
+      _color = color,
+      _transform = transform,
+      _shaderOverride = shaderOverride,
+      _extraUniforms = extraUniforms
     )
   }
 
@@ -136,13 +179,13 @@ object RenderData {
     // Result
     val (vertices, indices) = vertsAndIndicesFromPolyline(polyline, width)
     new RenderData(
-      vertices = vertices,
-      indices = indices,
-      layer = layer,
-      color = color,
-      transform = transform,
-      shaderOverride = shaderOverride,
-      extraUniforms = extraUniforms
+      _vertices = vertices,
+      _indices = indices,
+      _layer = layer,
+      _color = color,
+      _transform = transform,
+      _shaderOverride = shaderOverride,
+      _extraUniforms = extraUniforms
     )
   }
 
@@ -160,13 +203,13 @@ object RenderData {
     // Result
     val (vertices, indices) = vertsAndIndicesFromNGon(ngon)
     new RenderData(
-      vertices = vertices,
-      indices = indices,
-      layer = layer,
-      color = color,
-      transform = transform,
-      shaderOverride = shaderOverride,
-      extraUniforms = extraUniforms
+      _vertices = vertices,
+      _indices = indices,
+      _layer = layer,
+      _color = color,
+      _transform = transform,
+      _shaderOverride = shaderOverride,
+      _extraUniforms = extraUniforms
     )
   }
 }
