@@ -1,10 +1,11 @@
-package engine.render.renderer.render_data
+package engine.core.render_element
 
 import engine.render.Color
 import engine.math.Matrix3
 import engine.render.shader.Shader
 import engine.render.shader.Uniform
 import engine.math.Vector2
+import engine.render.renderer.render_data.RenderData
 
 final case class PolygonRD private (
     var _points: Vector[Vector2],
