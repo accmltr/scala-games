@@ -1,7 +1,7 @@
 import java.nio.{FloatBuffer, IntBuffer}
 
 import engine.*
-import engine.render.window.Resolution
+import engine.input.KeyCode
 import engine.math.*
 import engine.math.geometry.*
 import engine.math.shapes.*
@@ -9,6 +9,7 @@ import engine.render.*
 import engine.render.renderer.*
 import engine.render.renderer.render_element.*
 import engine.render.shader.Shader
+import engine.render.window.Resolution
 import org.joml.Matrix4f
 import org.lwjgl.BufferUtils
 import org.lwjgl.opengl.GL11.*
