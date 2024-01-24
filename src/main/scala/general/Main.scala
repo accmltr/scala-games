@@ -177,11 +177,11 @@ object MyGame extends Game {
       sin(3f * Time.current) * .5f + .5f
     )
 
-    // renderer.render(
-    //   List(
-    //     poly
-    //   )
-    // )
+    renderer.render(
+      List(
+        poly
+      ).map(_.renderData)
+    )
 
     // polygonRenderData = polygonRenderData.copy(
     //   transform = Matrix3

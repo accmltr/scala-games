@@ -13,7 +13,8 @@ final case class PolygonRenderElement(
     var color: Color = Color.WHITE,
     var transform: Matrix3 = Matrix3.IDENTITY
 ) extends RenderElement {
-  private[renderer] def renderData: RenderData = {
+  /*private[renderer]*/
+  def renderData: RenderData = {
     val (verts, indices) =
       PolygonRenderElement.vertsAndIndicesFromPolygon(points)
     RenderData(

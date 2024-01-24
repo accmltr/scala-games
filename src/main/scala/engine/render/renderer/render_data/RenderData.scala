@@ -6,7 +6,13 @@ import engine.math.Matrix3
 import scala.util.boundary, boundary.break
 import engine.math.geometry.Polyline
 
-/** @param layer
+/** The RenderData class serves as an immutable snapshot of the data needed to
+  * render an object. Mutable game objects are need to be passed to the renderer
+  * by creating a snapshots of their current state in the form of a RenderData
+  * object. This makes maintainability and safety of the Renderer class much
+  * easier.
+  *
+  * @param layer
   *   The layer value determines the order in which objects are drawn, with
   *   lower values being drawn first.
   * @param color
