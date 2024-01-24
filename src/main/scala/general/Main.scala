@@ -62,7 +62,7 @@ object MyGame extends Game {
 
   import engine.render.renderer.render_element.PolygonRenderElement
   val poly: PolygonRenderElement = PolygonRenderElement(
-    _points = Vector(
+    points = Vector(
       Vector2(0, 0),
       Vector2(1, 0),
       Vector2(1, 1),
@@ -71,9 +71,9 @@ object MyGame extends Game {
       Vector2(0.35, 0.5),
       Vector2(0, .2)
     ).map(v => Vector2(v.x - .5, v.y - .5)),
-    _layer = 0,
-    _color = Color.WHITE,
-    _transform = Matrix3.IDENTITY
+    layer = 0,
+    color = Color.WHITE,
+    transform = Matrix3.IDENTITY
   )
   // var polygonRenderData: RenderData = _
   // var polygonRenderData_no2: RenderData = _
@@ -171,17 +171,17 @@ object MyGame extends Game {
 
   onUpdate += { (delta: Float) =>
 
-    poly._color = Color(
+    poly.color = Color(
       sin(1.7f * Time.current) * .5f + .5f,
       sin(2f * Time.current) * .5f + .5f,
       sin(3f * Time.current) * .5f + .5f
     )
 
-    renderer.render(
-      List(
-        poly.renderData
-      )
-    )
+    // renderer.render(
+    //   List(
+    //     poly
+    //   )
+    // )
 
     // polygonRenderData = polygonRenderData.copy(
     //   transform = Matrix3

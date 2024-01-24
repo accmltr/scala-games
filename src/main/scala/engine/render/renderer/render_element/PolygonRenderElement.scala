@@ -8,20 +8,20 @@ import engine.math.Vector2
 import engine.render.renderer.render_data.RenderData
 
 final case class PolygonRenderElement(
-    var _points: Vector[Vector2],
-    var _layer: Float = 0,
-    var _color: Color = Color.WHITE,
-    var _transform: Matrix3 = Matrix3.IDENTITY
+    var points: Vector[Vector2],
+    var layer: Float = 0,
+    var color: Color = Color.WHITE,
+    var transform: Matrix3 = Matrix3.IDENTITY
 ) extends RenderElement {
   private[renderer] def renderData: RenderData = {
     val (verts, indices) =
-      PolygonRenderElement.vertsAndIndicesFromPolygon(_points)
+      PolygonRenderElement.vertsAndIndicesFromPolygon(points)
     RenderData(
       vertices = verts,
       indices = indices,
-      layer = _layer,
-      color = _color,
-      transform = _transform
+      layer = layer,
+      color = color,
+      transform = transform
       // extraUniforms =
     )
   }
