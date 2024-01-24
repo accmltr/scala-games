@@ -11,7 +11,9 @@ final case class PolygonRenderElement(
     var points: Vector[Vector2],
     var layer: Float = 0,
     var color: Color = Color.WHITE,
-    var transform: Matrix3 = Matrix3.IDENTITY
+    var position: Vector2 = Vector2.zero,
+    var rotation: Float = 0,
+    var scale: Vector2 = Vector2.one
 ) extends RenderElement {
 
   // Throw exceptions if arguments are invalid
@@ -32,7 +34,11 @@ final case class PolygonRenderElement(
       indices = indices,
       layer = layer,
       color = color,
-      transform = transform
+      transform = Matrix3.transform(
+        position,
+        rotation,
+        scale
+      )
     )
   }
 }
