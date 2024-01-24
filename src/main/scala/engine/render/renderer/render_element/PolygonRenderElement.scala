@@ -7,31 +7,30 @@ import engine.render.shader.Uniform
 import engine.math.Vector2
 import engine.render.renderer.render_data.RenderData
 
-final case class PolygonRD private (
+final case class PolygonRenderElement(
     var _points: Vector[Vector2],
     var _layer: Float = 0,
     var _color: Color = Color.WHITE,
     var _transform: Matrix3 = Matrix3.IDENTITY,
     var _shaderOverride: Shader = null,
     var _extraUniforms: Map[String, Uniform] = Map.empty
-) extends RenderData(
-      _layer = _layer,
-      _color = _color,
-      _transform = _transform,
-      _shaderOverride = _shaderOverride,
-      _extraUniforms = _extraUniforms
-    ) {
-  def points = _points
-  def poins_=(value: Vector[Vector2]) = {
-    val (v, i) = PolygonRD.vertsAndIndicesFromPolygon(value)
-    vertices = v
-    indices = i
-    _points = value
+) extends RenderElement {
+  def renderData: RenderData = {
+    val (verts, indices) =
+      PolygonRenderElement.vertsAndIndicesFromPolygon(_points)
+    RenderData(
+      shader = _shaderOverride,
+      vertices = verts,
+      indices = indices,
+      layer = _layer,
+      color = _color,
+      transform = _transform,
+      extraUniforms = _extraUniforms
+    )
   }
-
 }
 
-private object PolygonRD {
+object PolygonRenderElement {
 
   import scala.util.boundary, boundary.break
   import engine.math.geometry.Line

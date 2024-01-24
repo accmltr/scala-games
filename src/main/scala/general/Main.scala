@@ -60,126 +60,148 @@ object MyGame extends Game {
   window.maximized = false
   window.fpsStats.showAvg = true
 
-  var polygonRenderData: RenderData = _
-  var polygonRenderData_no2: RenderData = _
-  var polygonRenderData_no3: RenderData = _
-  var polygonRenderData_no4: RenderData = _
-  var polylineRenderData: RenderData = _
-  var ngonRenderData: RenderData = _
-  var ngonRenderData_no2: RenderData = _
+  import engine.render.renderer.render_element.PolygonRenderElement
+  val poly: PolygonRenderElement = PolygonRenderElement(
+    _points = Vector(
+      Vector2(0, 0),
+      Vector2(1, 0),
+      Vector2(1, 1),
+      Vector2(0, 1),
+      Vector2(0, .8),
+      Vector2(0.35, 0.5),
+      Vector2(0, .2)
+    ).map(v => Vector2(v.x - .5, v.y - .5)),
+    _layer = 0,
+    _color = Color.WHITE,
+    _transform = Matrix3.IDENTITY,
+    _shaderOverride = null,
+    _extraUniforms = Map.empty
+  )
+  // var polygonRenderData: RenderData = _
+  // var polygonRenderData_no2: RenderData = _
+  // var polygonRenderData_no3: RenderData = _
+  // var polygonRenderData_no4: RenderData = _
+  // var polylineRenderData: RenderData = _
+  // var ngonRenderData: RenderData = _
+  // var ngonRenderData_no2: RenderData = _
 
   onInit += { (_) =>
     window.vsync = true
 
-    val ngon = NGon(0.5f, 7)
-    ngonRenderData = RenderData.fromNGon(ngon, color = Color.YELLOW)
-    ngonRenderData_no2 = RenderData.fromNGon(
-      NGon(0.2f, 300),
-      color = Color.RED,
-      transform = Matrix3.transform(
-        translation = Vector2(-0.2, -0.3),
-        rotation = 0
-      )
-    )
-
-    val polyline = Polyline(
+    renderer.render(
       List(
-        Vector2(0, 0),
-        Vector2(1, 0),
-        Vector2(1, 1),
-        Vector2(0, 1),
-        Vector2(0, .8),
-        Vector2(0.35, 0.5),
-        Vector2(0, .2),
-        Vector2(0, 0)
-      ).map(v => Vector2(v.x - .5, v.y - .5))
+        poly.renderData
+      )
     )
-    polylineRenderData = RenderData.fromPolyline(polyline, 0.01f)
 
-    val polygon = Polygon(
-      Vector(
-        Vector2(0, 0),
-        Vector2(1, 0),
-        Vector2(1, 1),
-        Vector2(0, 1),
-        Vector2(0, .8),
-        Vector2(0.35, 0.5),
-        Vector2(0, .2)
-      ).map(v => Vector2(v.x - .5, v.y - .5))
-    )
-    polygonRenderData = RenderData.fromPolygon(
-      polygon = polygon,
-      color = Color.YELLOW * .75
-    )
-    polygonRenderData_no2 = RenderData.fromPolygon(
-      polygon = Polygon(
-        Vector(
-          Vector2(0, 0),
-          Vector2(1, 0),
-          Vector2(1, 1),
-          Vector2(0.5, 1.3),
-          Vector2(0, 1),
-          Vector2(0, .8),
-          Vector2(0.35, 0.2)
-        ).map(v => Vector2(v.x - .5, v.y - .5))
-      ),
-      color = Color(Color.GREEN.r, Color.GREEN.g, Color.GREEN.b, 0.1),
-      transform = Matrix3.transform(
-        translation = Vector2(0.5, 0.5),
-        rotation = 0,
-        scale = Vector2(1, 1) * 0.5
-      ),
-      extraUniforms = Map(
-        "uTimeMult" -> .2f
-      ),
-      layer = -10
-    )
-    polygonRenderData_no3 = RenderData.fromPolygon(
-      polygon = Polygon(polygon.points.take(4)),
-      color = Color.BLUE * .75,
-      transform = Matrix3.transform(
-        translation = Vector2(-0.5, 0.5),
-        rotation = 0,
-        scale = Vector2(1, 1) * 0.5
-      )
-    )
-    polygonRenderData_no4 = RenderData.fromPolygon(
-      polygon = Polygon(polygon.points.take(3)),
-      color = Color.RED * .75,
-      transform = Matrix3.transform(
-        translation = Vector2(0, -0.5),
-        rotation = 0,
-        scale = Vector2(1, 1) * 0.5
-      )
-    )
+    // val ngon = NGon(0.5f, 7)
+    // ngonRenderData = RenderData.fromNGon(ngon, color = Color.YELLOW)
+    // ngonRenderData_no2 = RenderData.fromNGon(
+    //   NGon(0.2f, 300),
+    //   color = Color.RED,
+    //   transform = Matrix3.transform(
+    //     translation = Vector2(-0.2, -0.3),
+    //     rotation = 0
+    //   )
+    // )
+
+    // val polyline = Polyline(
+    //   List(
+    //     Vector2(0, 0),
+    //     Vector2(1, 0),
+    //     Vector2(1, 1),
+    //     Vector2(0, 1),
+    //     Vector2(0, .8),
+    //     Vector2(0.35, 0.5),
+    //     Vector2(0, .2),
+    //     Vector2(0, 0)
+    //   ).map(v => Vector2(v.x - .5, v.y - .5))
+    // )
+    // polylineRenderData = RenderData.fromPolyline(polyline, 0.01f)
+
+    // val polygon = Polygon(
+    //   Vector(
+    //     Vector2(0, 0),
+    //     Vector2(1, 0),
+    //     Vector2(1, 1),
+    //     Vector2(0, 1),
+    //     Vector2(0, .8),
+    //     Vector2(0.35, 0.5),
+    //     Vector2(0, .2)
+    //   ).map(v => Vector2(v.x - .5, v.y - .5))
+    // )
+    // polygonRenderData = RenderData.fromPolygon(
+    //   polygon = polygon,
+    //   color = Color.YELLOW * .75
+    // )
+    // polygonRenderData_no2 = RenderData.fromPolygon(
+    //   polygon = Polygon(
+    //     Vector(
+    //       Vector2(0, 0),
+    //       Vector2(1, 0),
+    //       Vector2(1, 1),
+    //       Vector2(0.5, 1.3),
+    //       Vector2(0, 1),
+    //       Vector2(0, .8),
+    //       Vector2(0.35, 0.2)
+    //     ).map(v => Vector2(v.x - .5, v.y - .5))
+    //   ),
+    //   color = Color(Color.GREEN.r, Color.GREEN.g, Color.GREEN.b, 0.1),
+    //   transform = Matrix3.transform(
+    //     translation = Vector2(0.5, 0.5),
+    //     rotation = 0,
+    //     scale = Vector2(1, 1) * 0.5
+    //   ),
+    //   extraUniforms = Map(
+    //     "uTimeMult" -> .2f
+    //   ),
+    //   layer = -10
+    // )
+    // polygonRenderData_no3 = RenderData.fromPolygon(
+    //   polygon = Polygon(polygon.points.take(4)),
+    //   color = Color.BLUE * .75,
+    //   transform = Matrix3.transform(
+    //     translation = Vector2(-0.5, 0.5),
+    //     rotation = 0,
+    //     scale = Vector2(1, 1) * 0.5
+    //   )
+    // )
+    // polygonRenderData_no4 = RenderData.fromPolygon(
+    //   polygon = Polygon(polygon.points.take(3)),
+    //   color = Color.RED * .75,
+    //   transform = Matrix3.transform(
+    //     translation = Vector2(0, -0.5),
+    //     rotation = 0,
+    //     scale = Vector2(1, 1) * 0.5
+    //   )
+    // )
   }
 
   onUpdate += { (delta: Float) =>
+    // polygonRenderData = polygonRenderData.copy(
+    //   transform = Matrix3
+    //     .transform(
+    //       translation = Vector2(
+    //         2f * (input.mousePosition.x / window.resolution.width) - 1,
+    //         2f * (-input.mousePosition.y / window.resolution.height) + 1
+    //       ),
+    //       rotation = cos(.8f * Time.current + 3f) * 2f * pi,
+    //       scale = Vector2(1f, 1f) * (.2f + .1f * (cos(.8f * Time.current) + 1))
+    //     )
+    // )
 
-    polygonRenderData = polygonRenderData.copy(
-      transform = Matrix3
-        .transform(
-          translation = Vector2(
-            2f * (input.mousePosition.x / window.resolution.width) - 1,
-            2f * (-input.mousePosition.y / window.resolution.height) + 1
-          ),
-          rotation = cos(.8f * Time.current + 3f) * 2f * pi,
-          scale = Vector2(1f, 1f) * (.2f + .1f * (cos(.8f * Time.current) + 1))
-        )
-    )
-
-    renderer.render(
-      List(
-        ngonRenderData,
-        ngonRenderData_no2,
-        polylineRenderData,
-        polygonRenderData,
-        polygonRenderData_no2,
-        polygonRenderData_no3,
-        polygonRenderData_no4
-      ),
-      wireframeMode = false // true
-    )
+    // renderer.render(
+    //   List(
+    //     ngonRenderData,
+    //     ngonRenderData_no2,
+    //     polylineRenderData,
+    //     polygonRenderData,
+    //     polygonRenderData_no2,
+    //     polygonRenderData_no3,
+    //     polygonRenderData_no4
+    //   ),
+    //   wireframeMode = false // true
+    // )
 
     // val r = RenderedMesh(
     //   shader = shader,
@@ -266,12 +288,12 @@ object MyGame extends Game {
       quit()
     }
 
-  // shader.uploadFloat("aspect", window.aspect)
-  // shader.uploadVec2f("resolution", window.resolution.toVector2)
-  // shader.uploadVec2f(
-  //   "position",
-  //   Vector2(sin(Time.current), .5 * cos(Time.current))
-  // )
+    // shader.uploadFloat("aspect", window.aspect)
+    // shader.uploadVec2f("resolution", window.resolution.toVector2)
+    // shader.uploadVec2f(
+    //   "position",
+    //   Vector2(sin(Time.current), .5 * cos(Time.current))
+    // )
   }
 
   run()
