@@ -1,39 +1,21 @@
-import engine.input.{KeyCode, MouseCode}
-import engine.Game
-import engine.input.KeyCode
-import engine.math.Vector2
-import engine.math.Vector2Implicits.given
-import engine.input.MouseCode
-import engine.render.window.{Resolution, FpsStats}
-import engine.Node
-import engine.Component
-import org.lwjgl.opengl.GL11._
-import org.lwjgl.opengl.GL13._
-import org.lwjgl.opengl.GL15._
-import org.lwjgl.opengl.GL20._
-import org.lwjgl.opengl.GL30._
-import org.lwjgl.BufferUtils
-import engine.math.Vector3
-import org.joml.Matrix4f
-import java.nio.IntBuffer
-import java.nio.FloatBuffer
-import engine.math.shapes.Circle
-import engine.math.sin
-import engine.Time
-import engine.math.cos
-import engine.render.Color
-import engine.math.Matrix3
-import engine.math.Matrix4
-import engine.math.Matrix3.transform
-import engine.math.pi
-import engine.math.shapes.Polygon
+import java.nio.{FloatBuffer, IntBuffer}
+
+import engine.*
+import engine.render.window.Resolution
+import engine.math.*
+import engine.math.geometry.*
+import engine.math.shapes.*
+import engine.render.*
 import engine.render.renderer.*
+import engine.render.renderer.render_element.*
 import engine.render.shader.Shader
-import engine.render.renderer.RenderData
-import engine.math.geometry.Polyline
-import engine.math.shapes.NGon
-import engine.render.renderer.render_element.NGonRenderElement
-import engine.render.renderer.render_element.PolylineRenderElement
+import org.joml.Matrix4f
+import org.lwjgl.BufferUtils
+import org.lwjgl.opengl.GL11.*
+import org.lwjgl.opengl.GL13.*
+import org.lwjgl.opengl.GL15.*
+import org.lwjgl.opengl.GL20.*
+import org.lwjgl.opengl.GL30.*
 
 object MyGame extends Game {
 
