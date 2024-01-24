@@ -4,13 +4,16 @@ import engine.math.{pi, cos, sin}
 import engine.render.renderer.RenderData
 import engine.render.Color
 import engine.math.Matrix3
+import engine.math.Vector2
 
 final case class NGonRenderElement(
     radius: Float,
     segments: Int = 64,
     var layer: Float = 0,
     var color: Color = Color.WHITE,
-    var transform: Matrix3 = Matrix3.IDENTITY
+    var position: Vector2 = Vector2.zero,
+    var rotation: Float = 0,
+    var scale: Vector2 = Vector2.one
 ) extends RenderElement {
 
   // Throw exceptions if arguments are invalid
@@ -27,7 +30,11 @@ final case class NGonRenderElement(
       indices = indices,
       layer = layer,
       color = color,
-      transform = transform
+      transform = Matrix3.transform(
+        position,
+        rotation,
+        scale
+      )
     )
   }
 
