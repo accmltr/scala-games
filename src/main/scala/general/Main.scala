@@ -73,9 +73,7 @@ object MyGame extends Game {
     ).map(v => Vector2(v.x - .5, v.y - .5)),
     _layer = 0,
     _color = Color.WHITE,
-    _transform = Matrix3.IDENTITY,
-    _shaderOverride = null,
-    _extraUniforms = Map.empty
+    _transform = Matrix3.IDENTITY
   )
   // var polygonRenderData: RenderData = _
   // var polygonRenderData_no2: RenderData = _
@@ -87,12 +85,6 @@ object MyGame extends Game {
 
   onInit += { (_) =>
     window.vsync = true
-
-    renderer.render(
-      List(
-        poly.renderData
-      )
-    )
 
     // val ngon = NGon(0.5f, 7)
     // ngonRenderData = RenderData.fromNGon(ngon, color = Color.YELLOW)
@@ -178,6 +170,19 @@ object MyGame extends Game {
   }
 
   onUpdate += { (delta: Float) =>
+
+    poly._color = Color(
+      sin(1.7f * Time.current) * .5f + .5f,
+      sin(2f * Time.current) * .5f + .5f,
+      sin(3f * Time.current) * .5f + .5f
+    )
+
+    renderer.render(
+      List(
+        poly.renderData
+      )
+    )
+
     // polygonRenderData = polygonRenderData.copy(
     //   transform = Matrix3
     //     .transform(

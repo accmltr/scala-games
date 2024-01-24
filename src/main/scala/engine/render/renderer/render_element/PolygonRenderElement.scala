@@ -11,21 +11,18 @@ final case class PolygonRenderElement(
     var _points: Vector[Vector2],
     var _layer: Float = 0,
     var _color: Color = Color.WHITE,
-    var _transform: Matrix3 = Matrix3.IDENTITY,
-    var _shaderOverride: Shader = null,
-    var _extraUniforms: Map[String, Uniform] = Map.empty
+    var _transform: Matrix3 = Matrix3.IDENTITY
 ) extends RenderElement {
   def renderData: RenderData = {
     val (verts, indices) =
       PolygonRenderElement.vertsAndIndicesFromPolygon(_points)
     RenderData(
-      shader = _shaderOverride,
       vertices = verts,
       indices = indices,
       layer = _layer,
       color = _color,
-      transform = _transform,
-      extraUniforms = _extraUniforms
+      transform = _transform
+      // extraUniforms =
     )
   }
 }
