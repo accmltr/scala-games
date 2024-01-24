@@ -13,6 +13,16 @@ final case class PolygonRenderElement(
     var color: Color = Color.WHITE,
     var transform: Matrix3 = Matrix3.IDENTITY
 ) extends RenderElement {
+
+  // Throw exceptions if arguments are invalid
+  if points == null
+  then throw new IllegalArgumentException("'points' not initialized")
+  if points.size < 3
+  then
+    throw new IllegalArgumentException(
+      "'points' must have at least 3 elements"
+    )
+
   /*private[renderer]*/
   def renderData: RenderData = {
     val (verts, indices) =

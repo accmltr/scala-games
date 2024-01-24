@@ -47,8 +47,18 @@ final case class RenderData(
     )
   if vertices == null
   then throw new IllegalArgumentException("'vertices' not initialized")
+  if vertices.size < 3
+  then
+    throw new IllegalArgumentException(
+      "'vertices' must have at least 3 elements"
+    )
   if indices == null
   then throw new IllegalArgumentException("'indices' not initialized")
+  if indices.size < 3
+  then
+    throw new IllegalArgumentException(
+      "'indices' must have at least 3 elements"
+    )
   if layer.isNaN
   then throw new IllegalArgumentException("'layer' cannot be NaN")
   if color == null
