@@ -33,6 +33,7 @@ import engine.render.renderer.render_data.RenderData
 import engine.math.geometry.Polyline
 import engine.math.shapes.NGon
 import engine.render.renderer.render_element.NGonRenderElement
+import engine.render.renderer.render_element.PolylineRenderElement
 
 object MyGame extends Game {
 
@@ -78,6 +79,19 @@ object MyGame extends Game {
   )
   val ngon = NGonRenderElement(
     radius = 0.5f
+  )
+  val polyline = PolylineRenderElement(
+    points = List(
+      Vector2(0, 0),
+      Vector2(1, 0),
+      Vector2(1, 1),
+      Vector2(0, 1),
+      Vector2(0, .8),
+      Vector2(0.35, 0.5),
+      Vector2(0, .2),
+      Vector2(0, 0)
+    ).map(v => Vector2(v.x - .5, v.y - .5)),
+    width = 0.01f
   )
   // var polygonRenderData: RenderData = _
   // var polygonRenderData_no2: RenderData = _
@@ -184,7 +198,8 @@ object MyGame extends Game {
     renderer.render(
       List(
         poly,
-        ngon
+        ngon,
+        polyline
       ).map(_.renderData)
     )
 
