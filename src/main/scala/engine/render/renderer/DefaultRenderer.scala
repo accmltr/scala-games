@@ -12,7 +12,6 @@ import org.lwjgl.opengl.GL20._
 import org.lwjgl.opengl.GL30._
 import engine.math.Vector3
 import engine.math.Vector4
-import render_data.RenderData
 import engine.Time
 
 final case class DefaultRenderer(

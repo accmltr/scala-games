@@ -5,7 +5,7 @@ import engine.math.Matrix3
 import engine.render.shader.Shader
 import engine.render.shader.Uniform
 import engine.math.Vector2
-import engine.render.renderer.render_data.RenderData
+import engine.render.renderer.RenderData
 
 final case class PolygonRenderElement(
     var points: Vector[Vector2],

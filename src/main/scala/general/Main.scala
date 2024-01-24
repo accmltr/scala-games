@@ -29,7 +29,7 @@ import engine.math.pi
 import engine.math.shapes.Polygon
 import engine.render.renderer.*
 import engine.render.shader.Shader
-import engine.render.renderer.render_data.RenderData
+import engine.render.renderer.RenderData
 import engine.math.geometry.Polyline
 import engine.math.shapes.NGon
 import engine.render.renderer.render_element.NGonRenderElement

@@ -1,4 +1,4 @@
-package engine.render.renderer.render_data
+package engine.render.renderer
 
 import engine.render.shader.{Uniform, Shader}
 import engine.render.Color

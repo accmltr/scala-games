@@ -1,7 +1,7 @@
 package engine.render.renderer.render_element
 
 import engine.math.{pi, cos, sin}
-import engine.render.renderer.render_data.RenderData
+import engine.render.renderer.RenderData
 import engine.render.Color
 import engine.math.Matrix3
 
