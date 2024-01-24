@@ -59,33 +59,3 @@ final case class RenderData(
         s"Uniform name '$u' is reserved"
       )
 }
-
-// object RenderData {
-//   import engine.math.shapes.*
-
-//   /** @param polygon
-//     *   The polygon to create the vertices and indices from for the render data.
-//     * @param layer
-//     *   The layer value determines the order in which objects are drawn, with
-//     *   lower values being drawn first. Values include all real numbers, meaning
-//     *   that negative values can be used as well.
-//     * @param color
-//     * @param transform
-//     * @param shaderOverride
-//     *   Optionally used to override the `RenderData.defaultShader` property. (In
-//     *   this case it uses the `color_fill` shader as the default shader)
-//     * @param extraUniforms
-//     *   These are uniforms passed to the shader in addition to the default
-//     *   uniforms provided by the renderer.
-//     * @return
-//     *   A new `RenderData` instance with the vertices and indices created from
-//     *   the provided polygon.
-//     */
-//   def fromPolygon(
-//       polygon: Polygon,
-//       layer: Float = 0,
-//       color: Color = Color.WHITE,
-//       transform: Matrix3 = Matrix3.IDENTITY,
-//       shaderOverride: Shader = null,
-//       extraUniforms: Map[String, Uniform] = Map.empty
-//   ): RenderData = {
