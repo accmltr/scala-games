@@ -60,8 +60,15 @@ object MyGame extends Game {
     color = Color.WHITE,
     transform = Matrix3.IDENTITY
   )
-  val ngon = NGonRenderElement(
-    radius = 0.5f
+  val iris = NGonRenderElement(
+    radius = 0.5f,
+    color = Color.WHITE,
+    layer = 1
+  )
+  val pupil = NGonRenderElement(
+    radius = 0.3f,
+    color = Color.BLACK,
+    layer = 1.1
   )
   val polyline = PolylineRenderElement(
     points = List(
@@ -177,11 +184,18 @@ object MyGame extends Game {
       sin(2f * Time.current) * .5f + .5f,
       sin(3f * Time.current) * .5f + .5f
     )
+    pupil.transform = Matrix3.transform(
+      translation = Vector2(
+        (input.mousePosition.x - window.resolution.width / 2) / window.resolution.width,
+        -(input.mousePosition.y - window.resolution.height / 2) / window.resolution.height
+      ) * 0.17f
+    )
 
     renderer.render(
       List(
         poly,
-        ngon,
+        iris,
+        pupil,
         polyline
       ).map(_.renderData)
     )
