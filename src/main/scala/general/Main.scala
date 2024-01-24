@@ -57,8 +57,7 @@ object MyGame extends Game {
       Vector2(0, .2)
     ).map(v => Vector2(v.x - .5, v.y - .5)),
     layer = 0,
-    color = Color.WHITE,
-    transform = Matrix3.IDENTITY
+    color = Color.WHITE
   )
   val iris = NGonRenderElement(
     radius = 0.5f,
@@ -184,12 +183,10 @@ object MyGame extends Game {
       sin(2f * Time.current) * .5f + .5f,
       sin(3f * Time.current) * .5f + .5f
     )
-    pupil.transform = Matrix3.transform(
-      translation = Vector2(
-        (input.mousePosition.x - window.resolution.width / 2) / window.resolution.width,
-        -(input.mousePosition.y - window.resolution.height / 2) / window.resolution.height
-      ) * 0.17f
-    )
+    pupil.position = Vector2(
+      (input.mousePosition.x - window.resolution.width / 2) / window.resolution.width,
+      -(input.mousePosition.y - window.resolution.height / 2) / window.resolution.height
+    ) * 0.17f
 
     renderer.render(
       List(
