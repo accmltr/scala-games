@@ -33,7 +33,6 @@ final case class PolygonRenderElement(
       layer = layer,
       color = color,
       transform = transform
-      // extraUniforms =
     )
   }
 }

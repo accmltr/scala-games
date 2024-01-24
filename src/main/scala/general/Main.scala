@@ -32,6 +32,7 @@ import engine.render.shader.Shader
 import engine.render.renderer.render_data.RenderData
 import engine.math.geometry.Polyline
 import engine.math.shapes.NGon
+import engine.render.renderer.render_element.NGonRenderElement
 
 object MyGame extends Game {
 
@@ -74,6 +75,9 @@ object MyGame extends Game {
     layer = 0,
     color = Color.WHITE,
     transform = Matrix3.IDENTITY
+  )
+  val ngon = NGonRenderElement(
+    radius = 0.5f
   )
   // var polygonRenderData: RenderData = _
   // var polygonRenderData_no2: RenderData = _
@@ -179,7 +183,8 @@ object MyGame extends Game {
 
     renderer.render(
       List(
-        poly
+        poly,
+        ngon
       ).map(_.renderData)
     )
 
