@@ -63,7 +63,8 @@ This might seem like a minor inconvenience, but it is something that adds more o
 Here is the code that provides a consistent interface for the `Player` class:
 ```
 case class Player private () {
-  private var _health: Float = 0 // Health is private, but the companion object can access it!
+  private var _health: Float =
+    0 // Health is private, but the companion object may still access it.
   def health: Float = _health
   def health_=(value: Float): Unit =
     require(value >= 0, "health must be >= 0")
@@ -72,8 +73,9 @@ case class Player private () {
 
 object Player {
   def apply(health: Float): Player = {
-    val player = Player()
-    player.health = health
+    val player = new Player()
+    player.health =
+      health // DO NOT use `player._health = health`, this will bypass the `require` check.
     player
   }
 }
@@ -90,6 +92,35 @@ val player = Player(health = 10)
 println(player.health)
 ```
 
-And everyone is happy.
+And now we have successfully created a mutable class, enforces argument requirements upon value assignment, instead of checking for exceptions down the line, and leaving the search for the source of the exception up to the user.
 
-This is how all mutable interfaces in the source code should be implemented.
+#### Tip
+
+As noted in the comment inside the companion object, be careful to not set the private version of the property you are working with, as this bypasses the `require` checks on your properties. If you want to be a bit more cautious, you could make a mental note to always run your requirement checks manually inside your companion object constructors:
+
+```
+case class Player private () {
+  private var _health: Float =
+    0 // Health is private, but the companion object may still access it.
+  def health: Float = _health
+  def health_=(value: Float): Unit =
+    _checkHealth()
+    _health = value
+
+  private def _checkHealth(): Unit =
+    require(_health >= 0, "health must be >= 0")
+
+  private def _runChecks(): Unit = {
+    _checkHealth()
+  }
+}
+
+object Player {
+  def apply(health: Float): Player = {
+    val player = new Player()
+    player._health = health
+    player._runChecks()
+    player
+  }
+}
+```
