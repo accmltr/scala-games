@@ -17,6 +17,7 @@ import org.lwjgl.opengl.GL13.*
 import org.lwjgl.opengl.GL15.*
 import org.lwjgl.opengl.GL20.*
 import org.lwjgl.opengl.GL30.*
+import engine.render.renderer.sdf.CircleSdf
 
 object MyGame extends Game {
 
@@ -59,9 +60,11 @@ object MyGame extends Game {
     layer = 0,
     color = Color.WHITE
   )
-  val iris = NGonRenderElement(
-    radius = 0.5f,
-    color = Color.WHITE,
+  val iris = CircleSdf(
+    radius = 0.3f,
+    borderWidth = 0f,
+    borderColor = Color.BLACK,
+    color = Color.GRAY,
     layer = 1
   )
   val pupil = NGonRenderElement(

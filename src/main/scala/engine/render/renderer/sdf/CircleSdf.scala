@@ -1,22 +1,58 @@
 package engine.render.renderer.sdf
 
-import engine.render.renderer.render_data.RenderData
 import engine.render.Color
 import engine.math.Matrix3
+import engine.render.renderer.render_element.RenderElement
+import engine.math.Vector2
+import engine.render.renderer.RenderData
+import engine.render.shader.Shader
+import engine.math.Vector4
 
 final case class CircleSdf(
     var radius: Float,
-    var border: Float,
+    var borderWidth: Float = 0,
+    var borderColor: Color = Color.BLACK,
     var layer: Float = 0,
     var color: Color,
-    var transform: Matrix3 = Matrix3.IDENTITY
-) extends RenderData(
-      ViewportQuad.vertices,
-      ViewportQuad.indices,
-      0,
-      color,
-      transform
-    ) {
-  override def toString: String =
-    s"CircleSdf(radius=$radius, border=$border, color=$color, transform=$transform)"
+    var position: Vector2 = Vector2.zero,
+    var rotation: Float = 0,
+    var scale: Vector2 = Vector2.one
+) extends RenderElement {
+
+  override def renderData: RenderData = {
+    RenderData(
+      shader = Shader(
+        "src/main/scala/engine/render/shaders/vertex/default_with_interp_pos.vert",
+        "src/main/scala/engine/render/shaders/fragment/circle_sdf.frag"
+      ),
+      vertices = Array[Float](
+        -radius,
+        -radius,
+        radius,
+        -radius,
+        radius,
+        radius,
+        -radius,
+        radius
+      ),
+      indices = Array[Int](0, 1, 2, 2, 3, 0),
+      layer = layer,
+      color = color,
+      transform = Matrix3.transform(
+        position,
+        rotation,
+        scale
+      ),
+      extraUniforms = Map(
+        "uRadius" -> radius,
+        "uBorderWidth" -> borderWidth,
+        "uBorderColor" -> Vector4(
+          borderColor.r,
+          borderColor.g,
+          borderColor.b,
+          borderColor.a
+        )
+      )
+    )
+  }
 }
