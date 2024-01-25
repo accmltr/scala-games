@@ -45,6 +45,7 @@ object MyGame extends Game {
   window.resolution = Resolution.p720
   window.maximized = false
   window.fpsStats.showAvg = true
+  window.backgroundColor = Vector3(0.1f, 0.1f, 0.1f)
 
   import engine.render.renderer.render_element.PolygonRenderElement
   val poly: PolygonRenderElement = PolygonRenderElement(
@@ -61,10 +62,9 @@ object MyGame extends Game {
     color = Color.WHITE
   )
   val iris = CircleSdf(
-    radius = 0.3f,
-    borderWidth = 0f,
+    radius = 0.308f,
     borderColor = Color.BLACK,
-    color = Color.GRAY,
+    color = Color.WHITE,
     layer = 1
   )
   val pupil = NGonRenderElement(
@@ -190,6 +190,8 @@ object MyGame extends Game {
       (input.mousePosition.x - window.resolution.width / 2) / window.resolution.width,
       -(input.mousePosition.y - window.resolution.height / 2) / window.resolution.height
     ) * 0.17f
+
+    iris.borderInnerWidth = 0.007f + abs(0.008f * cos(2f * Time.current))
 
     renderer.render(
       List(
