@@ -58,7 +58,7 @@ println(player.health)
 
 This might seem like a minor inconvenience, but it is something that adds more overhead when coding, which goes against the goal of creating an engine that is easy to use. As we will see in the next section however, there is a clean solution.
 
-### How to fix the problem: Companion Objects!
+### How to fix the problem: Companion Objects
 
 Here is the code that provides a consistent interface for the `Player` class:
 ```
