@@ -10,7 +10,8 @@ import engine.math.Vector4
 
 final case class CircleSdf(
     var radius: Float,
-    var borderWidth: Float = 0,
+    var borderInnerWidth: Float = 0,
+    var borderOuterWidth: Float = 0,
     var borderColor: Color = Color.BLACK,
     var layer: Float = 0,
     var color: Color,
@@ -18,6 +19,16 @@ final case class CircleSdf(
     var rotation: Float = 0,
     var scale: Vector2 = Vector2.one
 ) extends RenderElement {
+
+  /** Shorthand for `borderInnerWidth`.
+    */
+  def biw: Float = borderInnerWidth
+  def biw_=(value: Float): Unit = borderInnerWidth = value
+
+  /** Shorthand for `borderOuterWidth`.
+    */
+  def bow: Float = borderOuterWidth
+  def bow_=(value: Float): Unit = borderOuterWidth = value
 
   override def renderData: RenderData = {
     RenderData(
@@ -45,7 +56,8 @@ final case class CircleSdf(
       ),
       extraUniforms = Map(
         "uRadius" -> radius,
-        "uBorderWidth" -> borderWidth,
+        "uBorderInnerWidth" -> borderInnerWidth,
+        "uBorderOuterWidth" -> borderOuterWidth,
         "uBorderColor" -> Vector4(
           borderColor.r,
           borderColor.g,
