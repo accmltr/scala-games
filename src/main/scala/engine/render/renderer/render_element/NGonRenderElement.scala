@@ -47,13 +47,12 @@ object NGonRenderElement {
       segments: Int
   ): (Array[Float], Array[Int]) = {
     val angle = (2 * pi) / segments
-    val halfRadius = radius / 2
 
     val vertices = (0 to segments + 1)
       .foldLeft(Array[Float]())((acc, i) =>
         acc ++ Array[Float](
-          if (i == 0) 0 else halfRadius * cos(angle * i),
-          if (i == 0) 0 else halfRadius * sin(angle * i)
+          if (i == 0) 0 else radius * cos(angle * i),
+          if (i == 0) 0 else radius * sin(angle * i)
         )
       )
 
