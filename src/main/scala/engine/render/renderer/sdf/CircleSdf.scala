@@ -31,20 +31,21 @@ final case class CircleSdf(
   def bow_=(value: Float): Unit = borderOuterWidth = value
 
   override def renderData: RenderData = {
+    val totalRadius = radius + borderOuterWidth
     RenderData(
       shader = Shader(
         "src/main/scala/engine/render/shaders/vertex/default_with_interp_pos.vert",
         "src/main/scala/engine/render/shaders/fragment/circle_sdf.frag"
       ),
       vertices = Array[Float](
-        -radius,
-        -radius,
-        radius,
-        -radius,
-        radius,
-        radius,
-        -radius,
-        radius
+        -totalRadius,
+        -totalRadius,
+        totalRadius,
+        -totalRadius,
+        totalRadius,
+        totalRadius,
+        -totalRadius,
+        totalRadius
       ),
       indices = Array[Int](0, 1, 2, 2, 3, 0),
       layer = layer,
