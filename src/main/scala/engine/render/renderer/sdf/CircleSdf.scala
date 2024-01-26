@@ -36,12 +36,10 @@ object CircleSdf {
 }
 
 /** @param radius
-  *   The radius of the circle. Absolute value is taken, e.g. `-0.3f` is
-  *   converted to `0.3f`.
-  * @param _borderInnerWidth
+  * @param borderInnerWidth
   *   The width of the inner border. Must be >= 0. This parameter is hidden
   *   after construction, use `borderInnerWidth` instead.
-  * @param _borderOuterWidth
+  * @param borderOuterWidth
   *   The width of the outer border. Must be >= 0. This parameter is hidden
   *   after construction, use `borderOuterWidth` instead.
   * @param borderColor
@@ -56,21 +54,11 @@ final case class CircleSdf private () extends RenderElement {
   private var _radius: Float = 0
   private var _borderInnerWidth: Float = 0
   private var _borderOuterWidth: Float = 0
-  var borderColor: Color = Color.BLACK
-  var layer: Float = 0
-  var color: Color = Color.WHITE
-  var position: Vector2 = Vector2.zero
-  var rotation: Float = 0
-  var scale: Vector2 = Vector2.one
-
-  // // Constructor Checks
-  // require(_radius >= 0, "radius must be >= 0")
-  // require(_borderInnerWidth >= 0, "borderInnerWidth must be >= 0")
-  // require(_borderOuterWidth >= 0, "borderOuterWidth must be >= 0")
+  private var _borderColor: Color = Color.BLACK
 
   /* The following setters and getters enforce constraints on some of the class's properties.
    * This pattern is not pleasant to look at, but has the advantage of throwing exceptions
-   * at the point of assignment, rather than at the point of using the properties.
+   * at the point of assignment, rather than at a later point, when the properties cause a problem elsewhere.
    */
 
   def radius: Float = _radius
@@ -91,6 +79,12 @@ final case class CircleSdf private () extends RenderElement {
     _borderOuterWidth = value
   }
 
+  def borderColor: Color = _borderColor
+  def borderColor_=(value: Color): Unit = {
+    require(value != null, "'borderColor' must not be null")
+    _borderColor = value
+  }
+
   /** Shorthand for `borderInnerWidth`.
     */
   def biw: Float = borderInnerWidth
@@ -102,7 +96,7 @@ final case class CircleSdf private () extends RenderElement {
   def bow_=(value: Float): Unit = borderOuterWidth = value
 
   override def renderData: RenderData = {
-    val totalRadius = abs(radius) + _borderOuterWidth
+    val totalRadius = abs(radius) + borderOuterWidth
     RenderData(
       shader = Shader(
         "src/main/scala/engine/render/shaders/vertex/default_with_interp_pos.vert",
@@ -128,8 +122,8 @@ final case class CircleSdf private () extends RenderElement {
       ),
       extraUniforms = Map(
         "uRadius" -> abs(radius),
-        "uBorderInnerWidth" -> _borderInnerWidth,
-        "uBorderOuterWidth" -> _borderOuterWidth,
+        "uBorderInnerWidth" -> borderInnerWidth,
+        "uBorderOuterWidth" -> borderOuterWidth,
         "uBorderColor" -> Vector4(
           borderColor.r,
           borderColor.g,

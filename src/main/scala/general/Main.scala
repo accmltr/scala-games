@@ -68,7 +68,7 @@ object MyGame extends Game {
     layer = 1
   )
   val pupil = NGonRenderElement(
-    radius = 0.3f,
+    radius = 0.13f,
     color = Color.BLACK,
     layer = 1.1
   )
@@ -189,7 +189,7 @@ object MyGame extends Game {
     pupil.position = Vector2(
       (input.mousePosition.x - window.resolution.width / 2) / window.resolution.width,
       -(input.mousePosition.y - window.resolution.height / 2) / window.resolution.height
-    ) * 0.17f
+    ) * 0.27f
 
     iris.borderInnerWidth = 0.007f + abs(0.008f * cos(2f * Time.current))
 
