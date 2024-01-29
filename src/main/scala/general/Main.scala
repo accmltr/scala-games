@@ -61,10 +61,8 @@ object MyGame extends Game {
   )
   poly.layer = 0
   poly.color = Color.WHITE
-  val iris = CircleSdf(
-    radius = 0.308f,
-    borderColor = Color.BLACK
-  )
+  val iris = CircleSdf(0.308f)
+  iris.borderColor = Color.BLACK
   iris.color = Color.WHITE
   iris.layer = 1
   val pupil = NGonRenderElement(

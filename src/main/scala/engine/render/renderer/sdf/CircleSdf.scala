@@ -11,16 +11,10 @@ import engine.math.abs
 
 object CircleSdf {
   def apply(
-      radius: Float = 0,
-      borderInnerWidth: Float = 0,
-      borderOuterWidth: Float = 0,
-      borderColor: Color = Color.BLACK
+      radius: Float
   ): CircleSdf = {
     val circle = CircleSdf()
     circle.radius = radius
-    circle.borderInnerWidth = borderInnerWidth
-    circle.borderOuterWidth = borderOuterWidth
-    circle.borderColor = borderColor
     circle
   }
 }
