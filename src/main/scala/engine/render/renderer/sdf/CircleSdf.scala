@@ -9,16 +9,6 @@ import engine.render.shader.Shader
 import engine.math.Vector4
 import engine.math.abs
 
-object CircleSdf {
-  def apply(
-      radius: Float
-  ): CircleSdf = {
-    val circle = CircleSdf()
-    circle.radius = radius
-    circle
-  }
-}
-
 /** @param radius
   * @param borderInnerWidth
   *   The width of the inner border. Must be >= 0. This parameter is hidden
@@ -33,7 +23,7 @@ object CircleSdf {
   * @param rotation
   * @param scale
   */
-final case class CircleSdf private () extends RenderElement {
+final case class CircleSdf private () extends RenderElement, Bordered {
 
   private var _radius: Float = 0
   private var _borderInnerWidth: Float = 0
@@ -50,34 +40,6 @@ final case class CircleSdf private () extends RenderElement {
     require(value >= 0, "radius must be >= 0")
     _radius = value
   }
-
-  def borderInnerWidth: Float = _borderInnerWidth
-  def borderInnerWidth_=(value: Float): Unit = {
-    require(value >= 0, "borderInnerWidth must be >= 0")
-    _borderInnerWidth = value
-  }
-
-  def borderOuterWidth: Float = _borderOuterWidth
-  def borderOuterWidth_=(value: Float): Unit = {
-    require(value >= 0, "borderOuterWidth must be >= 0")
-    _borderOuterWidth = value
-  }
-
-  def borderColor: Color = _borderColor
-  def borderColor_=(value: Color): Unit = {
-    require(value != null, "'borderColor' must not be null")
-    _borderColor = value
-  }
-
-  /** Shorthand for `borderInnerWidth`.
-    */
-  def biw: Float = borderInnerWidth
-  def biw_=(value: Float): Unit = borderInnerWidth = value
-
-  /** Shorthand for `borderOuterWidth`.
-    */
-  def bow: Float = borderOuterWidth
-  def bow_=(value: Float): Unit = borderOuterWidth = value
 
   override def renderData: RenderData = {
     val totalRadius = abs(radius) + borderOuterWidth
@@ -116,5 +78,15 @@ final case class CircleSdf private () extends RenderElement {
         )
       )
     )
+  }
+}
+
+object CircleSdf {
+  def apply(
+      radius: Float
+  ): CircleSdf = {
+    val circle = CircleSdf()
+    circle.radius = radius
+    circle
   }
 }
