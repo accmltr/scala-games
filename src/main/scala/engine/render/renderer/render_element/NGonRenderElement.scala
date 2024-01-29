@@ -9,7 +9,7 @@ import engine.math.Vector2
 final case class NGonRenderElement private () extends RenderElement {
 
   private var _radius: Float = 0
-  private var _segments: Int = 0
+  private var _segments: Int = 3
 
   def radius: Float = _radius
   def radius_=(value: Float): Unit =
@@ -20,10 +20,6 @@ final case class NGonRenderElement private () extends RenderElement {
   def segments_=(value: Int): Unit =
     require(value >= 3, "'segments' must be >= 3")
     _segments = value
-
-  // Throw exceptions if arguments are invalid
-  if (segments < 3)
-    throw new IllegalArgumentException("'segments' must be at least 3")
 
   override def renderData: RenderData = {
     val (verts, indices) = NGonRenderElement.vertsAndIndicesFromNGon(

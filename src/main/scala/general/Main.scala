@@ -57,10 +57,10 @@ object MyGame extends Game {
       Vector2(0, .8),
       Vector2(0.35, 0.5),
       Vector2(0, .2)
-    ).map(v => Vector2(v.x - .5, v.y - .5)),
-    layer = 0,
-    color = Color.WHITE
+    ).map(v => Vector2(v.x - .5, v.y - .5))
   )
+  poly.layer = 0
+  poly.color = Color.WHITE
   val iris = CircleSdf(
     radius = 0.308f,
     borderColor = Color.BLACK,
@@ -68,10 +68,10 @@ object MyGame extends Game {
     layer = 1
   )
   val pupil = NGonRenderElement(
-    radius = 0.13f,
-    color = Color.BLACK,
-    layer = 1.1
+    radius = 0.13f
   )
+  pupil.color = Color.BLACK
+  pupil.layer = 1.1
   val polyline = PolylineRenderElement(
     points = List(
       Vector2(0, 0),
