@@ -14,23 +14,13 @@ object CircleSdf {
       radius: Float = 0,
       borderInnerWidth: Float = 0,
       borderOuterWidth: Float = 0,
-      borderColor: Color = Color.BLACK,
-      layer: Float = 0,
-      color: Color = Color.WHITE,
-      position: Vector2 = Vector2.zero,
-      rotation: Float = 0,
-      scale: Vector2 = Vector2.one
+      borderColor: Color = Color.BLACK
   ): CircleSdf = {
     val circle = CircleSdf()
     circle.radius = radius
     circle.borderInnerWidth = borderInnerWidth
     circle.borderOuterWidth = borderOuterWidth
     circle.borderColor = borderColor
-    circle.layer = layer
-    circle.color = color
-    circle.position = position
-    circle.rotation = rotation
-    circle.scale = scale
     circle
   }
 }
