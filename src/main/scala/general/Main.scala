@@ -17,7 +17,7 @@ import org.lwjgl.opengl.GL13.*
 import org.lwjgl.opengl.GL15.*
 import org.lwjgl.opengl.GL20.*
 import org.lwjgl.opengl.GL30.*
-import engine.render.renderer.sdf.CircleSdf
+import engine.render.renderer.sdf.*
 
 object MyGame extends Game {
 
@@ -47,7 +47,6 @@ object MyGame extends Game {
   window.fpsStats.showAvg = true
   window.backgroundColor = Vector3(0.1f, 0.1f, 0.1f)
 
-  import engine.render.renderer.render_element.PolygonRenderElement
   val poly: PolygonRenderElement = PolygonRenderElement(
     points = Vector(
       Vector2(0, 0),
@@ -83,6 +82,12 @@ object MyGame extends Game {
     ).map(v => Vector2(v.x - .5, v.y - .5)),
     width = 0.01f
   )
+
+  val rectSdf = RectSdf(0.3f, 0.2f)
+  rectSdf.cr = rectSdf.mcr
+  println(rectSdf.cr)
+  rectSdf.position = Vector2(0.7f, 0.5f)
+  rectSdf.color = Color.ORANGE
   // var polygonRenderData: RenderData = _
   // var polygonRenderData_no2: RenderData = _
   // var polygonRenderData_no3: RenderData = _
@@ -191,12 +196,16 @@ object MyGame extends Game {
 
     iris.borderInnerWidth = 0.007f + abs(0.008f * cos(2f * Time.current))
 
+    // rectSdf.cornerRadius =
+    //   .1f // abs(rectSdf.maxCornerRadius * cos(Time.current))
+
     renderer.render(
       List(
         poly,
         iris,
         pupil,
-        polyline
+        polyline,
+        rectSdf
       ).map(_.renderData)
     )
 

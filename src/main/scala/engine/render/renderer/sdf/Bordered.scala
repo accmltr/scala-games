@@ -26,10 +26,16 @@ trait Bordered {
   /** Shorthand for `borderInnerWidth`.
     */
   def biw: Float = borderInnerWidth
+
+  /** Shorthand for `borderInnerWidth =`.
+    */
   def biw_=(value: Float): Unit = borderInnerWidth = value
 
   /** Shorthand for `borderOuterWidth`.
     */
   def bow: Float = borderOuterWidth
+
+  /** Shorthand for `borderOuterWidth =`.
+    */
   def bow_=(value: Float): Unit = borderOuterWidth = value
 }
