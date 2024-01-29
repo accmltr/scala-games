@@ -7,23 +7,15 @@ import engine.render.shader.Uniform
 import engine.math.Vector2
 import engine.render.renderer.RenderData
 
-final case class PolygonRenderElement(
-    var points: Vector[Vector2],
-    var layer: Float = 0,
-    var color: Color = Color.WHITE,
-    var position: Vector2 = Vector2.zero,
-    var rotation: Float = 0,
-    var scale: Vector2 = Vector2.one
-) extends RenderElement {
+final case class PolygonRenderElement private () extends RenderElement {
 
-  // Throw exceptions if arguments are invalid
-  if points == null
-  then throw new IllegalArgumentException("'points' not initialized")
-  if points.size < 3
-  then
-    throw new IllegalArgumentException(
-      "'points' must have at least 3 elements"
-    )
+  private var _points: Vector[Vector2] = Vector.empty
+
+  def points: Vector[Vector2] = _points
+  def points_=(value: Vector[Vector2]): Unit =
+    require(value != null, "'points' must not be null")
+    require(value.size >= 3, "'points' must have at least 3 elements")
+    _points = value
 
   /*private[renderer]*/
   def renderData: RenderData = {
@@ -44,6 +36,13 @@ final case class PolygonRenderElement(
 }
 
 object PolygonRenderElement {
+
+  def apply(
+      points: Vector[Vector2]
+  ): PolygonRenderElement =
+    val polyRe = PolygonRenderElement()
+    polyRe.points = points
+    polyRe
 
   import scala.util.boundary, boundary.break
   import engine.math.geometry.Line
