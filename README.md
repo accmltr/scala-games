@@ -4,6 +4,16 @@
 # scala-games
 A minimalistic game engine for rapid prototyping using Scala 3.
 
+## Why Scala?
+
+In short, power and clean code.
+
+Here are some further points that cover the viability of using Scala to develop games:
+ - **Write a solution once, use it everywhere (no duplicate patterns):** Scala allows you to create abstract solutions for the common patterns you need to solve in your projects. Which also makes it an outstanding choice for community made libraries.
+ - **Concise and powerful code:** Where you boilerplate in other languages, you usually have a tidy solution in Scala, e.g. [Setters And Getters](https://github.com/accmltr/scala-games/wiki/Scala-Pros-And-Cons#Setters-And-Getters).
+
+Checkout the [Scala Pros And Cons](https://github.com/accmltr/scala-games/wiki/Scala-Pros-And-Cons) wiki page for some examples of why Scala is a great language for game developers.
+
 ## Project Goals
  - Easy to learn for newcomers with a concise API.
  - Powerful features for prototyping game mechanics quickly.
