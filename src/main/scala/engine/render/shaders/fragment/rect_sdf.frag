@@ -20,16 +20,29 @@ void main(){
 	
 	vec2 o=vec2(uWidth/2,uHeight/2);
 	vec2 i=o-vec2(uCornerRadius);
-	if(p.x<o.x&&p.y<o.y){
+	if(p.x<o.x+uBorderOuterWidth&&p.y<o.y+uBorderOuterWidth){
 		vec2 pl=p-i;
 		if(pl.x>=0&&pl.y>=0){
-			if(length(pl)<=uCornerRadius)
-			FragColor=uColor;
+			float l=length(pl);
+			if(l<=uCornerRadius+uBorderOuterWidth){
+				if(l<=uCornerRadius-uBorderInnerWidth-uBorderOuterWidth){
+					FragColor=uColor;
+				}
+				else
+				{
+					FragColor=uBorderColor;
+				}
+			}
 			else
 			discard;
 		}
 		else
-		FragColor=uColor;
+		{
+			if(p.x<o.x-uBorderInnerWidth-uBorderOuterWidth&&p.y<o.y-uBorderInnerWidth-uBorderOuterWidth)
+			FragColor=uColor;
+			else
+			FragColor=uBorderColor;
+		}
 	}
 	else
 	discard;

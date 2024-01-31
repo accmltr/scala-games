@@ -55,20 +55,22 @@ final case class RectSdf private () extends RenderElement, Bordered {
   def mcr = maxCornerRadius
 
   override def renderData: RenderData = {
+    val totalWith = width + borderOuterWidth
+    val totalHeight = height + borderOuterWidth
     RenderData(
       shader = Shader(
         "src/main/scala/engine/render/shaders/vertex/default_with_vPos.vert",
         "src/main/scala/engine/render/shaders/fragment/rect_sdf.frag"
       ),
       vertices = Array[Float](
-        -width / 2,
-        -height / 2,
-        width / 2,
-        -height / 2,
-        width / 2,
-        height / 2,
-        -width / 2,
-        height / 2
+        -totalWith / 2,
+        -totalHeight / 2,
+        totalWith / 2,
+        -totalHeight / 2,
+        totalWith / 2,
+        totalHeight / 2,
+        -totalWith / 2,
+        totalHeight / 2
       ),
       indices = Array[Int](
         0, 1, 2, 2, 3, 0

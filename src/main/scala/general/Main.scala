@@ -80,10 +80,10 @@ object MyGame extends Game {
       Vector2(0, .2),
       Vector2(0, 0)
     ).map(v => Vector2(v.x - .5, v.y - .5)),
-    width = 0.01f
+    width = 0.0 // 1f
   )
 
-  val rectSdf = RectSdf(.3f, .7f)
+  val rectSdf = RectSdf(1.0f, 1.0f)
   rectSdf.cr = rectSdf.mcr / 3
   rectSdf.layer = 100
   // rectSdf.position = Vector2(0.7f, 0.5f)
@@ -196,8 +196,7 @@ object MyGame extends Game {
 
     iris.borderInnerWidth = 0.007f + abs(0.008f * cos(2f * Time.current))
 
-    // rectSdf.cornerRadius =
-    //   .1f // abs(rectSdf.maxCornerRadius * cos(Time.current))
+    rectSdf.bow = abs(0.01f * cos(Time.current))
 
     renderer.render(
       List(
