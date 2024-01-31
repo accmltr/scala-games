@@ -67,16 +67,9 @@ final case class CircleSdf private () extends RenderElement, Bordered {
         scale
       ),
       extraUniforms = Map(
-        "uRadius" -> abs(radius),
-        "uBorderInnerWidth" -> borderInnerWidth,
-        "uBorderOuterWidth" -> borderOuterWidth,
-        "uBorderColor" -> Vector4(
-          borderColor.r,
-          borderColor.g,
-          borderColor.b,
-          borderColor.a
-        )
+        "uRadius" -> abs(radius)
       )
+        ++ borderUniforms
     )
   }
 }

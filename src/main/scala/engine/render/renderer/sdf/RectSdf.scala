@@ -84,7 +84,7 @@ final case class RectSdf private () extends RenderElement, Bordered {
         "uWidth" -> width,
         "uHeight" -> height,
         "uCornerRadius" -> cornerRadius
-      )
+      ) ++ borderUniforms // TODO: streamline uniform additions
     )
   }
 

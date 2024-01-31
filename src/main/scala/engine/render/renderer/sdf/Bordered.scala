@@ -2,6 +2,8 @@ package engine.render.renderer.sdf
 
 import engine.render.Color
 import engine.render.renderer.render_element.RenderElement
+import engine.math.Vector4
+import engine.render.shader.Uniform
 
 trait Bordered {
   private var _borderInnerWidth: Float = 0
@@ -38,4 +40,16 @@ trait Bordered {
   /** Shorthand for `borderOuterWidth =`.
     */
   def bow_=(value: Float): Unit = borderOuterWidth = value
+
+  protected def borderUniforms: Map[String, Uniform] =
+    Map(
+      "uBorderInnerWidth" -> borderInnerWidth,
+      "uBorderOuterWidth" -> borderOuterWidth,
+      "uBorderColor" -> Vector4(
+        borderColor.r,
+        borderColor.g,
+        borderColor.b,
+        borderColor.a
+      )
+    )
 }
