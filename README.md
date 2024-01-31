@@ -14,6 +14,8 @@ Here are some further points that cover the viability of using Scala to develop 
 
 Checkout the [Scala Pros And Cons](https://github.com/accmltr/scala-games/wiki/Scala-Pros-And-Cons) wiki page for some examples of why Scala is a great language for game developers.
 
+If you have any questions or suggestions on using Scala for the purpose of writing the engine and developing games, please check out the [*Scala*](https://github.com/accmltr/scala-games/discussions/categories/scala) category in Discussions.
+
 ## Project Goals
  - Easy to learn for newcomers with a concise API.
  - Powerful features for prototyping game mechanics quickly.
