@@ -11,15 +11,30 @@ uniform float uCornerRadius;
 out vec4 FragColor;
 
 void main(){
-	vec2 pos=abs(vPos.xy)
-	vec2 furthest=vec2(uWidth,uHeight)
-	vec2 cornerCenter=furthest-vec2(uCornerRadius)
-	vec2 radVec=pos
-	if(pos.x>furthest.x||pos.y>furthest.y)
-	discard;
-	else if(radVec.x>0&&radVec.y>0&&length(radVec)>uRadius)
-	discard;
-	else
-	FragColor=u_Color
+	
+	vec2 p=abs(vPos);
+	
+	vec2 o=vec2(uWidth/2,uHeight/2);
+	vec2 r=vec2(uCornerRadius);
+	vec2 i=o-r;
+	if(p.x<i.x&&p.y<i.y){
+		FragColor=uColor;
+	}
+	else{
+		vec2 pl=p-i;
+		if(p.x<o.x&&p.y<o.y){
+			if(p.x>0&&p.y>0){
+				if(length(pl)<=uCornerRadius)
+				FragColor=uColor;
+				else
+				discard;
+			}
+			else
+			FragColor=uColor;
+			
+		}
+		else
+		discard;
+	}
 	
 }

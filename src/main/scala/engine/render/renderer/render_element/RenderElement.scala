@@ -35,4 +35,19 @@ trait RenderElement {
   def scale_=(value: Vector2): Unit =
     require(value != null, "'scale' must not be null")
     _scale = value
+
+  /** Shorthand for `position.x`. */
+  def x = position.x
+
+  /** Shorthand for `position.x = this.position.copy(x = value)`.
+    */
+  def x_=(value: Float): Unit = position = position.copy(x = value)
+
+  /** Shorthand for `position.y`. */
+  def y = position.y
+
+  /** Shorthand for `position.y = this.position.copy(y = value)`.
+    */
+  def y_=(value: Float): Unit = position = position.copy(y = value)
+
 }

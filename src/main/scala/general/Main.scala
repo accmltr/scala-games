@@ -83,10 +83,10 @@ object MyGame extends Game {
     width = 0.01f
   )
 
-  val rectSdf = RectSdf(0.3f, 0.2f)
+  val rectSdf = RectSdf(.3f, .7f)
   rectSdf.cr = rectSdf.mcr
-  println(rectSdf.cr)
-  rectSdf.position = Vector2(0.7f, 0.5f)
+  rectSdf.layer = 100
+  // rectSdf.position = Vector2(0.7f, 0.5f)
   rectSdf.color = Color.ORANGE
   // var polygonRenderData: RenderData = _
   // var polygonRenderData_no2: RenderData = _

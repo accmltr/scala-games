@@ -33,6 +33,18 @@ final case class RectSdf private () extends RenderElement, Bordered {
   def maxCornerRadius: Float =
     if width < height then width / 2 else height / 2
 
+  /** Shorthand for `width`. */
+  def w = width
+
+  /** Shorthand for `width =`. */
+  def w_=(value: Float): Unit = width = value
+
+  /** Shorthand for `height`. */
+  def h = height
+
+  /** Shorthand for `height =`. */
+  def h_=(value: Float): Unit = height = value
+
   /** Shorthand for `cornerRadius`. */
   def cr = cornerRadius
 
@@ -69,9 +81,9 @@ final case class RectSdf private () extends RenderElement, Bordered {
         scale
       ),
       extraUniforms = Map(
-        "u_width" -> width,
-        "u_height" -> height,
-        "u_cornerRadius" -> cornerRadius
+        "uWidth" -> width,
+        "uHeight" -> height,
+        "uCornerRadius" -> cornerRadius
       )
     )
   }
