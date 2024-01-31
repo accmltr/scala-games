@@ -84,7 +84,7 @@ object MyGame extends Game {
   )
 
   val rectSdf = RectSdf(.3f, .7f)
-  rectSdf.cr = rectSdf.mcr
+  rectSdf.cr = rectSdf.mcr / 3
   rectSdf.layer = 100
   // rectSdf.position = Vector2(0.7f, 0.5f)
   rectSdf.color = Color.ORANGE

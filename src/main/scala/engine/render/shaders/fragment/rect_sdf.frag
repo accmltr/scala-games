@@ -7,6 +7,10 @@ uniform vec4 uColor;
 uniform float uWidth;
 uniform float uHeight;
 uniform float uCornerRadius;
+// Border
+uniform float uBorderInnerWidth;
+uniform float uBorderOuterWidth;
+uniform vec4 uBorderColor;
 
 out vec4 FragColor;
 
@@ -15,26 +19,18 @@ void main(){
 	vec2 p=abs(vPos);
 	
 	vec2 o=vec2(uWidth/2,uHeight/2);
-	vec2 r=vec2(uCornerRadius);
-	vec2 i=o-r;
-	if(p.x<i.x&&p.y<i.y){
-		FragColor=uColor;
-	}
-	else{
+	vec2 i=o-vec2(uCornerRadius);
+	if(p.x<o.x&&p.y<o.y){
 		vec2 pl=p-i;
-		if(p.x<o.x&&p.y<o.y){
-			if(p.x>0&&p.y>0){
-				if(length(pl)<=uCornerRadius)
-				FragColor=uColor;
-				else
-				discard;
-			}
-			else
+		if(pl.x>=0&&pl.y>=0){
+			if(length(pl)<=uCornerRadius)
 			FragColor=uColor;
-			
+			else
+			discard;
 		}
 		else
-		discard;
+		FragColor=uColor;
 	}
-	
+	else
+	discard;
 }
