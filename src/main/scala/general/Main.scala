@@ -47,44 +47,9 @@ object MyGame extends Game {
   window.fpsStats.showAvg = true
   window.backgroundColor = Vector3(0.1f, 0.1f, 0.1f)
 
-  val poly: PolygonRenderElement = PolygonRenderElement(
-    points = Vector(
-      Vector2(0, 0),
-      Vector2(1, 0),
-      Vector2(1, 1),
-      Vector2(0, 1),
-      Vector2(0, .8),
-      Vector2(0.35, 0.5),
-      Vector2(0, .2)
-    ).map(v => Vector2(v.x - .5, v.y - .5))
-  )
-  poly.layer = 0
-  poly.color = Color.WHITE
-  val iris = CircleSdf(0.308f)
-  iris.borderColor = Color.BLACK
-  iris.color = Color.WHITE
-  iris.layer = 1
-  val pupil = NGonRenderElement(
-    radius = 0.13f
-  )
-  pupil.color = Color.BLACK
-  pupil.layer = 1.1
-  val polyline = PolylineRenderElement(
-    points = List(
-      Vector2(0, 0),
-      Vector2(1, 0),
-      Vector2(1, 1),
-      Vector2(0, 1),
-      Vector2(0, .8),
-      Vector2(0.35, 0.5),
-      Vector2(0, .2),
-      Vector2(0, 0)
-    ).map(v => Vector2(v.x - .5, v.y - .5)),
-    width = 0.0 // 1f
-  )
-
   val rectSdf = RectSdf(1.0f, 1.0f)
   rectSdf.cr = rectSdf.mcr / 3
+  rectSdf.borderColor = Color.YELLOW
   rectSdf.layer = 100
   // rectSdf.position = Vector2(0.7f, 0.5f)
   rectSdf.color = Color.ORANGE
@@ -184,26 +149,10 @@ object MyGame extends Game {
 
   onUpdate += { (delta: Float) =>
 
-    poly.color = Color(
-      sin(1.7f * Time.current) * .5f + .5f,
-      sin(2f * Time.current) * .5f + .5f,
-      sin(3f * Time.current) * .5f + .5f
-    )
-    pupil.position = Vector2(
-      (input.mousePosition.x - window.resolution.width / 2) / window.resolution.width,
-      -(input.mousePosition.y - window.resolution.height / 2) / window.resolution.height
-    ) * 0.27f
-
-    iris.borderInnerWidth = 0.007f + abs(0.008f * cos(2f * Time.current))
-
-    rectSdf.bow = abs(0.01f * cos(Time.current))
+    rectSdf.bow = abs(0.1f * cos(Time.current))
 
     renderer.render(
       List(
-        poly,
-        iris,
-        pupil,
-        polyline,
         rectSdf
       ).map(_.renderData)
     )
