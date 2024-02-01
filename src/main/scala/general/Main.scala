@@ -47,233 +47,39 @@ object MyGame extends Game {
   window.fpsStats.showAvg = true
   window.backgroundColor = Vector3(0.1f, 0.1f, 0.1f)
 
-  val rectSdf = RectSdf(100.0f, 100.0f)
+  val rectSdf = RectSdf(200.0f, 200.0f)
   rectSdf.position = Vector2(1, 1)
-  rectSdf.cr = rectSdf.mcr / 3
+  rectSdf.cr = 10
   rectSdf.borderColor = Color.YELLOW
   rectSdf.layer = 100
-  // rectSdf.position = Vector2(0.7f, 0.5f)
   rectSdf.color = Color.ORANGE
-  // var polygonRenderData: RenderData = _
-  // var polygonRenderData_no2: RenderData = _
-  // var polygonRenderData_no3: RenderData = _
-  // var polygonRenderData_no4: RenderData = _
-  // var polylineRenderData: RenderData = _
-  // var ngonRenderData: RenderData = _
-  // var ngonRenderData_no2: RenderData = _
+  rectSdf.bow = 10
+
+  val circleSdf = CircleSdf(100.0f)
+  circleSdf.position = Vector2(.24, .24)
+  circleSdf.borderColor = Color.GREEN
+  circleSdf.color = Color.BLUE
 
   onInit += { (_) =>
     window.vsync = true
-
-    // val ngon = NGon(0.5f, 7)
-    // ngonRenderData = RenderData.fromNGon(ngon, color = Color.YELLOW)
-    // ngonRenderData_no2 = RenderData.fromNGon(
-    //   NGon(0.2f, 300),
-    //   color = Color.RED,
-    //   transform = Matrix3.transform(
-    //     translation = Vector2(-0.2, -0.3),
-    //     rotation = 0
-    //   )
-    // )
-
-    // val polyline = Polyline(
-    //   List(
-    //     Vector2(0, 0),
-    //     Vector2(1, 0),
-    //     Vector2(1, 1),
-    //     Vector2(0, 1),
-    //     Vector2(0, .8),
-    //     Vector2(0.35, 0.5),
-    //     Vector2(0, .2),
-    //     Vector2(0, 0)
-    //   ).map(v => Vector2(v.x - .5, v.y - .5))
-    // )
-    // polylineRenderData = RenderData.fromPolyline(polyline, 0.01f)
-
-    // val polygon = Polygon(
-    //   Vector(
-    //     Vector2(0, 0),
-    //     Vector2(1, 0),
-    //     Vector2(1, 1),
-    //     Vector2(0, 1),
-    //     Vector2(0, .8),
-    //     Vector2(0.35, 0.5),
-    //     Vector2(0, .2)
-    //   ).map(v => Vector2(v.x - .5, v.y - .5))
-    // )
-    // polygonRenderData = RenderData.fromPolygon(
-    //   polygon = polygon,
-    //   color = Color.YELLOW * .75
-    // )
-    // polygonRenderData_no2 = RenderData.fromPolygon(
-    //   polygon = Polygon(
-    //     Vector(
-    //       Vector2(0, 0),
-    //       Vector2(1, 0),
-    //       Vector2(1, 1),
-    //       Vector2(0.5, 1.3),
-    //       Vector2(0, 1),
-    //       Vector2(0, .8),
-    //       Vector2(0.35, 0.2)
-    //     ).map(v => Vector2(v.x - .5, v.y - .5))
-    //   ),
-    //   color = Color(Color.GREEN.r, Color.GREEN.g, Color.GREEN.b, 0.1),
-    //   transform = Matrix3.transform(
-    //     translation = Vector2(0.5, 0.5),
-    //     rotation = 0,
-    //     scale = Vector2(1, 1) * 0.5
-    //   ),
-    //   extraUniforms = Map(
-    //     "uTimeMult" -> .2f
-    //   ),
-    //   layer = -10
-    // )
-    // polygonRenderData_no3 = RenderData.fromPolygon(
-    //   polygon = Polygon(polygon.points.take(4)),
-    //   color = Color.BLUE * .75,
-    //   transform = Matrix3.transform(
-    //     translation = Vector2(-0.5, 0.5),
-    //     rotation = 0,
-    //     scale = Vector2(1, 1) * 0.5
-    //   )
-    // )
-    // polygonRenderData_no4 = RenderData.fromPolygon(
-    //   polygon = Polygon(polygon.points.take(3)),
-    //   color = Color.RED * .75,
-    //   transform = Matrix3.transform(
-    //     translation = Vector2(0, -0.5),
-    //     rotation = 0,
-    //     scale = Vector2(1, 1) * 0.5
-    //   )
-    // )
   }
 
   onUpdate += { (delta: Float) =>
+    val k = 0.7f
+    rectSdf.biw = 10 * abs(sin(Time.current * k))
 
-    rectSdf.bow = abs(rectSdf.mcr * cos(Time.current))
+    circleSdf.bow = circleSdf.radius * abs(sin(Time.current * k))
 
     renderer.render(
       List(
-        rectSdf
+        rectSdf,
+        circleSdf
       ).map(_.renderData)
     )
-
-    // polygonRenderData = polygonRenderData.copy(
-    //   transform = Matrix3
-    //     .transform(
-    //       translation = Vector2(
-    //         2f * (input.mousePosition.x / window.resolution.width) - 1,
-    //         2f * (-input.mousePosition.y / window.resolution.height) + 1
-    //       ),
-    //       rotation = cos(.8f * Time.current + 3f) * 2f * pi,
-    //       scale = Vector2(1f, 1f) * (.2f + .1f * (cos(.8f * Time.current) + 1))
-    //     )
-    // )
-
-    // renderer.render(
-    //   List(
-    //     ngonRenderData,
-    //     ngonRenderData_no2,
-    //     polylineRenderData,
-    //     polygonRenderData,
-    //     polygonRenderData_no2,
-    //     polygonRenderData_no3,
-    //     polygonRenderData_no4
-    //   ),
-    //   wireframeMode = false // true
-    // )
-
-    // val r = RenderedMesh(
-    //   shader = shader,
-    //   transform = Matrix3
-    //     .transform(
-    //       translation = Vector2(
-    //         cos(1.7f * Time.current) * .2,
-    //         sin(2f * Time.current) * .11
-    //       ),
-    //       rotation = cos(.5f * Time.current) * 2f * pi,
-    //       scale = Vector2(1f, 1f) * .3f
-    //     ),
-    //   mesh = Mesh(Circle(0.5f), 7),
-    //   tint = Color.GRAY
-    // )
-    // val r1 = RenderedMesh(
-    //   shader = shader,
-    //   transform = Matrix3
-    //     .transform(
-    //       translation = Vector2(
-    //         cos(1.7f * Time.current + 3f) * .2,
-    //         sin(2f * Time.current + 3f) * .11
-    //       ),
-    //       rotation = cos(.5f * Time.current + 3f) * 2f * pi,
-    //       scale = Vector2(1f, 1f) * .3f
-    //     ),
-    //   mesh = Mesh(Circle(0.5f), 7),
-    //   tint = Color.GREEN * .75
-    // )
-    // val p1 = RenderedMesh(
-    //   shader = shader,
-    //   transform = Matrix3
-    //     .transform(
-    //       translation = Vector2(
-    //         cos(1.7f * Time.current + 5f) * .2,
-    //         sin(3f * Time.current + 3f) * .11
-    //       ),
-    //       rotation = cos(.8f * Time.current + 3f) * 2f * pi,
-    //       scale = Vector2(1f, 1f) * (.2f + .1f * (cos(.8f * Time.current) + 1))
-    //     ),
-    //   mesh = Mesh(
-    //     Polygon(
-    //       Vector(
-    //         Vector2(0, 0),
-    //         Vector2(1, 0),
-    //         Vector2(1, 1),
-    //         Vector2(0, 1),
-    //         Vector2(0, .8),
-    //         Vector2(0.35, 0.5),
-    //         Vector2(0, .2)
-    //       ).map(v => Vector2(v.x - .5, v.y - .5))
-    //     )
-    //   ),
-    //   tint = Color.YELLOW * .75
-    // )
-    // val l = LineRenderedElement(
-    //   shader = lineShader,
-    //   points = Array(
-    //     Vector2(0, 0),
-    //     Vector2(-1, -1) * .5,
-    //     Vector2(1, -1) * .5,
-    //     Vector2(1, 1) * .5
-    //     // Vector2(0, -1),
-    //     // Vector2(-1, -1),
-    //     // Vector2(-3, 1),
-    //     // Vector2(0, 10)
-    //   ).map(_ * .8),
-    //   width = 0.07
-    // )
-
-    // renderMaster += r
-    // renderMaster += r1
-    // renderMaster += p1
-    // renderMaster += l
-
-    // renderMaster.render()
-
-    // renderMaster -= r
-    // renderMaster -= r1
-    // renderMaster -= p1
-    // renderMaster -= l
 
     if (input.justReleased(KeyCode.escape)) {
       quit()
     }
-
-    // shader.uploadFloat("aspect", window.aspect)
-    // shader.uploadVec2f("resolution", window.resolution.toVector2)
-    // shader.uploadVec2f(
-    //   "position",
-    //   Vector2(sin(Time.current), .5 * cos(Time.current))
-    // )
   }
 
   run()
