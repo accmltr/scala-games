@@ -67,10 +67,14 @@ object MyGame extends Game {
 
   onUpdate += { (delta: Float) =>
     val k = 0.7f
-    rectSdf.biw = 10 * abs(sin(Time.current * k))
+    rectSdf.biw = 40 * abs(sin(Time.current * k))
+    rectSdf.bow = 70 * abs(sin(Time.current * k))
     // rectSdf.bow = 10 * abs(sin(Time.current * k)) + 5
 
     circleSdf.bow = circleSdf.radius * abs(sin(Time.current * k))
+    rectSdf.position =
+      Vector2(0, -1) + input.mousePosition / window.resolution.height
+    rectSdf.y *= -2
 
     renderer.render(
       List(

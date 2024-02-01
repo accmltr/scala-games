@@ -19,12 +19,24 @@ void main(){
 	vec2 p=abs(vPos);
 	vec2 cornerCenter=vec2(uWidth-uCornerRadius,uHeight-uCornerRadius);
 	vec2 cornerDelta=p-cornerCenter;
+	float cornerDeltaLength=length(cornerDelta);
 	
 	if(p.x<=uWidth&&p.y<=uHeight)// Inside width and height
 	{
 		if(cornerDelta.x>=0&&cornerDelta.y>=0)// Corner
 		{
-			FragColor=vec4(0.,.8353,1.,0.);
+			if(cornerDeltaLength<=uCornerRadius-uBorderInnerWidth)// Inner border
+			{
+				FragColor=vec4(.5451,.251,.6627,0.);
+			}
+			else if(cornerDeltaLength<=uCornerRadius+uBorderOuterWidth)// Outer border
+			{
+				FragColor=vec4(.4392,.4235,.6196,0.);
+			}
+			else// Empty space
+			{
+				discard;
+			}
 		}
 		else if(p.x<=uWidth-uBorderInnerWidth&&p.y<=uHeight-uBorderInnerWidth)// Main color
 		{
@@ -39,7 +51,14 @@ void main(){
 	{
 		if(cornerDelta.x>=0&&cornerDelta.y>=0)// Corner
 		{
-			FragColor=vec4(.8,0.,1.,0.);
+			if(cornerDeltaLength<=uCornerRadius+uBorderOuterWidth)
+			{
+				FragColor=vec4(.251,.4157,.6627,0.);
+			}
+			else// Empty space
+			{
+				discard;
+			}
 		}
 		else// Remainder of border
 		{
