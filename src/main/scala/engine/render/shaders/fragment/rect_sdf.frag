@@ -17,8 +17,8 @@ out vec4 FragColor;
 void main(){
 	
 	vec2 p=abs(vPos);
-	vec2 cornerOrigin=vec2(uWidth-uCornerRadius,uHeight-uCornerRadius);
-	vec2 cornerDelta=p-cornerOrigin;
+	vec2 cornerCenter=vec2(uWidth-uCornerRadius,uHeight-uCornerRadius);
+	vec2 cornerDelta=p-cornerCenter;
 	
 	if(p.x<=uWidth&&p.y<=uHeight)// Inside width and height
 	{
