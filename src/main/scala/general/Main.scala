@@ -47,7 +47,8 @@ object MyGame extends Game {
   window.fpsStats.showAvg = true
   window.backgroundColor = Vector3(0.1f, 0.1f, 0.1f)
 
-  val rectSdf = RectSdf(1.0f, 1.0f)
+  val rectSdf = RectSdf(100.0f, 100.0f)
+  rectSdf.position = Vector2(1, 1)
   rectSdf.cr = rectSdf.mcr / 3
   rectSdf.borderColor = Color.YELLOW
   rectSdf.layer = 100
@@ -149,7 +150,7 @@ object MyGame extends Game {
 
   onUpdate += { (delta: Float) =>
 
-    rectSdf.bow = abs(0.1f * cos(Time.current))
+    rectSdf.bow = abs(rectSdf.mcr * cos(Time.current))
 
     renderer.render(
       List(

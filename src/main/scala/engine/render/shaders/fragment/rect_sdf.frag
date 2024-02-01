@@ -18,8 +18,8 @@ void main(){
 	
 	vec2 p=abs(vPos);
 	
-	vec2 o=vec2(uWidth/2,uHeight/2)+vec2(uBorderOuterWidth);
-	vec2 i=vec2(uWidth/2,uHeight/2)-vec2(uCornerRadius);
+	vec2 o=.5*vec2(uWidth,uHeight)+vec2(uBorderOuterWidth);
+	vec2 i=.5*vec2(uWidth,uHeight)-vec2(uCornerRadius);
 	if(p.x<o.x&&p.y<o.y){
 		vec2 pl=p-i;
 		if(pl.x>=0&&pl.y>=0){
