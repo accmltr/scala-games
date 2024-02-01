@@ -8,6 +8,6 @@ out vec2 vPos;
 
 void main(){
 	vec3 pos=uTrans*vec3(aPos,1.);
-	gl_Position=vec4((pos.x/pos.z)/(uRes.x/uRes.y),(pos.y/pos.z),1.,1.);
+	gl_Position=vec4((uRes.y*pos.x)/(pos.z*uRes.x),(pos.y/pos.z),1.,1.);
 	vPos=aPos;
 }
