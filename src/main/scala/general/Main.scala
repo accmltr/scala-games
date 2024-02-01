@@ -54,6 +54,7 @@ object MyGame extends Game {
   rectSdf.layer = 100
   rectSdf.color = Color.ORANGE
   rectSdf.bow = 10
+  rectSdf.biw = 10
 
   val circleSdf = CircleSdf(100.0f)
   circleSdf.position = Vector2(.24, .24)
@@ -66,7 +67,7 @@ object MyGame extends Game {
 
   onUpdate += { (delta: Float) =>
     val k = 0.7f
-    rectSdf.biw = 10 * abs(sin(Time.current * k))
+    // rectSdf.biw = 10 * abs(sin(Time.current * k))
 
     circleSdf.bow = circleSdf.radius * abs(sin(Time.current * k))
 
