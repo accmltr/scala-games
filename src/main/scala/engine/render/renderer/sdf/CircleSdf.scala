@@ -45,7 +45,7 @@ final case class CircleSdf private () extends RenderElement, Bordered {
     val totalRadius = abs(radius) + borderOuterWidth
     RenderData(
       shader = Shader(
-        "src/main/scala/engine/render/shaders/vertex/default_with_vPos.vert",
+        "src/main/scala/engine/render/shaders/vertex/default.vert",
         "src/main/scala/engine/render/shaders/fragment/circle_sdf.frag"
       ),
       vertices = Array[Float](

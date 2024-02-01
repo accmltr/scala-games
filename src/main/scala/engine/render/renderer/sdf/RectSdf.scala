@@ -59,7 +59,7 @@ final case class RectSdf private () extends RenderElement, Bordered {
     val yRadius = height + borderOuterWidth
     RenderData(
       shader = Shader(
-        "src/main/scala/engine/render/shaders/vertex/default_with_vPos.vert",
+        "src/main/scala/engine/render/shaders/vertex/default.vert",
         "src/main/scala/engine/render/shaders/fragment/rect_sdf.frag"
       ),
       vertices = Array[Float](
