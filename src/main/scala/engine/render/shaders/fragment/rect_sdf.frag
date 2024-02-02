@@ -13,7 +13,7 @@ uniform float uBorderOuterWidth;
 uniform vec4 uBorderColor;
 // Border, RectSdf specific
 uniform bool uConstantBorderWidth;
-unifrom bool uAutoDisableCBW;
+uniform bool uAutoDisableCBW;
 
 out vec4 FragColor;
 
