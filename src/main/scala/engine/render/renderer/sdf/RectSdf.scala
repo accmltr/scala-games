@@ -115,7 +115,9 @@ final case class RectSdf private () extends RenderElement, Bordered {
       extraUniforms = Map(
         "uWidth" -> width,
         "uHeight" -> height,
-        "uCornerRadius" -> cornerRadius
+        "uCornerRadius" -> cornerRadius,
+        "uConstantBorderWidth" -> constantBorderWidth,
+        "uAutoCBW" -> autoCBW
       ) ++ borderUniforms // TODO: streamline uniform additions
     )
   }
