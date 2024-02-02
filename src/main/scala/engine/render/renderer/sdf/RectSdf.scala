@@ -10,8 +10,8 @@ final case class RectSdf private () extends RenderElement, Bordered {
   private var _width: Float = 0
   private var _height: Float = 0
   private var _cornerRadius: Float = 0
-  private var _constantBorderWidth: Boolean = false
-  private var _autoCBW: Boolean = false
+  private var _constantBorderWidth: Boolean = true
+  private var _autoDisableCBW: Boolean = true
 
   def width: Float = _width
   def width_=(value: Float): Unit =
@@ -39,26 +39,29 @@ final case class RectSdf private () extends RenderElement, Bordered {
     * of the rect.
     *
     * This is analogous to the `equivalentCornerRadii` property.
-    *
-    * @return
     */
   def constantBorderWidth: Boolean = _constantBorderWidth
   def constantBorderWidth_=(value: Boolean): Unit =
     _constantBorderWidth = value
 
-  /** If `true`, `constandBorderWidth` will be set to `false` when
-    * `cornerRadius` is set to a value smaller than the width of the outer
-    * border. If `false`, `equivalentCornerRadii` will not be automatically set,
-    * and a rect with no corner radius will have a outer border with a rounding
-    * equal in radius to the width of the outer border.
+  /** When **enabled**, `constandBorderWidth` will be set to `false` when
+    * `cornerRadius` is smaller than or equal to `outerBorderWidth`. This means
+    * the outer border will have the same radius as the inner border in that
+    * range, but the distance between the inner and outer border on the corners
+    * will be wider than on the sides of the rect.
     *
-    * The default value is `false`.
+    * When **disabled**, `constandBorderWidth` will not be automatically set to
+    * `false`. Meaning the outer border will maintain a constant width around
+    * the corners of the rect, even when the corner radius becomes smaller than
+    * the outer border width. This leads to the outer border having a rounding,
+    * when the inner border has a sharp corner on rects with `cornerRadius <=
+    * outerBorderWidth`.
     *
-    * @return
+    * The default value is `true`.
     */
-  def autoCBW: Boolean = _autoCBW
-  def autoCBW_=(value: Boolean): Unit =
-    _autoCBW = value
+  def autoDisableCBW: Boolean = _autoDisableCBW
+  def autoDisableCBW_=(value: Boolean): Unit =
+    _autoDisableCBW = value
 
   def maxCornerRadius: Float =
     if width < height then width / 2 else height / 2
@@ -117,7 +120,7 @@ final case class RectSdf private () extends RenderElement, Bordered {
         "uHeight" -> height,
         "uCornerRadius" -> cornerRadius,
         "uConstantBorderWidth" -> constantBorderWidth,
-        "uAutoCBW" -> autoCBW
+        "uAutoDisableCBW" -> autoDisableCBW
       ) ++ borderUniforms // TODO: streamline uniform additions
     )
   }
