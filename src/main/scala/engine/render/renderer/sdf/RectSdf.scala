@@ -10,6 +10,8 @@ final case class RectSdf private () extends RenderElement, Bordered {
   private var _width: Float = 0
   private var _height: Float = 0
   private var _cornerRadius: Float = 0
+  private var _constantBorderWidth: Boolean = false
+  private var _autoCBW: Boolean = false
 
   def width: Float = _width
   def width_=(value: Float): Unit =
@@ -29,6 +31,34 @@ final case class RectSdf private () extends RenderElement, Bordered {
     require(value <= width / 2, "'cornerRadius' must be <= 'width' / 2")
     require(value <= height / 2, "'cornerRadius' must be <= 'height' / 2")
     _cornerRadius = value
+
+    /** If `true`, the border will maintain a constant with around the corners
+      * of the rect by rounding the outer corner around the center of the inner
+      * corner. If `false`, the inner and outer radii of the border will be
+      * equal, meaning the border will not maintain a constant width around the
+      * corners of the rect.
+      *
+      * This is analogous to the `equivalentCornerRadii` property.
+      *
+      * @return
+      */
+  def constantBorderWidth: Boolean = _constantBorderWidth
+  def constantBorderWidth_=(value: Boolean): Unit =
+    _constantBorderWidth = value
+
+    /** If `true`, `constandBorderWidth` will be set to `false` when
+      * `cornerRadius` is set to a value smaller than the width of the outer
+      * border. If `false`, `equivalentCornerRadii` will not be automatically
+      * set, and a rect with no corner radius will have a outer border with a
+      * rounding equal in radius to the width of the outer border.
+      *
+      * The default value is `false`.
+      *
+      * @return
+      */
+  def autoCBW: Boolean = _autoCBW
+  def autoCBW_=(value: Boolean): Unit =
+    _autoCBW = value
 
   def maxCornerRadius: Float =
     if width < height then width / 2 else height / 2
