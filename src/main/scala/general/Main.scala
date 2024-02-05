@@ -55,6 +55,12 @@ case class Image(path: String) {
   }
 }
 
+object Image {
+  def resetCursor(windowId: Long): Unit = {
+    org.lwjgl.glfw.GLFW.glfwSetCursor(windowId, 0)
+  }
+}
+
 object MyGame extends Game {
 
   title = "MyGame"
@@ -122,6 +128,10 @@ object MyGame extends Game {
         circleSdf
       ).map(_.renderData)
     )
+
+    if (input.justPressed(KeyCode.space)) {
+      Image.resetCursor(window.windowId)
+    }
 
     if (input.justReleased(KeyCode.escape)) {
       quit()
