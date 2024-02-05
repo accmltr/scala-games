@@ -239,4 +239,25 @@ class Window(
     glfwRequestWindowAttention(_windowId)
   }
 
+  import org.lwjgl.glfw.GLFWImage
+  import engine.render.Image
+  private var _cursorImage: Image = null
+  private var _cursorPointer: Long = 0
+  def cursor: Image = _cursorImage
+  def setCursor(image: Image, x: Int, y: Int): Unit = {
+
+    require(image != null, "`image` may nut be `null`")
+
+    if (_cursorPointer != 0)
+      glfwDestroyCursor(_cursorPointer)
+    _cursorPointer = glfwCreateCursor(image.image, x, y)
+    glfwSetCursor(windowId, _cursorPointer)
+    _cursorImage = image
+  }
+  def clearCursor(): Unit = {
+    if (_cursorPointer != 0)
+      glfwDestroyCursor(_cursorPointer)
+    glfwSetCursor(windowId, NULL)
+    _cursorImage = null
+  }
 }
