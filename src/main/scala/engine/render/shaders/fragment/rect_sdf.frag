@@ -12,8 +12,7 @@ uniform float uBorderInnerWidth;
 uniform float uBorderOuterWidth;
 uniform vec4 uBorderColor;
 // Border, RectSdf specific
-uniform bool uConstantBorderWidth;
-uniform bool uAutoDisableCBW;
+uniform int uCornerMode;
 
 out vec4 FragColor;
 
@@ -38,11 +37,49 @@ bool isInsideRounderRect(vec2 point,vec2 corner,float cornerRadius)
 	return false;
 }
 
-void main(){
+void constantWidthMode()
+{
 	if(isInsideRounderRect(vPos,vec2(uWidth,uHeight)-vec2(uBorderInnerWidth),uCornerRadius-uBorderInnerWidth))
 	FragColor=uColor;
 	else if(isInsideRounderRect(vPos,vec2(uWidth,uHeight)+vec2(uBorderOuterWidth),uCornerRadius+uBorderOuterWidth))
 	FragColor=uBorderColor;
+	else
+	discard;
+}
+
+void equivalentRadiiMode()
+{
+	if(isInsideRounderRect(vPos,vec2(uWidth,uHeight)-vec2(uBorderInnerWidth),uCornerRadius))
+	FragColor=uColor;
+	else if(isInsideRounderRect(vPos,vec2(uWidth,uHeight)+vec2(uBorderOuterWidth),((uCornerRadius/uBorderOuterWidth)*(uCornerRadius+uBorderOuterWidth))))
+	FragColor=uBorderColor;
+	else
+	discard;
+}
+
+void main(){
+	
+	if(uCornerMode==0)
+	{
+		constantWidthMode();
+	}else if(uCornerMode==1)
+	{
+		equivalentRadiiMode();
+	}else if(uCornerMode==2)
+	{
+		if(isInsideRounderRect(vPos,vec2(uWidth,uHeight)-vec2(uBorderInnerWidth),uCornerRadius-uBorderInnerWidth))
+		FragColor=uColor;
+		else if(uCornerRadius<uBorderOuterWidth){
+			if(isInsideRounderRect(vPos,vec2(uWidth,uHeight)+vec2(uBorderOuterWidth),(uCornerRadius/uBorderOuterWidth)*(uCornerRadius+uBorderOuterWidth)))
+			FragColor=uBorderColor;
+			else
+			discard;
+		}
+		else if(isInsideRounderRect(vPos,vec2(uWidth,uHeight)+vec2(uBorderOuterWidth),uCornerRadius+uBorderOuterWidth))
+		FragColor=uBorderColor;
+		else
+		discard;
+	}
 	else
 	discard;
 }

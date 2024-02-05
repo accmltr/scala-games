@@ -91,12 +91,13 @@ object MyGame extends Game {
 
   val rectSdf = RectSdf(200.0f, 200.0f)
   rectSdf.position = Vector2(1, 1)
-  rectSdf.cr = 10
+  // rectSdf.cr = 10
   rectSdf.borderColor = Color.YELLOW
+  rectSdf.borderOuterWidth = 10
+  rectSdf.borderInnerWidth = 10
   rectSdf.layer = 100
   rectSdf.color = Color.ORANGE
-  rectSdf.bow = 10
-  rectSdf.biw = 10
+  rectSdf.cornerMode = CornerMode.AutoSharpen
 
   val circleSdf = CircleSdf(100.0f)
   circleSdf.position = Vector2(.24, .24)
@@ -113,9 +114,9 @@ object MyGame extends Game {
 
   onUpdate += { (delta: Float) =>
     val k = 0.7f
-    rectSdf.biw = 4 * abs(sin(Time.current * k))
-    rectSdf.bow = 7 * abs(sin(Time.current * k))
-    // rectSdf.bow = 10 * abs(sin(Time.current * k)) + 5
+    // rectSdf.biw = 10 * abs(sin(Time.current * k))
+    rectSdf.cr = 50 * abs(sin(Time.current * k))
+    // rectSdf.biw = 50 * abs(sin(Time.current * k))
 
     circleSdf.bow = circleSdf.radius * abs(sin(Time.current * k))
     rectSdf.position =
