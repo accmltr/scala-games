@@ -8,24 +8,21 @@ import engine.math.geometry.Polyline
 import engine.math.Vector2
 import engine.math.geometry.Line
 
-final case class PolylineRenderElement(
-    points: List[Vector2],
-    width: Float = 1,
-    var layer: Float = 0,
-    var color: Color = Color.WHITE,
-    var position: Vector2 = Vector2.zero,
-    var rotation: Float = 0,
-    var scale: Vector2 = Vector2.one
-) extends RenderElement {
+final case class PolylineRenderElement private () extends RenderElement {
 
-  // Throw exceptions if arguments are invalid
-  if points == null
-  then throw new IllegalArgumentException("'points' not initialized")
-  if points.size < 2
-  then
-    throw new IllegalArgumentException(
-      "'points' must have at least 2 elements"
-    )
+  private var _points: List[Vector2] = List.empty
+  private var _width: Float = 1
+
+  def points: List[Vector2] = _points
+  def points_=(value: List[Vector2]): Unit =
+    require(value != null, "'points' must not be null")
+    require(value.size >= 2, "'points' must have at least 2 elements")
+    _points = value
+
+  def width: Float = _width
+  def width_=(value: Float): Unit =
+    require(value >= 0, "'width' must be >= 0")
+    _width = value
 
   override def renderData: RenderData = {
     val (verts, indices) =
@@ -46,6 +43,13 @@ final case class PolylineRenderElement(
 }
 
 object PolylineRenderElement {
+
+  def apply(points: List[Vector2], width: Float = 1): PolylineRenderElement =
+    val polylineRe = PolylineRenderElement()
+    polylineRe.points = points
+    polylineRe.width = width
+    polylineRe
+
   private def vertsAndIndicesFromPolyline(
       points: List[Vector2],
       width: Float

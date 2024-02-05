@@ -6,19 +6,20 @@ import engine.render.Color
 import engine.math.Matrix3
 import engine.math.Vector2
 
-final case class NGonRenderElement(
-    radius: Float,
-    segments: Int = 64,
-    var layer: Float = 0,
-    var color: Color = Color.WHITE,
-    var position: Vector2 = Vector2.zero,
-    var rotation: Float = 0,
-    var scale: Vector2 = Vector2.one
-) extends RenderElement {
+final case class NGonRenderElement private () extends RenderElement {
 
-  // Throw exceptions if arguments are invalid
-  if (segments < 3)
-    throw new IllegalArgumentException("'segments' must be at least 3")
+  private var _radius: Float = 0
+  private var _segments: Int = 3
+
+  def radius: Float = _radius
+  def radius_=(value: Float): Unit =
+    require(value >= 0, "'radius' must be >= 0")
+    _radius = value
+
+  def segments: Int = _segments
+  def segments_=(value: Int): Unit =
+    require(value >= 3, "'segments' must be >= 3")
+    _segments = value
 
   override def renderData: RenderData = {
     val (verts, indices) = NGonRenderElement.vertsAndIndicesFromNGon(
@@ -42,18 +43,23 @@ final case class NGonRenderElement(
 
 object NGonRenderElement {
 
+  def apply(radius: Float, segments: Int = 32): NGonRenderElement =
+    val ngonRe = NGonRenderElement()
+    ngonRe.radius = radius
+    ngonRe.segments = segments
+    ngonRe
+
   private def vertsAndIndicesFromNGon(
       radius: Float,
       segments: Int
   ): (Array[Float], Array[Int]) = {
     val angle = (2 * pi) / segments
-    val halfRadius = radius / 2
 
     val vertices = (0 to segments + 1)
       .foldLeft(Array[Float]())((acc, i) =>
         acc ++ Array[Float](
-          if (i == 0) 0 else halfRadius * cos(angle * i),
-          if (i == 0) 0 else halfRadius * sin(angle * i)
+          if (i == 0) 0 else radius * cos(angle * i),
+          if (i == 0) 0 else radius * sin(angle * i)
         )
       )
 

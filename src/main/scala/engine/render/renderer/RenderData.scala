@@ -36,7 +36,6 @@ final case class RenderData(
     layer: Float = 0,
     color: Color = Color.WHITE,
     transform: Matrix3 = Matrix3.IDENTITY,
-    shaderOverride: Shader = null,
     extraUniforms: Map[String, Uniform] = Map.empty
 ) {
   // Throw exceptions if arguments are invalid
