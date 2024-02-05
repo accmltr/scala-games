@@ -1,5 +1,3 @@
-import java.nio.{FloatBuffer, IntBuffer}
-
 import engine.*
 import engine.input.KeyCode
 import engine.math.*
@@ -8,6 +6,7 @@ import engine.math.shapes.*
 import engine.render.*
 import engine.render.renderer.*
 import engine.render.renderer.render_element.*
+import engine.render.renderer.sdf.*
 import engine.render.shader.Shader
 import engine.render.window.Resolution
 import org.joml.Matrix4f
@@ -17,49 +16,12 @@ import org.lwjgl.opengl.GL13.*
 import org.lwjgl.opengl.GL15.*
 import org.lwjgl.opengl.GL20.*
 import org.lwjgl.opengl.GL30.*
-import engine.render.renderer.sdf.*
+
 import java.nio.CharBuffer
+import java.nio.FloatBuffer
+import java.nio.IntBuffer
 import scala.io.Source
-
-case class Image(path: String) {
-  import org.lwjgl.glfw.GLFW._
-  import org.lwjgl.glfw.GLFWImage;
-  import org.lwjgl.system.MemoryStack;
-  import org.lwjgl.stb.STBImage;
-  import org.lwjgl.system.MemoryStack.stackPush;
-  import org.lwjgl.system.MemoryUtil;
-  import org.lwjgl.system.MemoryUtil.memAlloc;
-  import org.lwjgl.system.MemoryUtil.memFree;
-  import org.lwjgl.stb.STBImage.stbi_load_from_memory;
-  import org.lwjgl.stb.STBImage.stbi_image_free;
-  import org.lwjgl.stb.STBImage.stbi_set_flip_vertically_on_load;
-
-  val image: GLFWImage = GLFWImage.malloc();
-  val width: IntBuffer = BufferUtils.createIntBuffer(1);
-  val height: IntBuffer = BufferUtils.createIntBuffer(1);
-  val channels: IntBuffer = BufferUtils.createIntBuffer(1);
-
-  private val imgData =
-    org.lwjgl.stb.STBImage.stbi_load(path, width, height, channels, 4)
-
-  image.set(width.get(0), height.get(0), imgData)
-
-  def setAsCursor(windowId: Long, x: Int, y: Int): Unit = {
-    val cursor = glfwCreateCursor(image, x, y)
-    glfwSetCursor(windowId, cursor)
-  }
-
-  def free(): Unit = {
-    stbi_image_free(imgData)
-    image.free()
-  }
-}
-
-object Image {
-  def resetCursor(windowId: Long): Unit = {
-    org.lwjgl.glfw.GLFW.glfwSetCursor(windowId, 0)
-  }
-}
+import engine.render.Image
 
 object MyGame extends Game {
 
@@ -104,11 +66,14 @@ object MyGame extends Game {
   circleSdf.color = Color.BLUE
 
   val cursor = Image("res/cursor.png")
+  println(
+    s"width: ${cursor.width}, height: ${cursor.height}, channels: ${cursor.channels}"
+  )
 
   onInit += { (_) =>
     window.vsync = true
 
-    cursor.setAsCursor(window.windowId, 0, 0)
+    window.setCursor(cursor, 0, 0)
   }
 
   onUpdate += { (delta: Float) =>
@@ -130,7 +95,7 @@ object MyGame extends Game {
     )
 
     if (input.justPressed(KeyCode.space)) {
-      Image.resetCursor(window.windowId)
+      window.clearCursor()
     }
 
     if (input.justReleased(KeyCode.escape)) {
