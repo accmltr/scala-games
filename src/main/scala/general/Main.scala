@@ -97,7 +97,6 @@ object MyGame extends Game {
   rectSdf.borderInnerWidth = 10
   rectSdf.layer = 100
   rectSdf.color = Color.ORANGE
-  rectSdf.cornerMode = CornerMode.AutoSharpen
 
   val circleSdf = CircleSdf(100.0f)
   circleSdf.position = Vector2(.24, .24)

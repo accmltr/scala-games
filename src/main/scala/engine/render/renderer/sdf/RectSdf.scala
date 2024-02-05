@@ -5,9 +5,35 @@ import engine.render.renderer.RenderData
 import engine.math.Matrix3
 import engine.render.shader.Shader
 
+/** Each mode determines how the corners of the border will be rounded.
+  *
+  * @param value
+  *   The integer value of the mode. Passed to the shader.
+  */
 enum CornerMode(val value: Int):
+  /** Outer borders will always have a constant width. Which means that with no
+    * corner radius, the outer border corners will have a radius equal to the
+    * outer border width.
+    *
+    * Inner border corners will have a radius equal to the `cornerRadius -
+    * borderInnerWidth`. Which means that inner border width will not be
+    * constant when `borderInnerWidth > cornerRadius`.
+    */
   case ConstantWidth extends CornerMode(0)
+
+  /** Both inner and outer border corners will always have radii equal to
+    * `cornerRadius`
+    */
   case EquivalentRadii extends CornerMode(1)
+
+  /** When the `cornerRadius > borderOuterWidth`, corners will behave the same
+    * as in `ConstantWidth` mode.
+    *
+    * When `cornerRadius < borderOuterWidth`, the outer border corners will
+    * transition from a radius of `borderOuterWidth + cornerRadius` to `0` as
+    * `cornerRadius` approaches `0`. Inner border corner behavior remains the
+    * same.
+    */
   case AutoSharpen extends CornerMode(2)
 
 final case class RectSdf private () extends RenderElement, Bordered {
@@ -36,7 +62,10 @@ final case class RectSdf private () extends RenderElement, Bordered {
     require(value <= height / 2, "'cornerRadius' must be <= 'height' / 2")
     _cornerRadius = value
 
-    /** Determines border behavior when a corner radius is applied.
+    /** Determines behavior of border corners, i.e. determines how they are
+      * rounded.
+      *
+      * Read the docs of the `CornerMode` members for more information.
       */
   def cornerMode: CornerMode = _cornerMode
   def cornerMode_=(value: CornerMode): Unit = _cornerMode = value
