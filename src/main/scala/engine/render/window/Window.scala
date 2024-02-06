@@ -185,6 +185,10 @@ class Window(
     // bindings available for use.
     GL.createCapabilities()
 
+    // Enable blending
+    glEnable(GL_BLEND)
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
+
     // Initialize the game
     initCallback()
   }
