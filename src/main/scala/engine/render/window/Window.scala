@@ -182,7 +182,8 @@ class Window(
     // OpenGL context, or any context that is managed externally.
     // LWJGL detects the context that is current in the current thread,
     // creates the GLCapabilities instance and makes the OpenGL
-    // bindings available for use.
+    // bindings available for use. Hence methods like `glEnable` and
+    // `glBlendFunc` are used after this line.
     GL.createCapabilities()
 
     // Enable blending
