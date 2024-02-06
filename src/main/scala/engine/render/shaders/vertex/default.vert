@@ -7,8 +7,8 @@ uniform mat3 uTrans;// Transformation matrix
 out vec2 vPos;// Vertex position in pixel coordinates, to be interpolated
 
 void main(){
-	// Convert coordinates to OpenGL and apply transformation
-	vec3 pos=uTrans*vec3((aPos/uRes)*2.-1.,1.);
-	gl_Position=vec4(pos.xy,0.,1.);
+	// Convert coordinates for OpenGL and apply transformation
+	vec2 pos=((uTrans*vec3((aPos),1.)).xy/uRes)*2.-1.;
+	gl_Position=vec4(pos.x,pos.y,0.,1.);
 	vPos=aPos;// Pass the given vertex position to the fragment shader
 }

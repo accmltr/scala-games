@@ -51,24 +51,19 @@ object MyGame extends Game {
   window.fpsStats.showAvg = true
   window.backgroundColor = Vector3(0.1f, 0.1f, 0.1f)
 
-  val rectSdf = RectSdf(200.0f, 200.0f)
-  rectSdf.position = Vector2(1, 1)
-  // rectSdf.cr = 10
-  rectSdf.borderColor = Color.YELLOW
-  rectSdf.borderOuterWidth = 10
-  rectSdf.borderInnerWidth = 10
-  rectSdf.layer = 100
+  val rectSdf =
+    RectSdf(window.resolution.width - 20, window.resolution.height - 20)
   rectSdf.color = Color(0.5f, 0.5f, 0.5f, 0.5f)
+  rectSdf.position = Vector2(10, 10)
+
+  println(window.resolution.width)
 
   val circleSdf = CircleSdf(100.0f)
-  circleSdf.position = Vector2(.24, .24)
+  circleSdf.position = Vector2(100, 240)
   circleSdf.borderColor = Color.GREEN
   circleSdf.color = Color.BLUE
 
   val cursor = Image("res/cursor.png")
-  println(
-    s"width: ${cursor.width}, height: ${cursor.height}, channels: ${cursor.channels}"
-  )
 
   window.vsync = true
   onInit += { (_) =>
@@ -76,15 +71,9 @@ object MyGame extends Game {
   }
 
   onUpdate += { (delta: Float) =>
-    val k = 0.7f
-    // rectSdf.biw = 10 * abs(sin(Time.current * k))
-    rectSdf.cr = 50 * abs(sin(Time.current * k))
-    // rectSdf.biw = 50 * abs(sin(Time.current * k))
 
-    circleSdf.bow = circleSdf.radius * abs(sin(Time.current * k))
-    rectSdf.position =
-      Vector2(0, -1) + input.mousePosition / window.resolution.height
-    rectSdf.y *= -2
+    circleSdf.bow = circleSdf.radius * abs(sin(Time.current))
+    circleSdf.position = input.mousePosition
 
     renderer.render(
       List(
