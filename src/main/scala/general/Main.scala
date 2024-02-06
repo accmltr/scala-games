@@ -58,7 +58,7 @@ object MyGame extends Game {
   rectSdf.borderOuterWidth = 10
   rectSdf.borderInnerWidth = 10
   rectSdf.layer = 100
-  rectSdf.color = Color.ORANGE
+  rectSdf.color = Color(0.5f, 0.5f, 0.5f, 0.5f)
 
   val circleSdf = CircleSdf(100.0f)
   circleSdf.position = Vector2(.24, .24)
