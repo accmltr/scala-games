@@ -21,8 +21,14 @@ private[engine] class MouseListener {
   }
 
   def cursorPositionCallback(GLFWwindow: Long, x: Double, y: Double): Unit = {
+
+    val outX = new Array[Int](1)
+    val outY = new Array[Int](1)
+    glfwGetWindowSize(glfwGetCurrentContext(), outX, outY)
+    val windowSize = Vector2(outX(0), outY(0))
+
     _lastPosition = _position
-    _position = Vector2(x, y)
+    _position = Vector2(x, windowSize.y - y)
     _isDragging = _buttonsPressed.contains(GLFW_MOUSE_BUTTON_LEFT)
   }
 
