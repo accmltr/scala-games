@@ -54,12 +54,12 @@ object MyGame extends Game {
   val rectSdf =
     RectSdf(window.resolution.width - 20, window.resolution.height - 20)
   rectSdf.color = Color(0.5f, 0.5f, 0.5f, 0.5f)
-  rectSdf.position = Vector2(10, 10)
+  rectSdf.position =
+    Vector2(rectSdf.width / 2f, rectSdf.height / 2f) + Vector2(10, 10)
 
   println(window.resolution.width)
 
-  val circleSdf = CircleSdf(100.0f)
-  circleSdf.position = Vector2(100, 240)
+  val circleSdf = CircleSdf(6.0f)
   circleSdf.borderColor = Color.GREEN
   circleSdf.color = Color.BLUE
 
