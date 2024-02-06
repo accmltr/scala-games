@@ -72,7 +72,7 @@ class Window(
   def vsync_=(vsync: Boolean): Unit =
     if (isInitialized)
       glfwSwapInterval(if (vsync) 1 else 0)
-      _vsync = vsync
+    _vsync = vsync
 
   // Methods
 

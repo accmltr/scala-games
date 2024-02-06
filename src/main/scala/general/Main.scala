@@ -70,9 +70,8 @@ object MyGame extends Game {
     s"width: ${cursor.width}, height: ${cursor.height}, channels: ${cursor.channels}"
   )
 
+  window.vsync = true
   onInit += { (_) =>
-    window.vsync = true
-
     window.setCursor(cursor, 0, 0)
   }
 
@@ -94,8 +93,8 @@ object MyGame extends Game {
       ).map(_.renderData)
     )
 
-    if (input.justPressed(KeyCode.space)) {
-      window.clearCursor()
+    if (input.justPressed(KeyCode.v)) {
+      window.vsync = !window.vsync
     }
 
     if (input.justReleased(KeyCode.escape)) {
