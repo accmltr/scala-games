@@ -8,4 +8,4 @@ type Uniform = FloatBuffer | IntBuffer | Array[Float] | Array[Int] | Boolean |
   Float | Int | Double | Vector2 | Vector3 | Vector4 | Matrix3 | Matrix4 |
   TexturePointer // | Matrix2
 
-final case class TexturePointer(val id: Int, val unit: Int)
+final case class TexturePointer(val pointer: Int)

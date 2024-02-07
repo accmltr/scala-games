@@ -14,6 +14,8 @@ import engine.math.Vector3
 import engine.math.Vector4
 import engine.Time
 import engine.render.shader.TexturePointer
+import java.nio.ByteBuffer
+import org.lwjgl.BufferUtils
 
 final case class DefaultRenderer(
     override val window: Window
@@ -78,14 +80,23 @@ final case class DefaultRenderer(
       )
       glBindVertexArray(0)
 
+      // Clean up
+      glDeleteVertexArrays(vaoId)
+      glDeleteBuffers(vboId)
+      glDeleteBuffers(eboId)
     }
 
+    // Reset wireframe mode
+    if wireframeMode
+    then glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
+
+    // Reset shader program
+    glUseProgram(0)
   }
 
   override def applyPostProcessing(shaders: List[Shader]): Unit = {
 
     // Prepare for post-processing
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
     glBindFramebuffer(GL_FRAMEBUFFER, 0)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     glDisable(GL_DEPTH_TEST)
@@ -93,6 +104,37 @@ final case class DefaultRenderer(
     // Create FBO
     val fboId = glGenFramebuffers()
     glBindFramebuffer(GL_FRAMEBUFFER, fboId)
+
+    // Create texture
+    val textureId = glGenTextures()
+    glBindTexture(GL_TEXTURE_2D, textureId)
+    val pixels = BufferUtils.createByteBuffer(
+      window.resolution.width * window.resolution.height * 3
+    )
+    glTexImage2D(
+      GL_TEXTURE_2D,
+      0,
+      GL_RGB,
+      window.resolution.width,
+      window.resolution.height,
+      0,
+      GL_RGB,
+      GL_UNSIGNED_BYTE,
+      pixels
+    )
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
+    glFramebufferTexture2D(
+      GL_FRAMEBUFFER,
+      GL_COLOR_ATTACHMENT0,
+      GL_TEXTURE_2D,
+      textureId,
+      0
+    )
+
+    // Check for errors
+    if glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE
+    then throw new RuntimeException("Failed to create FBO")
 
     // Create and bind a VAO
     val vaoId = glGenVertexArrays()
@@ -133,7 +175,7 @@ final case class DefaultRenderer(
         Map[String, Uniform](
           BuiltInUniforms.uRes.toString() -> window.resolution.toVector2,
           BuiltInUniforms.uTime.toString() -> Time.current,
-          "uScreenTexture" -> TexturePointer(
+          "uScreenTexture" -> TexturePointer(textureId)
         )
       )
 
@@ -147,5 +189,12 @@ final case class DefaultRenderer(
       )
       glBindVertexArray(0)
     }
+
+    // Clean up
+    glDeleteFramebuffers(fboId)
+    glDeleteTextures(textureId)
+    glDeleteVertexArrays(vaoId)
+    glDeleteBuffers(vboId)
+    glDeleteBuffers(eboId)
   }
 }
