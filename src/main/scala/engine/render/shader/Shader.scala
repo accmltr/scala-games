@@ -156,6 +156,8 @@ final case class Shader(val vertPath: String, val fragPath: String) {
         case value: Vector4      => uploadVec4f(name, value)
         case value: Matrix3      => uploadMatrix3(name, value)
         case value: Matrix4      => uploadMat4f(name, value)
+        case TexturePointer(id, unit) =>
+          uploadTexture(name, unit)
         case null =>
           throw new Exception(
             "Error: Invalid uniform type. Uniform must be a FloatBuffer, IntBuffer, Array[Float], Array[Int], Boolean, Float, Int, Double, Vector2, Vector3, Matrix3, or Matrix4."

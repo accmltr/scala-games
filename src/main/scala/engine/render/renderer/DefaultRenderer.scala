@@ -13,6 +13,7 @@ import org.lwjgl.opengl.GL30._
 import engine.math.Vector3
 import engine.math.Vector4
 import engine.Time
+import engine.render.shader.TexturePointer
 
 final case class DefaultRenderer(
     override val window: Window
@@ -65,6 +66,7 @@ final case class DefaultRenderer(
       // Set wireframe mode
       if wireframeMode
       then glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
+      else glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
 
       // Draw
       glBindVertexArray(vaoId)
@@ -78,5 +80,72 @@ final case class DefaultRenderer(
 
     }
 
+  }
+
+  override def applyPostProcessing(shaders: List[Shader]): Unit = {
+
+    // Prepare for post-processing
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
+    glBindFramebuffer(GL_FRAMEBUFFER, 0)
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+    glDisable(GL_DEPTH_TEST)
+
+    // Create FBO
+    val fboId = glGenFramebuffers()
+    glBindFramebuffer(GL_FRAMEBUFFER, fboId)
+
+    // Create and bind a VAO
+    val vaoId = glGenVertexArrays()
+    glBindVertexArray(vaoId)
+
+    // Vertices for a fullscreen quad
+    val vertices: Array[Float] = Array(
+      -1, -1, 1, -1, 1, 1, 1, 1, -1, 1, -1, -1
+    )
+
+    // Elements for a fullscreen quad
+    val elements: Array[Int] = Array(0, 1, 2, 2, 3, 0)
+
+    // Create and bind a VBO for the vertices
+    val vboId = glGenBuffers()
+    glBindBuffer(GL_ARRAY_BUFFER, vboId)
+    glBufferData(GL_ARRAY_BUFFER, vertices, GL_STATIC_DRAW)
+    glVertexAttribPointer(0, 2, GL_FLOAT, false, 0, 0)
+    glEnableVertexAttribArray(0)
+
+    // Create and bind a VBO for the indices
+    val eboId = glGenBuffers()
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboId)
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, elements, GL_STATIC_DRAW)
+
+    // Unbind the VAO
+    glBindVertexArray(0)
+
+    // Apply each shader
+    for shader <- shaders
+    do {
+
+      // Bind shader program
+      shader.use()
+
+      // Upload uniforms
+      shader.uploadUniforms(
+        Map[String, Uniform](
+          BuiltInUniforms.uRes.toString() -> window.resolution.toVector2,
+          BuiltInUniforms.uTime.toString() -> Time.current,
+          "uScreenTexture" -> TexturePointer(
+        )
+      )
+
+      // Draw
+      glBindVertexArray(vaoId)
+      glDrawElements(
+        GL_TRIANGLES,
+        elements.length,
+        GL_UNSIGNED_INT,
+        0
+      )
+      glBindVertexArray(0)
+    }
   }
 }

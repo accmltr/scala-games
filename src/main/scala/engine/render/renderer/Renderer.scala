@@ -1,6 +1,7 @@
 package engine.render.renderer
 
 import engine.render.window.Window
+import engine.render.shader.Shader
 
 trait Renderer(val window: Window) {
 
@@ -15,4 +16,6 @@ trait Renderer(val window: Window) {
       renderDatas: List[RenderData],
       wireframeMode: Boolean = false
   ): Unit
+
+  def applyPostProcessing(shaders: List[Shader]): Unit
 }
