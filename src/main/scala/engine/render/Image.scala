@@ -22,6 +22,10 @@ final case class Image(path: String) {
     if (_image == null) load()
     _image
 
+  private[engine] def imgData: ByteBuffer =
+    if (_imgData == null) load()
+    _imgData
+
   def width: Int =
     if (_width == null) load()
     _width.get(0)

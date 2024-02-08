@@ -13,7 +13,6 @@ import org.lwjgl.opengl.GL30._
 import engine.math.Vector3
 import engine.math.Vector4
 import engine.Time
-import engine.render.shader.TexturePointer
 import java.nio.ByteBuffer
 import org.lwjgl.BufferUtils
 import engine.render.Image

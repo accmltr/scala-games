@@ -65,6 +65,10 @@ object MyGame extends Game {
   circleSdf.borderColor = Color.GREEN
   circleSdf.color = Color.BLUE
 
+  var sprite: Sprite = Sprite(
+    "res/soldier-paladin-digital-art-gun-wallpaper-907ffdf3e20334b701b15a7cc7668b54.jpg"
+  )
+
   val cursor = Image("res/cursor.png")
 
   window.vsync = true
@@ -79,6 +83,7 @@ object MyGame extends Game {
 
     renderer.render(
       List(
+        sprite,
         rectSdf,
         circleSdf
       ).map(_.renderData)
