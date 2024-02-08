@@ -70,4 +70,33 @@ final case class Image(path: String) {
     _imgData = null
     _image = null
   }
+
+  // import org.lwjgl.opengl.GL11._
+  // import org.lwjgl.opengl.GL30._
+  // import org.lwjgl.opengl.GL32._
+  // import org.lwjgl.opengl.GL45._
+  // import org.lwjgl.opengl.GL46._
+  // import org.lwjgl.opengl.GL15._
+  // import org.lwjgl.opengl.GL20._
+  // import org.lwjgl.opengl.GL13._
+  // import org.lwjgl.opengl.GL14._
+  // import org.lwjgl.opengl.GL12._
+  // import org.lwjgl.opengl.GL43._
+  // def uploadAsUniform(name: String, shaderId: Int): Unit = {
+  //   val tempTextureId = glGenTextures()
+  //   glBindTexture(GL_TEXTURE_2D, tempTextureId)
+  //   glTexImage2D(
+  //     GL_TEXTURE_2D,
+  //     0,
+  //     GL_RGBA,
+  //     width,
+  //     height,
+  //     0,
+  //     GL_RGBA,
+  //     GL_UNSIGNED_BYTE,
+  //     _imgData
+  //   )
+  //   glGenerateMipmap(GL_TEXTURE_2D)
+  //   glUniform1i(glGetUniformLocation(shaderId, name), 0)
+  // }
 }

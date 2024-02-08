@@ -16,6 +16,8 @@ import engine.Time
 import engine.render.shader.TexturePointer
 import java.nio.ByteBuffer
 import org.lwjgl.BufferUtils
+import engine.render.Image
+import org.lwjgl.glfw.GLFWImage
 
 final case class DefaultRenderer(
     override val window: Window
@@ -136,10 +138,6 @@ final case class DefaultRenderer(
     if glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE
     then throw new RuntimeException("Failed to create FBO")
 
-    // Create and bind a VAO
-    val vaoId = glGenVertexArrays()
-    glBindVertexArray(vaoId)
-
     // Vertices for a fullscreen quad
     val vertices: Array[Float] = Array(
       -1, -1, 1, -1, 1, 1, 1, 1, -1, 1, -1, -1
@@ -147,6 +145,10 @@ final case class DefaultRenderer(
 
     // Elements for a fullscreen quad
     val elements: Array[Int] = Array(0, 1, 2, 2, 3, 0)
+
+    // Create and bind a VAO
+    val vaoId = glGenVertexArrays()
+    glBindVertexArray(vaoId)
 
     // Create and bind a VBO for the vertices
     val vboId = glGenBuffers()
@@ -171,11 +173,15 @@ final case class DefaultRenderer(
       shader.use()
 
       // Upload uniforms
+      // Image(
+      //   "res/soldier-paladin-digital-art-gun-wallpaper-907ffdf3e20334b701b15a7cc7668b54.jpg"
+      // ).uploadAsUniform("uScreenTexture", shader.id)
+
       shader.uploadUniforms(
         Map[String, Uniform](
           BuiltInUniforms.uRes.toString() -> window.resolution.toVector2,
-          BuiltInUniforms.uTime.toString() -> Time.current,
-          "uScreenTexture" -> TexturePointer(textureId)
+          BuiltInUniforms.uTime.toString() -> Time.current
+          // "uScreenTexture" -> TexturePointer(0, textureId)
         )
       )
 

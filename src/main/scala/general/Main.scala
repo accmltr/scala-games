@@ -28,6 +28,10 @@ object MyGame extends Game {
   title = "MyGame"
 
   val renderer = DefaultRenderer(window)
+  val anti_aliasing_shader = Shader(
+    "src/main/scala/engine/render/shaders/vertex/default.vert",
+    "src/main/scala/engine/render/shaders/post_processing/anti_aliasing.frag"
+  )
 
   root = {
     val node = Node()
@@ -57,8 +61,6 @@ object MyGame extends Game {
   rectSdf.position =
     Vector2(rectSdf.width / 2f, rectSdf.height / 2f) + Vector2(10, 10)
 
-  println(window.resolution.width)
-
   val circleSdf = CircleSdf(6.0f)
   circleSdf.borderColor = Color.GREEN
   circleSdf.color = Color.BLUE
@@ -81,6 +83,8 @@ object MyGame extends Game {
         circleSdf
       ).map(_.renderData)
     )
+
+    renderer.applyPostProcessing(List(anti_aliasing_shader))
 
     if (input.justPressed(KeyCode.v)) {
       window.vsync = !window.vsync
