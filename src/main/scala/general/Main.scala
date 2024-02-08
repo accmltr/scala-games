@@ -84,7 +84,7 @@ object MyGame extends Game {
       ).map(_.renderData)
     )
 
-    renderer.applyPostProcessing(List(anti_aliasing_shader))
+    // renderer.applyPostProcessing(List(anti_aliasing_shader))
 
     if (input.justPressed(KeyCode.v)) {
       window.vsync = !window.vsync
