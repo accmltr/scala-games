@@ -79,10 +79,13 @@ object MyGame extends Game {
 
     renderer.render(
       List(
-        sprite,
+        // sprite,
         circleSdf
       ).map(_.renderData)
     )
+    if (!sprite.loaded)
+      sprite.load()
+    renderer.renderSprites(List(sprite))
 
     // renderer.applyPostProcessing(List(anti_aliasing_shader))
 

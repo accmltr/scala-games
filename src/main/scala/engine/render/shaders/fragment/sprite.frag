@@ -12,6 +12,6 @@ out vec4 FragColor;
 void main()
 {
 	vec2 normalizedPos=vPos/uRes;
-	// FragColor=texture(uTexture,vec2(.9));
-	FragColor=vec4(vPos/uRes,0,1);
+	FragColor=texture(uTexture,normalizedPos);
+	// FragColor=vec4(normalizedPos,0,1);
 }

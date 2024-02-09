@@ -17,6 +17,7 @@ import java.nio.ByteBuffer
 import org.lwjgl.BufferUtils
 import engine.render.Image
 import org.lwjgl.glfw.GLFWImage
+import engine.render.renderer.render_element.Sprite
 
 final case class DefaultRenderer(
     override val window: Window
@@ -93,6 +94,10 @@ final case class DefaultRenderer(
 
     // Reset shader program
     glUseProgram(0)
+  }
+
+  override def renderSprites(sprites: List[Sprite]): Unit = {
+    sprites.foreach(_.render(window))
   }
 
   override def applyPostProcessing(shaders: List[Shader]): Unit = {
