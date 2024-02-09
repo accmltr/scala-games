@@ -203,9 +203,9 @@ final case class Sprite private (private val image: Image)
   }
 
   def textureId: Int = _textureId
-  def width: Int = _width
-  def height: Int = _height
-  def channels: Int = _channels
+  def width: Int = image.width
+  def height: Int = image.height
+  def channels: Int = image.channels
 
   override def renderData: RenderData = {
     val vertices: Array[Float] = Array(
@@ -228,12 +228,16 @@ final case class Sprite private (private val image: Image)
       indices = indices,
       layer = layer,
       color = color,
-      transform = Matrix3.transform(
-        position,
-        rotation,
-        scale
+      transform = Matrix3
+        .transform(
+          position,
+          rotation,
+          scale
+        ),
+      extraUniforms = Map(
+        "uWidth" -> width,
+        "uHeight" -> height
       )
-      // extraUniforms = Map("uTexture" -> image)
     )
   }
 }
