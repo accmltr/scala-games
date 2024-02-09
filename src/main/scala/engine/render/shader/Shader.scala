@@ -171,30 +171,78 @@ final case class Shader(val vertPath: String, val fragPath: String) {
   def uploadImage(varName: String, image: Image): Unit = {
     _uniformUsedCheck()
     val varLocation: Int = glGetUniformLocation(id, varName)
-    use()
-    val img: GLFWImage = image.image
-    val textureId: Int = glGenTextures()
-    glBindTexture(GL_TEXTURE_2D, textureId)
-    glTexImage2D(
-      GL_TEXTURE_2D,
-      0,
-      GL_RGBA,
-      img.width,
-      img.height,
-      0,
-      GL_RGBA,
-      GL_UNSIGNED_BYTE,
-      image.imgData
-    )
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
 
-    glUniform1i(varLocation, textureId)
+    if (varLocation != -1) { // Ensure the uniform variable exists in the shader
+      use()
 
-    // Check for errors
-    if glGetError() != GL_NO_ERROR then
-      throw new RuntimeException("Failed to create texture")
+      // Assuming you want to bind the texture to texture unit 0
+      val textureUnit = 0
+
+      // Generate and bind the texture
+      val textureId: Int = glGenTextures()
+      glBindTexture(GL_TEXTURE_2D, textureId)
+      glTexImage2D(
+        GL_TEXTURE_2D,
+        0,
+        GL_RGBA,
+        image.width,
+        image.height,
+        0,
+        GL_RGBA,
+        GL_UNSIGNED_BYTE,
+        image.imgData
+      )
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
+
+      import org.lwjgl.opengl.GL13._
+      glActiveTexture(GL_TEXTURE0 + textureUnit)
+      glBindTexture(GL_TEXTURE_2D, textureId)
+
+      glUniform1i(varLocation, textureUnit)
+
+      // Check for errors
+      if (glGetError() != GL_NO_ERROR) {
+        throw new RuntimeException("Failed to set texture uniform in shader.")
+      }
+
+      // Clean up by deleting the texture if necessary
+      glDeleteTextures(textureId)
+    } else {
+      // Handle case where the uniform variable doesn't exist in the shader
+      throw new RuntimeException(
+        s"Uniform variable $varName not found in shader."
+      )
+    }
   }
+
+  // def uploadImage(varName: String, image: Image): Unit = {
+  //   _uniformUsedCheck()
+  //   val varLocation: Int = glGetUniformLocation(id, varName)
+  //   use()
+  //   val img: GLFWImage = image.image
+  //   val textureId: Int = glGenTextures()
+  //   glBindTexture(GL_TEXTURE_2D, textureId)
+  //   glTexImage2D(
+  //     GL_TEXTURE_2D,
+  //     0,
+  //     GL_RGBA,
+  //     img.width,
+  //     img.height,
+  //     0,
+  //     GL_RGBA,
+  //     GL_UNSIGNED_BYTE,
+  //     image.imgData
+  //   )
+  //   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
+  //   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
+
+  //   glUniform1i(varLocation, textureId)
+
+  //   // Check for errors
+  //   if glGetError() != GL_NO_ERROR then
+  //     throw new RuntimeException("Failed to create texture")
+  // }
 
   def uploadTexture(varName: String, slot: Int): Unit = {
     _uniformUsedCheck()

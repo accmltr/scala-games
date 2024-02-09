@@ -55,12 +55,6 @@ object MyGame extends Game {
   window.fpsStats.showAvg = true
   window.backgroundColor = Vector3(0.1f, 0.1f, 0.1f)
 
-  val rectSdf =
-    RectSdf(window.resolution.width - 20, window.resolution.height - 20)
-  rectSdf.color = Color(0.5f, 0.5f, 0.5f, 0.5f)
-  rectSdf.position =
-    Vector2(rectSdf.width / 2f, rectSdf.height / 2f) + Vector2(10, 10)
-
   val circleSdf = CircleSdf(6.0f)
   circleSdf.borderColor = Color.GREEN
   circleSdf.color = Color.BLUE
@@ -68,6 +62,8 @@ object MyGame extends Game {
   var sprite: Sprite = Sprite(
     "res/soldier-paladin-digital-art-gun-wallpaper-907ffdf3e20334b701b15a7cc7668b54.jpg"
   )
+  sprite.position = Vector2(50, 50)
+  sprite.scale = Vector2(0.5f, 0.5f)
 
   val cursor = Image("res/cursor.png")
 
@@ -84,7 +80,6 @@ object MyGame extends Game {
     renderer.render(
       List(
         sprite,
-        rectSdf,
         circleSdf
       ).map(_.renderData)
     )

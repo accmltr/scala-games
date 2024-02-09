@@ -3,14 +3,30 @@ package engine.render.renderer.render_element
 import engine.render.Image
 import engine.render.renderer.RenderData
 import engine.math.Matrix3
+import engine.render.shader.Shader
 
 final case class Sprite private (private val image: Image)
     extends RenderElement {
 
   override def renderData: RenderData = {
+    val vertices: Array[Float] = Array(
+      image.width,
+      image.height,
+      0,
+      image.height,
+      0,
+      0,
+      image.width,
+      0
+    )
+    val indices: Array[Int] = Array(0, 1, 2, 2, 3, 0)
     RenderData(
-      vertices = Sprite.vertices,
-      indices = Sprite.indices,
+      shader = Shader(
+        "src/main/scala/engine/render/shaders/vertex/default.vert",
+        "src/main/scala/engine/render/shaders/fragment/sprite.frag"
+      ),
+      vertices = vertices,
+      indices = indices,
       layer = layer,
       color = color,
       transform = Matrix3.transform(
@@ -24,11 +40,6 @@ final case class Sprite private (private val image: Image)
 }
 
 object Sprite {
-  val vertices: Array[Float] = Array(
-    -1.0f, 1.0f, -1.0f, -1.0f, 1.0f, -1.0f, 1.0f, 1.0f
-  )
-  val indices: Array[Int] = Array(0, 1, 2, 2, 3, 0)
-
   def apply(path: String): Sprite = new Sprite(Image(path))
   def apply(image: Image): Sprite = new Sprite(image)
 }
