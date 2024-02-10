@@ -122,34 +122,34 @@ final case class Sprite private (private val image: Image)
 
   def load(): Unit = {
     // Generate texture on GPU
-    _textureId = glGenTextures();
-    glBindTexture(GL_TEXTURE_2D, _textureId);
+    _textureId = glGenTextures()
+    glBindTexture(GL_TEXTURE_2D, _textureId)
 
     // --------------------------------------------------------------------
     // SET TEXTURE PARAMETERS
     // --------------------------------------------------------------------
 
     // Repeat
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, _wrapMode.value);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, _wrapMode.value);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, _wrapMode.value)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, _wrapMode.value)
 
     // Linear filtering
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, _filterMode.value);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, _filterMode.value);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, _filterMode.value)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, _filterMode.value)
 
     // Load image
-    val width: IntBuffer = BufferUtils.createIntBuffer(1);
-    val height: IntBuffer = BufferUtils.createIntBuffer(1);
-    val channels: IntBuffer = BufferUtils.createIntBuffer(1);
+    val width: IntBuffer = BufferUtils.createIntBuffer(1)
+    val height: IntBuffer = BufferUtils.createIntBuffer(1)
+    val channels: IntBuffer = BufferUtils.createIntBuffer(1)
 
     import org.lwjgl.stb.STBImage.stbi_load
-    val image: ByteBuffer = stbi_load(path, width, height, channels, 0);
+    val image: ByteBuffer = stbi_load(path, width, height, channels, 0)
     if (image != null) {
 
       // Store image data
-      _width = width.get(0);
-      _height = height.get(0);
-      _channels = channels.get(0);
+      _width = width.get(0)
+      _height = height.get(0)
+      _channels = channels.get(0)
 
       // Send image data to GPU
       if (channels.get(0) == 3) {
@@ -164,7 +164,7 @@ final case class Sprite private (private val image: Image)
           GL_RGB,
           GL_UNSIGNED_BYTE,
           image
-        );
+        )
       } else if (channels.get(0) == 4) {
         // RGBA image
         glTexImage2D(
@@ -177,29 +177,29 @@ final case class Sprite private (private val image: Image)
           GL_RGBA,
           GL_UNSIGNED_BYTE,
           image
-        );
+        )
       } else {
         throw new Exception(
           "Error: (Texture) Unknown number of channels '" + channels.get(
             0
           ) + "' in texture file: " + path
-        );
+        )
       }
     } else {
-      throw new Exception("Failed to load texture file: " + path);
+      throw new Exception("Failed to load texture file: " + path)
     }
 
     import org.lwjgl.stb.STBImage.stbi_image_free
     // Free image from CPU memory
-    stbi_image_free(image);
+    stbi_image_free(image)
   }
 
   def bind(slot: Int = 0): Unit = {
-    glBindTexture(GL_TEXTURE_2D, _textureId);
+    glBindTexture(GL_TEXTURE_2D, _textureId)
   }
 
   def unbind(): Unit = {
-    glBindTexture(GL_TEXTURE_2D, 0);
+    glBindTexture(GL_TEXTURE_2D, 0)
   }
 
   def textureId: Int = _textureId
