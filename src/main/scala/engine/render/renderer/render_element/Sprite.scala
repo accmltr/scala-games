@@ -209,14 +209,14 @@ final case class Sprite private (private val image: Image)
 
   override def renderData: RenderData = {
     val vertices: Array[Float] = Array(
-      image.width,
-      image.height,
-      0,
-      image.height,
       0,
       0,
-      image.width,
-      0
+      width,
+      0,
+      width,
+      height,
+      0,
+      height
     )
     val indices: Array[Int] = Array(0, 1, 2, 2, 3, 0)
     RenderData(

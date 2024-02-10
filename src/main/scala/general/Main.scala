@@ -62,6 +62,7 @@ object MyGame extends Game {
   var sprite: Sprite = Sprite(
     "res/soldier-paladin-digital-art-gun-wallpaper-907ffdf3e20334b701b15a7cc7668b54.jpg"
   )
+
   sprite.position = Vector2(50, 50)
   sprite.scale = Vector2(0.5f, 0.5f)
 
