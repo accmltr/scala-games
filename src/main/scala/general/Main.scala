@@ -79,12 +79,12 @@ object MyGame extends Game {
     circleSdf.bow = circleSdf.radius * abs(sin(Time.current))
     circleSdf.position = input.mousePosition
 
-    renderer.render(
-      List(
-        // sprite,
-        circleSdf
-      ).map(_.renderData)
-    )
+    // renderer.render(
+    //   List(
+    //     // sprite,
+    //     circleSdf
+    //   ).map(_.renderData)
+    // )
     if (!sprite.loaded)
       sprite.load()
     renderer.renderSprites(List(sprite))
