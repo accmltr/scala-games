@@ -62,7 +62,6 @@ object MyGame extends Game {
   var sprite: Sprite = Sprite(
     "res/sample_image.png"
   )
-  sprite.color = Color.GREEN
   sprite.position = Vector2(50, 50)
   sprite.width = 100
   sprite.height = 100
@@ -93,15 +92,15 @@ object MyGame extends Game {
 
     // renderer.applyPostProcessing(List(anti_aliasing_shader))
 
-    if (input.justPressed(KeyCode.s)) {
-      sprite.width += 10
-      sprite.height += 10
-      sprite.rotation += 0.1f
+    if (input.pressed(KeyCode.s)) {
+      sprite.width += 100 * delta
+      sprite.height += 100 * delta
+      sprite.rotation += 2.1f * delta
     }
-    if (input.justPressed(KeyCode.d)) {
-      sprite.width -= 10
-      sprite.height -= 10
-      sprite.rotation -= 0.1f
+    if (input.pressed(KeyCode.d)) {
+      sprite.width -= 100 * delta
+      sprite.height -= 100 * delta
+      sprite.rotation -= 2.1f * delta
     }
 
     if (input.justPressed(KeyCode.v)) {
