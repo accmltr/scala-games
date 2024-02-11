@@ -12,6 +12,7 @@ import java.nio.ByteBuffer
 import engine.render.window.Window
 import engine.render.renderer.BuiltInUniforms
 import engine.Time
+import engine.math.Vector4
 
 enum WrapMode(val value: Int):
   case Repeat extends WrapMode(GL_REPEAT)
@@ -25,15 +26,22 @@ final case class Sprite private (private val image: Image)
     extends RenderElement {
 
   private val path: String = image.path
-
   require(engine.io.fileExists(path), "Image file does not exist")
 
-  private var _textureId: Int = 0
-  private var _width: Int = 0
-  private var _height: Int = 0
-  private var _channels: Int = 0
-  private var _wrapMode: WrapMode = WrapMode.Repeat
-  private var _filterMode: FilterMode = FilterMode.Linear
+  private var _width: Float = 0
+  private var _height: Float = 0
+
+  private var _imageTextureId: Int = 0
+  private var _imageWidth: Int = 0
+  private var _imageHeight: Int = 0
+  private var _imageChannels: Int = 0
+  private var _imageWrapMode: WrapMode = WrapMode.Repeat
+  private var _imageFilterMode: FilterMode = FilterMode.Linear
+
+  def width: Float = _width
+  def width_=(value: Float): Unit = _width = value
+  def height: Float = _height
+  def height_=(value: Float): Unit = _height = value
 
   def render(window: Window): Unit = {
 
@@ -90,7 +98,7 @@ final case class Sprite private (private val image: Image)
 
     // Upload texture
     glActiveTexture(GL_TEXTURE0)
-    glBindTexture(GL_TEXTURE_2D, _textureId)
+    glBindTexture(GL_TEXTURE_2D, _imageTextureId)
 
     // Set wireframe mode
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
@@ -118,61 +126,70 @@ final case class Sprite private (private val image: Image)
     glUseProgram(0)
   }
 
-  def loaded: Boolean = _textureId != 0
+  def loaded: Boolean = _imageTextureId != 0
 
   def load(): Unit = {
     // Generate texture on GPU
-    _textureId = glGenTextures()
-    glBindTexture(GL_TEXTURE_2D, _textureId)
+    _imageTextureId = glGenTextures()
+    glBindTexture(GL_TEXTURE_2D, _imageTextureId)
 
     // --------------------------------------------------------------------
     // SET TEXTURE PARAMETERS
     // --------------------------------------------------------------------
 
     // Repeat
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, _wrapMode.value)
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, _wrapMode.value)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, _imageWrapMode.value)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, _imageWrapMode.value)
 
     // Linear filtering
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, _filterMode.value)
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, _filterMode.value)
+    glTexParameteri(
+      GL_TEXTURE_2D,
+      GL_TEXTURE_MIN_FILTER,
+      _imageFilterMode.value
+    )
+    glTexParameteri(
+      GL_TEXTURE_2D,
+      GL_TEXTURE_MAG_FILTER,
+      _imageFilterMode.value
+    )
 
     // Load image
-    val width: IntBuffer = BufferUtils.createIntBuffer(1)
-    val height: IntBuffer = BufferUtils.createIntBuffer(1)
-    val channels: IntBuffer = BufferUtils.createIntBuffer(1)
+    val wBuffer: IntBuffer = BufferUtils.createIntBuffer(1)
+    val hBuffer: IntBuffer = BufferUtils.createIntBuffer(1)
+    val channelsBuffer: IntBuffer = BufferUtils.createIntBuffer(1)
 
     import org.lwjgl.stb.STBImage.stbi_load
-    val image: ByteBuffer = stbi_load(path, width, height, channels, 0)
+    val image: ByteBuffer =
+      stbi_load(path, wBuffer, hBuffer, channelsBuffer, 0)
     if (image != null) {
 
       // Store image data
-      _width = width.get(0)
-      _height = height.get(0)
-      _channels = channels.get(0)
+      _imageWidth = wBuffer.get(0)
+      _imageHeight = hBuffer.get(0)
+      _imageChannels = channelsBuffer.get(0)
 
       // Send image data to GPU
-      if (channels.get(0) == 3) {
+      if (channelsBuffer.get(0) == 3) {
         // RGB image
         glTexImage2D(
           GL_TEXTURE_2D,
           0,
           GL_RGB,
-          width.get(0),
-          height.get(0),
+          wBuffer.get(0),
+          hBuffer.get(0),
           0,
           GL_RGB,
           GL_UNSIGNED_BYTE,
           image
         )
-      } else if (channels.get(0) == 4) {
+      } else if (channelsBuffer.get(0) == 4) {
         // RGBA image
         glTexImage2D(
           GL_TEXTURE_2D,
           0,
           GL_RGBA,
-          width.get(0),
-          height.get(0),
+          wBuffer.get(0),
+          hBuffer.get(0),
           0,
           GL_RGBA,
           GL_UNSIGNED_BYTE,
@@ -180,7 +197,7 @@ final case class Sprite private (private val image: Image)
         )
       } else {
         throw new Exception(
-          "Error: (Texture) Unknown number of channels '" + channels.get(
+          "Error: (Texture) Unknown number of channels '" + channelsBuffer.get(
             0
           ) + "' in texture file: " + path
         )
@@ -195,17 +212,17 @@ final case class Sprite private (private val image: Image)
   }
 
   def bind(slot: Int = 0): Unit = {
-    glBindTexture(GL_TEXTURE_2D, _textureId)
+    glBindTexture(GL_TEXTURE_2D, _imageTextureId)
   }
 
   def unbind(): Unit = {
     glBindTexture(GL_TEXTURE_2D, 0)
   }
 
-  def textureId: Int = _textureId
-  def width: Int = image.width
-  def height: Int = image.height
-  def channels: Int = image.channels
+  def imageTextureId: Int = _imageTextureId
+  def imageWidth: Int = image.width
+  def imageHeight: Int = image.height
+  def imageChannels: Int = image.channels
 
   override def renderData: RenderData = {
     val vertices: Array[Float] = Array(
