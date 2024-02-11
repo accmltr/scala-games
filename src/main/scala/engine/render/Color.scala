@@ -44,12 +44,20 @@ final case class Color(
       clamp(a * other.a, 0, 1)
     )
 
+  def +(other: Color): Color =
+    Color(
+      clamp(r + other.r, 0f, 1f),
+      clamp(g + other.g, 0f, 1f),
+      clamp(b + other.b, 0f, 1f),
+      clamp(a + other.a, 0f, 1f)
+    )
+
   def -(other: Color): Color =
     Color(
-      clamp(r - other.r, 0, 1),
-      clamp(g - other.g, 0, 1),
-      clamp(b - other.b, 0, 1),
-      clamp(a - other.a, 0, 1)
+      clamp(r - other.r, 0f, 1f),
+      clamp(g - other.g, 0f, 1f),
+      clamp(b - other.b, 0f, 1f),
+      clamp(a - other.a, 0f, 1f)
     )
 }
 

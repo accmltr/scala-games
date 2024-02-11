@@ -62,10 +62,10 @@ object MyGame extends Game {
   var sprite: Sprite = Sprite(
     "res/sample_image.png"
   )
-
+  sprite.color = Color.GREEN
   sprite.position = Vector2(50, 50)
-  // sprite.width = 100
-  // sprite.height = 100
+  sprite.width = 100
+  sprite.height = 100
 
   val cursor = Image("res/cursor.png")
 
@@ -79,6 +79,8 @@ object MyGame extends Game {
     circleSdf.bow = circleSdf.radius * abs(sin(Time.current))
     circleSdf.position = input.mousePosition
 
+    sprite.position = input.mousePosition
+
     // renderer.render(
     //   List(
     //     // sprite,
@@ -90,6 +92,17 @@ object MyGame extends Game {
     renderer.renderSprites(List(sprite))
 
     // renderer.applyPostProcessing(List(anti_aliasing_shader))
+
+    if (input.justPressed(KeyCode.s)) {
+      sprite.width += 10
+      sprite.height += 10
+      sprite.rotation += 0.1f
+    }
+    if (input.justPressed(KeyCode.d)) {
+      sprite.width -= 10
+      sprite.height -= 10
+      sprite.rotation -= 0.1f
+    }
 
     if (input.justPressed(KeyCode.v)) {
       window.vsync = !window.vsync
