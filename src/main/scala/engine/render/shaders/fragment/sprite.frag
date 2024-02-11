@@ -13,5 +13,5 @@ void main()
 {
 	// FragColor=vec4(vPos,0.,1.);
 	// FragColor=vec4(vPos/vec2(uWidth,-uHeight),0.,1.);
-	FragColor=texture(uTexture,vPos/vec2(uWidth,-uHeight));
+	FragColor=texture(uTexture,vPos/vec2(uWidth,-uHeight))*uColor;
 }
