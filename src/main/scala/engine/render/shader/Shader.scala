@@ -14,6 +14,9 @@ import java.nio.IntBuffer
 import engine.math.Matrix3
 import engine.math.Matrix4
 import engine.render.shader.Uniform
+import engine.render.Image
+import org.lwjgl.glfw.GLFWImage
+import java.nio.ByteBuffer
 
 /** Creates a compiled shader from a vertex and fragment shader.
   *
@@ -156,12 +159,96 @@ final case class Shader(val vertPath: String, val fragPath: String) {
         case value: Vector4      => uploadVec4f(name, value)
         case value: Matrix3      => uploadMatrix3(name, value)
         case value: Matrix4      => uploadMat4f(name, value)
+        case image: Image        => uploadImage(name, image)
         case null =>
           throw new Exception(
             "Error: Invalid uniform type. Uniform must be a FloatBuffer, IntBuffer, Array[Float], Array[Int], Boolean, Float, Int, Double, Vector2, Vector3, Matrix3, or Matrix4."
           )
       }
     }
+  }
+
+  def uploadImage(varName: String, image: Image): Unit = {
+    _uniformUsedCheck()
+    val varLocation: Int = glGetUniformLocation(id, varName)
+
+    if (varLocation != -1) { // Ensure the uniform variable exists in the shader
+      use()
+
+      // Assuming you want to bind the texture to texture unit 0
+      val textureUnit = 0
+
+      // Generate and bind the texture
+      val textureId: Int = glGenTextures()
+      glBindTexture(GL_TEXTURE_2D, textureId)
+      glTexImage2D(
+        GL_TEXTURE_2D,
+        0,
+        GL_RGBA,
+        image.width,
+        image.height,
+        0,
+        GL_RGBA,
+        GL_UNSIGNED_BYTE,
+        image.imgData
+      )
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
+
+      import org.lwjgl.opengl.GL13._
+      glActiveTexture(GL_TEXTURE0 + textureUnit)
+      glBindTexture(GL_TEXTURE_2D, textureId)
+
+      glUniform1i(varLocation, textureUnit)
+
+      // Check for errors
+      if (glGetError() != GL_NO_ERROR) {
+        throw new RuntimeException("Failed to set texture uniform in shader.")
+      }
+
+      // Clean up by deleting the texture if necessary
+      glDeleteTextures(textureId)
+    } else {
+      // Handle case where the uniform variable doesn't exist in the shader
+      throw new RuntimeException(
+        s"Uniform variable $varName not found in shader."
+      )
+    }
+  }
+
+  // def uploadImage(varName: String, image: Image): Unit = {
+  //   _uniformUsedCheck()
+  //   val varLocation: Int = glGetUniformLocation(id, varName)
+  //   use()
+  //   val img: GLFWImage = image.image
+  //   val textureId: Int = glGenTextures()
+  //   glBindTexture(GL_TEXTURE_2D, textureId)
+  //   glTexImage2D(
+  //     GL_TEXTURE_2D,
+  //     0,
+  //     GL_RGBA,
+  //     img.width,
+  //     img.height,
+  //     0,
+  //     GL_RGBA,
+  //     GL_UNSIGNED_BYTE,
+  //     image.imgData
+  //   )
+  //   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
+  //   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
+
+  //   glUniform1i(varLocation, textureId)
+
+  //   // Check for errors
+  //   if glGetError() != GL_NO_ERROR then
+  //     throw new RuntimeException("Failed to create texture")
+  // }
+
+  def uploadTexture(varName: String, slot: Int): Unit = {
+    _uniformUsedCheck()
+    val varLocation: Int = glGetUniformLocation(id, varName)
+    use()
+    glUniform1i(varLocation, slot)
   }
 
   def uploadMat4f(varName: String, mat4: Matrix4): Unit = {
@@ -217,13 +304,6 @@ final case class Shader(val vertPath: String, val fragPath: String) {
     val varLocation: Int = glGetUniformLocation(id, varName)
     use()
     glUniform1i(varLocation, value)
-  }
-
-  def uploadTexture(varName: String, slot: Int): Unit = {
-    _uniformUsedCheck()
-    val varLocation: Int = glGetUniformLocation(id, varName)
-    use()
-    glUniform1i(varLocation, slot)
   }
 
   def uploadIntBuffer(varName: String, buffer: IntBuffer): Unit = {
