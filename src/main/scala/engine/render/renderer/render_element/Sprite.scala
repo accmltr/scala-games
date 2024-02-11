@@ -29,7 +29,9 @@ final case class Sprite private (private val image: Image)
   require(engine.io.fileExists(path), "Image file does not exist")
 
   private var _width: Float = 0
+  private var _widthEdited: Boolean = false
   private var _height: Float = 0
+  private var _heightEdited: Boolean = false
 
   private var _imageTextureId: Int = 0
   private var _imageWidth: Int = 0
@@ -39,9 +41,13 @@ final case class Sprite private (private val image: Image)
   private var _imageFilterMode: FilterMode = FilterMode.Linear
 
   def width: Float = _width
-  def width_=(value: Float): Unit = _width = value
+  def width_=(value: Float): Unit =
+    _widthEdited = true
+    _width = value
   def height: Float = _height
-  def height_=(value: Float): Unit = _height = value
+  def height_=(value: Float): Unit =
+    _heightEdited = true
+    _height = value
 
   def render(window: Window): Unit = {
 
@@ -167,6 +173,10 @@ final case class Sprite private (private val image: Image)
       _imageWidth = wBuffer.get(0)
       _imageHeight = hBuffer.get(0)
       _imageChannels = channelsBuffer.get(0)
+
+      // Set width and height if not initialized by user
+      if (!_widthEdited) _width = _imageWidth
+      if (!_heightEdited) _height = _imageHeight
 
       // Send image data to GPU
       if (channelsBuffer.get(0) == 3) {

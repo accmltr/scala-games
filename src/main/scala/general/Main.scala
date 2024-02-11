@@ -64,8 +64,8 @@ object MyGame extends Game {
   )
 
   sprite.position = Vector2(50, 50)
-  sprite.width = 100
-  sprite.height = 100
+  // sprite.width = 100
+  // sprite.height = 100
 
   val cursor = Image("res/cursor.png")
 
