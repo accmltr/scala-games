@@ -39,10 +39,18 @@ final case class Image(path: String) {
   private var _wrapMode: WrapMode = WrapMode.Repeat
   private var _filterMode: FilterMode = FilterMode.Linear
 
-  def id: Int = _texId
-  def width: Int = _width
-  def height: Int = _height
-  def channels: Int = _channels
+  def id: Int =
+    if (!loaded) load()
+    _texId
+  def width: Int =
+    if (!loaded) load()
+    _width
+  def height: Int =
+    if (!loaded) load()
+    _height
+  def channels: Int =
+    if (!loaded) load()
+    _channels
 
   def loaded: Boolean = _texId != 0
 
@@ -120,9 +128,8 @@ final case class Image(path: String) {
         )
       } else {
         throw new Exception(
-          "Error: (Texture) Unknown number of channels '" + channelsBuffer.get(
-            0
-          ) + "' in texture file: " + path
+          "Unknown number of color channels in texture file: " + path +
+            ". Expected 3 or 4, but found: " + channelsBuffer.get(0) + "."
         )
       }
     } else {
@@ -135,6 +142,7 @@ final case class Image(path: String) {
   }
 
   def unload(): Unit = {
+    require(loaded, "Trying to unload an image that is not loaded")
     if (_texId != 0) {
       glDeleteTextures(_texId)
       _texId = 0
