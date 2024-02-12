@@ -18,6 +18,8 @@ import engine.render.shader.Uniform
 import engine.render.Image
 import org.lwjgl.glfw.GLFWImage
 import java.nio.ByteBuffer
+import org.lwjgl.glfw.GLFW
+import org.lwjgl.system.MemoryUtil
 
 /** Creates a compiled shader from a vertex and fragment shader.
   *
@@ -99,7 +101,7 @@ final case class Shader(val vertPath: String, val fragPath: String) {
       println(glGetShaderInfoLog(programId, 1024))
       assert(
         false,
-        "Error: Vertex and/or fragment shader failed to link with GL program."
+        "Vertex and/or fragment shader failed to link with GL program."
       )
     }
 
@@ -108,7 +110,7 @@ final case class Shader(val vertPath: String, val fragPath: String) {
       println(glGetShaderInfoLog(programId, 1024))
       assert(
         false,
-        "Error: Shader program validation failed. Check vertex and fragment shaders for errors."
+        "Shader program validation failed. Check vertex and fragment shaders for errors."
       )
     }
 
@@ -133,7 +135,7 @@ final case class Shader(val vertPath: String, val fragPath: String) {
   private def _glcontextCheck(): Unit = {
     if glfwGetCurrentContext() == 0L then
       throw new Exception(
-        "Error: Game has not yet been initialized."
+        "Game has not yet been initialized."
       )
   }
 
@@ -163,7 +165,7 @@ final case class Shader(val vertPath: String, val fragPath: String) {
         case (texUnit: Int, image: Image) => uploadImage(name, texUnit, image)
         case null =>
           throw new Exception(
-            "Error: Invalid uniform type. Uniform must be a FloatBuffer, IntBuffer, Array[Float], Array[Int], Boolean, Float, Int, Double, Vector2, Vector3, Matrix3, or Matrix4."
+            "Invalid uniform type. Uniform must be a FloatBuffer, IntBuffer, Array[Float], Array[Int], Boolean, Float, Int, Double, Vector2, Vector3, Matrix3, or Matrix4."
           )
       }
     }
@@ -173,7 +175,7 @@ final case class Shader(val vertPath: String, val fragPath: String) {
     _uniformUsedCheck()
     require(
       textureUnit >= 0 && textureUnit < Shader.maxTextureUnits,
-      s"Error: Texture unit out of range. Must be between 0 and ${Shader.maxTextureUnits - 1}, inclusive."
+      s"Texture unit out of range. Must be between 0 and ${Shader.maxTextureUnits - 1}, inclusive."
     )
     val varLocation: Int = glGetUniformLocation(id, varName)
     use()
@@ -268,7 +270,7 @@ final case class Shader(val vertPath: String, val fragPath: String) {
   private def _uniformUsedCheck(): Unit = {
     if !isUsed() then
       throw new Exception(
-        "Error: Shader must be bound before uploading uniforms."
+        "Shader must be bound before uploading uniforms."
       )
   }
 
@@ -280,5 +282,15 @@ final case class Shader(val vertPath: String, val fragPath: String) {
 }
 
 object Shader {
-  val maxTextureUnits: Int = glGetInteger(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS)
+  private var _maxTextureUnits: Int = -1
+  def maxTextureUnits: Int =
+    // Make sure the OpenGL context is available
+    if GLFW.glfwGetCurrentContext() == MemoryUtil.NULL then
+      throw new Exception(
+        "OpenGL context not available"
+      )
+    else
+      if (_maxTextureUnits == -1)
+        _maxTextureUnits = glGetInteger(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS)
+      _maxTextureUnits
 }
