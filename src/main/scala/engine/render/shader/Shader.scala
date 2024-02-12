@@ -7,6 +7,7 @@ import org.lwjgl.glfw.GLFW._
 import org.joml._
 import org.lwjgl.BufferUtils
 import org.lwjgl.opengl.GL11._
+import org.lwjgl.opengl.GL13._
 import org.lwjgl.opengl.GL20._
 import org.lwjgl.opengl.GL20.glGetShaderInfoLog
 import engine.math.{Vector2, Vector3, Vector4}
@@ -159,7 +160,7 @@ final case class Shader(val vertPath: String, val fragPath: String) {
         case value: Vector4      => uploadVec4f(name, value)
         case value: Matrix3      => uploadMatrix3(name, value)
         case value: Matrix4      => uploadMat4f(name, value)
-        case image: Image        => uploadImage(name, image)
+        case (texUnit: Int, image: Image) => uploadImage(name, texUnit, image)
         case null =>
           throw new Exception(
             "Error: Invalid uniform type. Uniform must be a FloatBuffer, IntBuffer, Array[Float], Array[Int], Boolean, Float, Int, Double, Vector2, Vector3, Matrix3, or Matrix4."
@@ -168,87 +169,17 @@ final case class Shader(val vertPath: String, val fragPath: String) {
     }
   }
 
-  def uploadImage(varName: String, image: Image): Unit = {
+  def uploadImage(varName: String, textureUnit: Int, image: Image): Unit = {
     _uniformUsedCheck()
-    val varLocation: Int = glGetUniformLocation(id, varName)
-
-    if (varLocation != -1) { // Ensure the uniform variable exists in the shader
-      use()
-
-      // Assuming you want to bind the texture to texture unit 0
-      val textureUnit = 0
-
-      // Generate and bind the texture
-      val textureId: Int = glGenTextures()
-      glBindTexture(GL_TEXTURE_2D, textureId)
-      glTexImage2D(
-        GL_TEXTURE_2D,
-        0,
-        GL_RGBA,
-        image.width,
-        image.height,
-        0,
-        GL_RGBA,
-        GL_UNSIGNED_BYTE,
-        image.imgData
-      )
-      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
-      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
-
-      import org.lwjgl.opengl.GL13._
-      glActiveTexture(GL_TEXTURE0 + textureUnit)
-      glBindTexture(GL_TEXTURE_2D, textureId)
-
-      glUniform1i(varLocation, textureUnit)
-
-      // Check for errors
-      if (glGetError() != GL_NO_ERROR) {
-        throw new RuntimeException("Failed to set texture uniform in shader.")
-      }
-
-      // Clean up by deleting the texture if necessary
-      glDeleteTextures(textureId)
-    } else {
-      // Handle case where the uniform variable doesn't exist in the shader
-      throw new RuntimeException(
-        s"Uniform variable $varName not found in shader."
-      )
-    }
-  }
-
-  // def uploadImage(varName: String, image: Image): Unit = {
-  //   _uniformUsedCheck()
-  //   val varLocation: Int = glGetUniformLocation(id, varName)
-  //   use()
-  //   val img: GLFWImage = image.image
-  //   val textureId: Int = glGenTextures()
-  //   glBindTexture(GL_TEXTURE_2D, textureId)
-  //   glTexImage2D(
-  //     GL_TEXTURE_2D,
-  //     0,
-  //     GL_RGBA,
-  //     img.width,
-  //     img.height,
-  //     0,
-  //     GL_RGBA,
-  //     GL_UNSIGNED_BYTE,
-  //     image.imgData
-  //   )
-  //   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
-  //   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
-
-  //   glUniform1i(varLocation, textureId)
-
-  //   // Check for errors
-  //   if glGetError() != GL_NO_ERROR then
-  //     throw new RuntimeException("Failed to create texture")
-  // }
-
-  def uploadTexture(varName: String, slot: Int): Unit = {
-    _uniformUsedCheck()
+    require(
+      textureUnit >= 0 && textureUnit < Shader.maxTextureUnits,
+      s"Error: Texture unit out of range. Must be between 0 and ${Shader.maxTextureUnits - 1}, inclusive."
+    )
     val varLocation: Int = glGetUniformLocation(id, varName)
     use()
-    glUniform1i(varLocation, slot)
+    glActiveTexture(GL_TEXTURE0 + textureUnit)
+    glBindTexture(GL_TEXTURE_2D, image.id)
+    glUniform1i(varLocation, textureUnit)
   }
 
   def uploadMat4f(varName: String, mat4: Matrix4): Unit = {
@@ -346,4 +277,8 @@ final case class Shader(val vertPath: String, val fragPath: String) {
       this.vertPath == vertPath && this.fragPath == fragPath
     case _ => false
   }
+}
+
+object Shader {
+  val maxTextureUnits: Int = glGetInteger(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS)
 }
