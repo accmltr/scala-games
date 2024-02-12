@@ -89,7 +89,7 @@ object MyGame extends Game {
       sprite.load()
     renderer.renderSprites(List(sprite))
 
-    // renderer.applyPostProcessing(List(anti_aliasing_shader))
+    renderer.applyPostProcessing(List(anti_aliasing_shader))
 
     if (input.justPressed(KeyCode.v)) {
       window.vsync = !window.vsync
