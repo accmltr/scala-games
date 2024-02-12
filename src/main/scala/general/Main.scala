@@ -67,11 +67,9 @@ object MyGame extends Game {
   // sprite.width = 100
   // sprite.height = 100
 
-  val cursor = Image("res/cursor.png")
-
   window.vsync = true
   onInit += { (_) =>
-    window.setCursor(cursor, 0, 0)
+    window.setCursor("res/cursor.png", 0, 0)
   }
 
   onUpdate += { (delta: Float) =>
