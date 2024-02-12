@@ -7,4 +7,4 @@ import engine.render.Image
 
 type Uniform = FloatBuffer | IntBuffer | Array[Float] | Array[Int] | Boolean |
   Float | Int | Double | Vector2 | Vector3 | Vector4 | Matrix3 | Matrix4 |
-  Image // | Matrix2
+  (Int, Image) // | Matrix2
