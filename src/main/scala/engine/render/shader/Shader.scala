@@ -132,6 +132,18 @@ final case class Shader(val vertPath: String, val fragPath: String) {
     glUseProgram(0)
   }
 
+  private var _renderTarget: Int = -1
+  def renderTarget: Int = _renderTarget
+  def renderTarget_=(target: Int): Unit = {
+    _glcontextCheck()
+    _autoCompile()
+    _renderTarget = target
+
+    import org.lwjgl.opengl.GL30._
+    if target == -1 then glBindFramebuffer(GL_FRAMEBUFFER, 0)
+    else glBindFramebuffer(GL_FRAMEBUFFER, target)
+  }
+
   private def _glcontextCheck(): Unit = {
     if glfwGetCurrentContext() == 0L then
       throw new Exception(
