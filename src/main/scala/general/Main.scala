@@ -92,7 +92,6 @@ object MyGame extends Game {
     glGenTextures(texturePointers)
     val texture = texturePointers(0)
     glBindTexture(GL_TEXTURE_2D, texture)
-
     glTexImage2D(
       GL_TEXTURE_2D,
       0,
@@ -104,10 +103,9 @@ object MyGame extends Game {
       GL_UNSIGNED_BYTE,
       null.asInstanceOf[ByteBuffer]
     )
-
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
-
+    glBindTexture(GL_TEXTURE_2D, 0)
     glFramebufferTexture2D(
       GL_FRAMEBUFFER,
       GL_COLOR_ATTACHMENT0,
