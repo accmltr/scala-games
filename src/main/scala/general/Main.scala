@@ -22,6 +22,7 @@ import java.nio.FloatBuffer
 import java.nio.IntBuffer
 import scala.io.Source
 import engine.render.Image
+import java.nio.ByteBuffer
 
 object MyGame extends Game {
 
@@ -63,9 +64,10 @@ object MyGame extends Game {
     "res/sample_image.png"
   )
 
-  sprite.position = Vector2(50, 50)
-  // sprite.width = 100
-  // sprite.height = 100
+  sprite.position = Vector2(700, 500)
+  sprite.width = 300
+  sprite.height = 300
+  sprite.rotation = pi / 3.0f
 
   window.vsync = true
   onInit += { (_) =>
@@ -77,6 +79,51 @@ object MyGame extends Game {
     circleSdf.bow = circleSdf.radius * abs(sin(Time.current))
     circleSdf.position = input.mousePosition
 
+    import org.lwjgl.opengl.GL30._
+
+    // Create FBO -----------------------------------------
+
+    val fboPointers = Array(1)
+    glGenFramebuffers(fboPointers)
+    val fbo = fboPointers(0)
+
+    // Create texture for FBO
+    val texturePointers = Array(1)
+    glGenTextures(texturePointers)
+    val texture = texturePointers(0)
+    glBindTexture(GL_TEXTURE_2D, texture)
+
+    glTexImage2D(
+      GL_TEXTURE_2D,
+      0,
+      GL_RGB,
+      window.resolution.width,
+      window.resolution.height,
+      0,
+      GL_RGB,
+      GL_UNSIGNED_BYTE,
+      null.asInstanceOf[ByteBuffer]
+    )
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
+
+    glFramebufferTexture2D(
+      GL_FRAMEBUFFER,
+      GL_COLOR_ATTACHMENT0,
+      GL_TEXTURE_2D,
+      texture,
+      0
+    )
+
+    if (glCheckFramebufferStatus(fbo) == GL_FRAMEBUFFER_COMPLETE)
+      println(s"Successfully created a Frame Buffer Object.")
+
+    // Make the default FBO active again
+    glBindFramebuffer(GL_FRAMEBUFFER, 0)
+
+    // < Create FBO -----------------------------------------
+
     // renderer.render(
     //   List(
     //     // sprite,
@@ -87,7 +134,11 @@ object MyGame extends Game {
       sprite.load()
     renderer.renderSprites(List(sprite))
 
-    renderer.applyPostProcessing(List(anti_aliasing_shader))
+    // renderer.applyPostProcessing(List(anti_aliasing_shader))
+
+    // Delete FBO -----------------------------------------
+    glDeleteBuffers(fbo)
+    // < Delete FBO -----------------------------------------
 
     if (input.justPressed(KeyCode.v)) {
       window.vsync = !window.vsync
