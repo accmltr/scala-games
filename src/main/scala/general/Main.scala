@@ -21,6 +21,7 @@ import java.nio.CharBuffer
 import java.nio.FloatBuffer
 import java.nio.IntBuffer
 import scala.io.Source
+import javax.swing.InputMap
 
 object MyGame extends Game {
 
@@ -50,9 +51,7 @@ object MyGame extends Game {
   window.fpsStats.showAvg = true
   window.backgroundColor = Vector3(0.1f, 0.1f, 0.1f)
 
-  val circleSdf = CircleSdf(6.0f)
-  circleSdf.borderColor = Color.GREEN
-  circleSdf.color = Color.BLUE
+  val ngonRenderElement = NGonRenderElement(100)
 
   window.vsync = true
   onInit += { (_) =>
@@ -61,12 +60,11 @@ object MyGame extends Game {
 
   onUpdate += { (delta: Float) =>
 
-    circleSdf.bow = circleSdf.radius * abs(sin(Time.current))
-    circleSdf.position = input.mousePosition
+    ngonRenderElement.position = input.mousePosition
 
     renderer.render(
       List(
-        circleSdf
+        ngonRenderElement
       ).map(_.renderData)
     )
 
