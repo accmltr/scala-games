@@ -21,17 +21,12 @@ import java.nio.CharBuffer
 import java.nio.FloatBuffer
 import java.nio.IntBuffer
 import scala.io.Source
-import engine.render.Image
 
 object MyGame extends Game {
 
   title = "MyGame"
 
   val renderer = DefaultRenderer(window)
-  val anti_aliasing_shader = Shader(
-    "src/main/scala/engine/render/shaders/vertex/default.vert",
-    "src/main/scala/engine/render/shaders/post_processing/anti_aliasing.frag"
-  )
 
   root = {
     val node = Node()
@@ -59,13 +54,6 @@ object MyGame extends Game {
   circleSdf.borderColor = Color.GREEN
   circleSdf.color = Color.BLUE
 
-  var sprite: Sprite = Sprite(
-    "res/sample_image.png"
-  )
-  sprite.position = Vector2(50, 50)
-  sprite.width = 100
-  sprite.height = 100
-
   window.vsync = true
   onInit += { (_) =>
     window.setCursor("res/cursor.png", 0, 0)
@@ -76,30 +64,11 @@ object MyGame extends Game {
     circleSdf.bow = circleSdf.radius * abs(sin(Time.current))
     circleSdf.position = input.mousePosition
 
-    sprite.position = input.mousePosition
-
-    // renderer.render(
-    //   List(
-    //     // sprite,
-    //     circleSdf
-    //   ).map(_.renderData)
-    // )
-    if (!sprite.loaded)
-      sprite.load()
-    renderer.renderSprites(List(sprite))
-
-    renderer.applyPostProcessing(List(anti_aliasing_shader))
-
-    if (input.pressed(KeyCode.s)) {
-      sprite.width += 100 * delta
-      sprite.height += 100 * delta
-      sprite.rotation += 2.1f * delta
-    }
-    if (input.pressed(KeyCode.d)) {
-      sprite.width -= 100 * delta
-      sprite.height -= 100 * delta
-      sprite.rotation -= 2.1f * delta
-    }
+    renderer.render(
+      List(
+        circleSdf
+      ).map(_.renderData)
+    )
 
     if (input.justPressed(KeyCode.v)) {
       window.vsync = !window.vsync

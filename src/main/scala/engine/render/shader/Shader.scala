@@ -15,7 +15,6 @@ import java.nio.IntBuffer
 import engine.math.Matrix3
 import engine.math.Matrix4
 import engine.render.shader.Uniform
-import engine.render.Image
 import org.lwjgl.glfw.GLFWImage
 import java.nio.ByteBuffer
 import org.lwjgl.glfw.GLFW
@@ -28,7 +27,10 @@ import org.lwjgl.system.MemoryUtil
   * @param fragPath
   *   Path to fragment source file.
   */
-final case class Shader(val vertPath: String, val fragPath: String) {
+final private[engine] case class Shader(
+    val vertPath: String,
+    val fragPath: String
+) {
 
   val vertexSource: String = engine.io
     .readTextFile(vertPath)
@@ -174,26 +176,12 @@ final case class Shader(val vertPath: String, val fragPath: String) {
         case value: Vector4      => uploadVec4f(name, value)
         case value: Matrix3      => uploadMatrix3(name, value)
         case value: Matrix4      => uploadMat4f(name, value)
-        case (texUnit: Int, image: Image) => uploadImage(name, texUnit, image)
         case null =>
           throw new Exception(
             "Invalid uniform type. Uniform must be a FloatBuffer, IntBuffer, Array[Float], Array[Int], Boolean, Float, Int, Double, Vector2, Vector3, Matrix3, or Matrix4."
           )
       }
     }
-  }
-
-  def uploadImage(varName: String, textureUnit: Int, image: Image): Unit = {
-    _uniformUsedCheck()
-    require(
-      textureUnit >= 0 && textureUnit < Shader.maxTextureUnits,
-      s"Texture unit out of range. Must be between 0 and ${Shader.maxTextureUnits - 1}, inclusive."
-    )
-    val varLocation: Int = glGetUniformLocation(id, varName)
-    use()
-    glActiveTexture(GL_TEXTURE0 + textureUnit)
-    glBindTexture(GL_TEXTURE_2D, image.id)
-    glUniform1i(varLocation, textureUnit)
   }
 
   def uploadMat4f(varName: String, mat4: Matrix4): Unit = {
@@ -291,18 +279,4 @@ final case class Shader(val vertPath: String, val fragPath: String) {
       this.vertPath == vertPath && this.fragPath == fragPath
     case _ => false
   }
-}
-
-object Shader {
-  private var _maxTextureUnits: Int = -1
-  def maxTextureUnits: Int =
-    // Make sure the OpenGL context is available
-    if GLFW.glfwGetCurrentContext() == MemoryUtil.NULL then
-      throw new Exception(
-        "OpenGL context not available"
-      )
-    else
-      if (_maxTextureUnits == -1)
-        _maxTextureUnits = glGetInteger(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS)
-      _maxTextureUnits
 }
