@@ -2,7 +2,6 @@ package engine.render.renderer.render_element
 
 import engine.render.Color
 import engine.math.Matrix3
-import engine.render.shader.Shader
 import engine.render.shader.Uniform
 import engine.math.Vector2
 import engine.render.renderer.RenderData
