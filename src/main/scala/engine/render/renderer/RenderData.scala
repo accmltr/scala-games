@@ -26,7 +26,7 @@ import engine.math.geometry.Polyline
   *   uniforms provided by the renderer.
   * @param shader
   */
-final case class RenderData(
+final private[engine] case class RenderData(
     shader: Shader = Shader(
       "src/main/scala/engine/render/shaders/vertex/default.vert",
       "src/main/scala/engine/render/shaders/fragment/color_fill.frag"

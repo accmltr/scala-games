@@ -6,8 +6,6 @@ import engine.math.shapes.*
 import engine.render.*
 import engine.render.renderer.*
 import engine.render.renderer.render_element.*
-import engine.render.renderer.sdf.*
-import engine.render.shader.Shader
 import engine.render.window.Resolution
 import org.joml.Matrix4f
 import org.lwjgl.BufferUtils
@@ -21,17 +19,13 @@ import java.nio.CharBuffer
 import java.nio.FloatBuffer
 import java.nio.IntBuffer
 import scala.io.Source
-import engine.render.Image
+import javax.swing.InputMap
 
 object MyGame extends Game {
 
   title = "MyGame"
 
   val renderer = DefaultRenderer(window)
-  val anti_aliasing_shader = Shader(
-    "src/main/scala/engine/render/shaders/vertex/default.vert",
-    "src/main/scala/engine/render/shaders/post_processing/anti_aliasing.frag"
-  )
 
   root = {
     val node = Node()
@@ -55,53 +49,22 @@ object MyGame extends Game {
   window.fpsStats.showAvg = true
   window.backgroundColor = Vector3(0.1f, 0.1f, 0.1f)
 
-  val circleSdf = CircleSdf(6.0f)
-  circleSdf.borderColor = Color.GREEN
-  circleSdf.color = Color.BLUE
-
-  var sprite: Sprite = Sprite(
-    "res/sample_image.png"
-  )
-  sprite.position = Vector2(50, 50)
-  sprite.width = 100
-  sprite.height = 100
-
-  val cursor = Image("res/cursor.png")
+  val ngonRenderElement = NGonRenderElement(100)
 
   window.vsync = true
   onInit += { (_) =>
-    window.setCursor(cursor, 0, 0)
+    window.setCursor("res/cursor.png", 0, 0)
   }
 
   onUpdate += { (delta: Float) =>
 
-    circleSdf.bow = circleSdf.radius * abs(sin(Time.current))
-    circleSdf.position = input.mousePosition
+    ngonRenderElement.position = input.mousePosition
 
-    sprite.position = input.mousePosition
-
-    // renderer.render(
-    //   List(
-    //     // sprite,
-    //     circleSdf
-    //   ).map(_.renderData)
-    // )
-    if (!sprite.loaded)
-      sprite.load()
-    renderer.renderSprites(List(sprite))
-
-    // renderer.applyPostProcessing(List(anti_aliasing_shader))
-
-    if (input.pressed(KeyCode.s)) {
-      sprite.width += 100 * delta
-      sprite.height += 100 * delta
-      sprite.rotation += 2.1f * delta
-    }
-    if (input.pressed(KeyCode.d)) {
-      sprite.width -= 100 * delta
-      sprite.height -= 100 * delta
-      sprite.rotation -= 2.1f * delta
-    }
+    renderer.render(
+      List(
+        ngonRenderElement
+      ).map(_.renderData)
+    )
 
     if (input.justPressed(KeyCode.v)) {
       window.vsync = !window.vsync

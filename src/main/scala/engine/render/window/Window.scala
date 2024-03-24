@@ -25,6 +25,10 @@ import engine.math.Vector3
 import engine.render.window.Resolution
 import engine.render.window.FpsStats
 import engine.input.{KeyListener, MouseListener}
+import java.nio.ByteBuffer
+import java.nio.IntBuffer
+import org.lwjgl.stb.STBImage.stbi_load
+import org.lwjgl.stb.STBImage.stbi_failure_reason
 
 class Window(
     private var _title: String,
@@ -245,24 +249,70 @@ class Window(
   }
 
   import org.lwjgl.glfw.GLFWImage
-  import engine.render.Image
-  private var _cursorImage: Image = null
+  private var _cursorPath: String = null
+  private var _cursorWidth: Int = 0
+  private var _cursorHeight: Int = 0
+  private var _cursorChannels: Int = 0
+  private var _cursorData: ByteBuffer = null
+  private var _cursorHotspotX: Int = 0
+  private var _cursorHotspotY: Int = 0
+  private var _cursorGLFWImage: GLFWImage = null
   private var _cursorPointer: Long = 0
-  def cursor: Image = _cursorImage
-  def setCursor(image: Image, x: Int, y: Int): Unit = {
-
-    require(image != null, "`image` may nut be `null`")
-
+  def cursorPath: String = _cursorPath
+  def cursorWidth: Int = _cursorWidth
+  def cursorHeight: Int = _cursorHeight
+  def cursorChannels: Int = _cursorChannels
+  def cursorHotspotX: Int = _cursorHotspotX
+  def cursorHotspotX_=(x: Int): Unit = {
+    _cursorHotspotX = x
     if (_cursorPointer != 0)
       glfwDestroyCursor(_cursorPointer)
-    _cursorPointer = glfwCreateCursor(image.image, x, y)
-    glfwSetCursor(windowId, _cursorPointer)
-    _cursorImage = image
+    _cursorPointer = glfwCreateCursor(_cursorGLFWImage, x, _cursorHotspotY)
+    glfwSetCursor(_windowId, _cursorPointer)
+  }
+  def cursorHotspotY: Int = _cursorHotspotY
+  def cursorHotspotY_=(y: Int): Unit = {
+    _cursorHotspotY = y
+    if (_cursorPointer != 0)
+      glfwDestroyCursor(_cursorPointer)
+    _cursorPointer = glfwCreateCursor(_cursorGLFWImage, _cursorHotspotX, y)
+    glfwSetCursor(_windowId, _cursorPointer)
+  }
+  def setCursor(path: String, x: Int, y: Int): Unit = {
+
+    require(engine.io.fileExists(path), "Cursor file does not exist")
+
+    _cursorGLFWImage = GLFWImage.malloc()
+
+    val wBuffer: IntBuffer = BufferUtils.createIntBuffer(1)
+    val hBuffer: IntBuffer = BufferUtils.createIntBuffer(1)
+    val channelsBuffer: IntBuffer = BufferUtils.createIntBuffer(1)
+    val image: ByteBuffer =
+      stbi_load(path, wBuffer, hBuffer, channelsBuffer, 0)
+    if (image == null)
+      throw new RuntimeException(
+        "Failed to load cursor image: " + stbi_failure_reason()
+      )
+
+    _cursorPath = path
+    _cursorWidth = wBuffer.get(0)
+    _cursorHeight = hBuffer.get(0)
+    _cursorChannels = channelsBuffer.get(0)
+    _cursorData = image
+    _cursorHotspotX = x
+    _cursorHotspotY = y
+    _cursorGLFWImage.set(_cursorWidth, _cursorHeight, _cursorData)
+
+    // Set the cursor
+    if (_cursorPointer != 0)
+      glfwDestroyCursor(_cursorPointer)
+    _cursorPointer = glfwCreateCursor(_cursorGLFWImage, x, y)
+    glfwSetCursor(_windowId, _cursorPointer)
   }
   def clearCursor(): Unit = {
     if (_cursorPointer != 0)
       glfwDestroyCursor(_cursorPointer)
     glfwSetCursor(windowId, NULL)
-    _cursorImage = null
+    _cursorGLFWImage = null
   }
 }
