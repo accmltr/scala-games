@@ -66,11 +66,9 @@ object MyGame extends Game {
   sprite.width = 100
   sprite.height = 100
 
-  val cursor = Image("res/cursor.png")
-
   window.vsync = true
   onInit += { (_) =>
-    window.setCursor(cursor, 0, 0)
+    window.setCursor("res/cursor.png", 0, 0)
   }
 
   onUpdate += { (delta: Float) =>
@@ -90,7 +88,7 @@ object MyGame extends Game {
       sprite.load()
     renderer.renderSprites(List(sprite))
 
-    // renderer.applyPostProcessing(List(anti_aliasing_shader))
+    renderer.applyPostProcessing(List(anti_aliasing_shader))
 
     if (input.pressed(KeyCode.s)) {
       sprite.width += 100 * delta

@@ -22,10 +22,58 @@ import engine.render.renderer.render_element.Sprite
 final case class DefaultRenderer(
     override val window: Window
 ) extends Renderer(window) {
+
+  var fboId: Int = 0
+  var textureId: Int = 0
+
   override def render(
       renderDatas: List[RenderData],
       wireframeMode: Boolean = false
   ): Unit = {
+
+    // Frame Buffer Object
+    {
+      // Prepare for post-processing
+      glBindFramebuffer(GL_FRAMEBUFFER, 0)
+      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+      glDisable(GL_DEPTH_TEST)
+
+      // Create FBO
+      fboId = glGenFramebuffers()
+      glBindFramebuffer(GL_FRAMEBUFFER, fboId)
+
+      // Create texture
+      textureId = glGenTextures()
+      glBindTexture(GL_TEXTURE_2D, textureId)
+      val pixels = BufferUtils.createByteBuffer(
+        window.resolution.width * window.resolution.height * 3
+      )
+      glTexImage2D(
+        GL_TEXTURE_2D,
+        0,
+        GL_RGB,
+        window.resolution.width,
+        window.resolution.height,
+        0,
+        GL_RGB,
+        GL_UNSIGNED_BYTE,
+        pixels
+      )
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
+      glFramebufferTexture2D(
+        GL_FRAMEBUFFER,
+        GL_COLOR_ATTACHMENT0,
+        GL_TEXTURE_2D,
+        textureId,
+        0
+      )
+
+      // Check for errors
+      if glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE
+      then throw new RuntimeException("Failed to create FBO")
+    }
+
     for rd <- renderDatas.sortBy(_.layer)
     do {
 
@@ -102,46 +150,6 @@ final case class DefaultRenderer(
 
   override def applyPostProcessing(shaders: List[Shader]): Unit = {
 
-    // Prepare for post-processing
-    glBindFramebuffer(GL_FRAMEBUFFER, 0)
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-    glDisable(GL_DEPTH_TEST)
-
-    // Create FBO
-    val fboId = glGenFramebuffers()
-    glBindFramebuffer(GL_FRAMEBUFFER, fboId)
-
-    // Create texture
-    val textureId = glGenTextures()
-    glBindTexture(GL_TEXTURE_2D, textureId)
-    val pixels = BufferUtils.createByteBuffer(
-      window.resolution.width * window.resolution.height * 3
-    )
-    glTexImage2D(
-      GL_TEXTURE_2D,
-      0,
-      GL_RGB,
-      window.resolution.width,
-      window.resolution.height,
-      0,
-      GL_RGB,
-      GL_UNSIGNED_BYTE,
-      pixels
-    )
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
-    glFramebufferTexture2D(
-      GL_FRAMEBUFFER,
-      GL_COLOR_ATTACHMENT0,
-      GL_TEXTURE_2D,
-      textureId,
-      0
-    )
-
-    // Check for errors
-    if glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE
-    then throw new RuntimeException("Failed to create FBO")
-
     // Vertices for a fullscreen quad
     val vertices: Array[Float] = Array(
       -1, -1, 1, -1, 1, 1, 1, 1, -1, 1, -1, -1
@@ -175,11 +183,6 @@ final case class DefaultRenderer(
 
       // Bind shader program
       shader.use()
-
-      // Upload uniforms
-      // Image(
-      //   "res/soldier-paladin-digital-art-gun-wallpaper-907ffdf3e20334b701b15a7cc7668b54.jpg"
-      // ).uploadAsUniform("uScreenTexture", shader.id)
 
       shader.uploadUniforms(
         Map[String, Uniform](

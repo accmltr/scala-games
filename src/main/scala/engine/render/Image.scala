@@ -7,100 +7,145 @@ import org.lwjgl.system.{MemoryStack, MemoryUtil}
 import org.lwjgl.BufferUtils
 import java.nio.IntBuffer
 import java.nio.ByteBuffer
+import engine.render.window.Window
+import engine.render.renderer.RenderData
+import org.lwjgl.opengl.GL11._
+import org.lwjgl.opengl.GL13._
+import org.lwjgl.opengl.GL15._
+import org.lwjgl.opengl.GL20._
+import org.lwjgl.opengl.GL30._
+import engine.render.renderer.BuiltInUniforms
+import engine.Time
+import engine.render.shader.Shader
+import engine.math.Matrix3
 
+/** Represents an image file that is loaded into GPU memory.
+  *
+  * It can be loaded and unloaded from GPU memory. This is done automatically
+  * when the image is used by the engine for the first time, but can be done
+  * manually with the `load` and `unload` methods, as long as a valid OpenGL
+  * context is available, i.e. when a `Window` has been intialized.
+  *
+  * @param path
+  */
 final case class Image(path: String) {
 
   require(engine.io.fileExists(path), "Image file does not exist")
 
-  private var _image: GLFWImage = null
-  private var _width: IntBuffer = null
-  private var _height: IntBuffer = null
-  private var _channels: IntBuffer = null
-  private var _imgData: ByteBuffer = null
+  private var _width: Int = 0
+  private var _height: Int = 0
+  private var _channels: Int = 0
+  private var _texId: Int = 0
+  private var _wrapMode: WrapMode = WrapMode.Repeat
+  private var _filterMode: FilterMode = FilterMode.Linear
 
-  private[engine] def image: GLFWImage =
-    if (_image == null) load()
-    _image
-
-  private[engine] def imgData: ByteBuffer =
-    if (_imgData == null) load()
-    _imgData
-
+  def id: Int =
+    if (!loaded) load()
+    _texId
   def width: Int =
-    if (_width == null) load()
-    _width.get(0)
+    if (!loaded) load()
+    _width
   def height: Int =
-    if (_width == null) load()
-    _height.get(0)
+    if (!loaded) load()
+    _height
   def channels: Int =
-    if (_width == null) load()
-    _channels.get(0)
+    if (!loaded) load()
+    _channels
+
+  def loaded: Boolean = _texId != 0
 
   def load(): Unit = {
-    if (_image != null)
-      throw new RuntimeException("Image already loaded")
+    require(
+      GLFW.glfwGetCurrentContext() != MemoryUtil.NULL,
+      "OpenGL context not available"
+    )
 
-    _image = GLFWImage.malloc()
-    _width = BufferUtils.createIntBuffer(1)
-    _height = BufferUtils.createIntBuffer(1)
-    _channels = BufferUtils.createIntBuffer(1)
-    _imgData =
-      org.lwjgl.stb.STBImage.stbi_load(path, _width, _height, _channels, 4)
+    // Generate texture on GPU and get the texture ID
+    _texId = glGenTextures()
+    glBindTexture(GL_TEXTURE_2D, _texId)
 
-    if (_imgData == null) {
-      throw new RuntimeException(
-        "Image loading failed: " + org.lwjgl.stb.STBImage.stbi_failure_reason()
-      )
+    // --------------------------------------------------------------------
+    // SET TEXTURE PARAMETERS
+    // --------------------------------------------------------------------
+
+    // Repeat
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, _wrapMode.value)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, _wrapMode.value)
+
+    // Linear filtering
+    glTexParameteri(
+      GL_TEXTURE_2D,
+      GL_TEXTURE_MIN_FILTER,
+      _filterMode.value
+    )
+    glTexParameteri(
+      GL_TEXTURE_2D,
+      GL_TEXTURE_MAG_FILTER,
+      _filterMode.value
+    )
+
+    // Load image
+    val wBuffer: IntBuffer = BufferUtils.createIntBuffer(1)
+    val hBuffer: IntBuffer = BufferUtils.createIntBuffer(1)
+    val channelsBuffer: IntBuffer = BufferUtils.createIntBuffer(1)
+
+    import org.lwjgl.stb.STBImage.stbi_load
+    val image: ByteBuffer =
+      stbi_load(path, wBuffer, hBuffer, channelsBuffer, 0)
+    if (image != null) {
+
+      // Store image data
+      _width = wBuffer.get(0)
+      _height = hBuffer.get(0)
+      _channels = channelsBuffer.get(0)
+
+      // Send image data to GPU
+      if (channelsBuffer.get(0) == 3) {
+        // RGB image
+        glTexImage2D(
+          GL_TEXTURE_2D,
+          0,
+          GL_RGB,
+          wBuffer.get(0),
+          hBuffer.get(0),
+          0,
+          GL_RGB,
+          GL_UNSIGNED_BYTE,
+          image
+        )
+      } else if (channelsBuffer.get(0) == 4) {
+        // RGBA image
+        glTexImage2D(
+          GL_TEXTURE_2D,
+          0,
+          GL_RGBA,
+          wBuffer.get(0),
+          hBuffer.get(0),
+          0,
+          GL_RGBA,
+          GL_UNSIGNED_BYTE,
+          image
+        )
+      } else {
+        throw new Exception(
+          "Unknown number of color channels in texture file: " + path +
+            ". Expected 3 or 4, but found: " + channelsBuffer.get(0) + "."
+        )
+      }
+    } else {
+      throw new Exception("Failed to load texture file: " + path)
     }
-    _image.set(_width.get(0), _height.get(0), _imgData)
+
+    import org.lwjgl.stb.STBImage.stbi_image_free
+    // Free image from CPU memory
+    stbi_image_free(image)
   }
 
-  def free(): Unit = {
-
-    if (_image == null)
-      throw new RuntimeException("Freeing non-loaded image.")
-
-    stbi_image_free(_imgData)
-    _image.free()
-
-    _width.clear()
-    _height.clear()
-    _channels.clear()
-    _imgData.clear()
-
-    _width = null
-    _height = null
-    _channels = null
-    _imgData = null
-    _image = null
+  def unload(): Unit = {
+    require(loaded, "Trying to unload an image that is not loaded")
+    if (_texId != 0) {
+      glDeleteTextures(_texId)
+      _texId = 0
+    }
   }
-
-  // import org.lwjgl.opengl.GL11._
-  // import org.lwjgl.opengl.GL30._
-  // import org.lwjgl.opengl.GL32._
-  // import org.lwjgl.opengl.GL45._
-  // import org.lwjgl.opengl.GL46._
-  // import org.lwjgl.opengl.GL15._
-  // import org.lwjgl.opengl.GL20._
-  // import org.lwjgl.opengl.GL13._
-  // import org.lwjgl.opengl.GL14._
-  // import org.lwjgl.opengl.GL12._
-  // import org.lwjgl.opengl.GL43._
-  // def uploadAsUniform(name: String, shaderId: Int): Unit = {
-  //   val tempTextureId = glGenTextures()
-  //   glBindTexture(GL_TEXTURE_2D, tempTextureId)
-  //   glTexImage2D(
-  //     GL_TEXTURE_2D,
-  //     0,
-  //     GL_RGBA,
-  //     width,
-  //     height,
-  //     0,
-  //     GL_RGBA,
-  //     GL_UNSIGNED_BYTE,
-  //     _imgData
-  //   )
-  //   glGenerateMipmap(GL_TEXTURE_2D)
-  //   glUniform1i(glGetUniformLocation(shaderId, name), 0)
-  // }
 }
