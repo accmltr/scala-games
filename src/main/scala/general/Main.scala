@@ -6,7 +6,6 @@ import engine.math.shapes.*
 import engine.render.*
 import engine.render.renderer.*
 import engine.render.renderer.render_element.*
-import engine.render.renderer.sdf.*
 import engine.render.window.Resolution
 import org.joml.Matrix4f
 import org.lwjgl.BufferUtils
