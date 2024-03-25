@@ -20,6 +20,7 @@ import java.nio.FloatBuffer
 import java.nio.IntBuffer
 import scala.io.Source
 import javax.swing.InputMap
+import engine.render.window.AA
 
 object MyGame extends Game {
 
@@ -47,9 +48,10 @@ object MyGame extends Game {
   window.resolution = Resolution.p720
   window.maximized = false
   window.fpsStats.showAvg = true
-  window.backgroundColor = Vector3(0.1f, 0.1f, 0.1f)
+  window.backgroundColor = Vector3.one * 0.12
+  // window.anti_aliasing = AA.x4
 
-  val ngonRenderElement = NGonRenderElement(100)
+  val ngonRenderElement = NGonRenderElement(100, 100)
 
   window.vsync = true
   onInit += { (_) =>

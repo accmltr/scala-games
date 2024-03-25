@@ -45,6 +45,7 @@ class Window(
   private var _vsync = false
   private var _maximized = false
   private var _centered = true
+  private var _anti_aliasing: AA = AA.x4
 
   val fpsStats = FpsStats()
 
@@ -77,6 +78,14 @@ class Window(
     if (isInitialized)
       glfwSwapInterval(if (vsync) 1 else 0)
     _vsync = vsync
+  def anti_aliasing: AA = _anti_aliasing
+  def anti_aliasing_=(aa: AA): Unit =
+    if (isInitialized)
+      throw new RuntimeException(
+        "Cannot update `anti_aliasing` property after Window has been initialized."
+      )
+    else
+      _anti_aliasing = aa
 
   // Methods
 
@@ -108,6 +117,7 @@ class Window(
 
     // Configure GLFW
     glfwDefaultWindowHints()
+    glfwWindowHint(GLFW_SAMPLES, _anti_aliasing.x)
     glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE)
     glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE)
     if (_maximized)
@@ -190,8 +200,16 @@ class Window(
     // `glBlendFunc` are used after this line.
     GL.createCapabilities()
 
+    val maxSamples = glGetInteger(GL_MAX_SAMPLES)
+    println(s"Maximum supported anti aliasing sample size: ${maxSamples}")
+    if (_anti_aliasing.x > maxSamples)
+      println(
+        s"Desired anti aliasing sample size ${_anti_aliasing.x} too high, using maximum supported sample size of ${maxSamples}."
+      )
+
     // Enable blending
     glEnable(GL_BLEND)
+    glEnable(GL_MULTISAMPLE)
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
 
     // Initialize the game
