@@ -49,7 +49,7 @@ object MyGame extends Game {
   window.fpsStats.showAvg = true
   window.backgroundColor = Vector3(0.1f, 0.1f, 0.1f)
 
-  val ngonRenderElement = NGonRenderElement(100)
+  val ngonRenderElement = NGonRenderElement(100, 100)
 
   window.vsync = true
   onInit += { (_) =>

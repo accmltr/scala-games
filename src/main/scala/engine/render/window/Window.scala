@@ -108,6 +108,7 @@ class Window(
 
     // Configure GLFW
     glfwDefaultWindowHints()
+    glfwWindowHint(GLFW_SAMPLES, 4)
     glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE)
     glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE)
     if (_maximized)
@@ -192,6 +193,7 @@ class Window(
 
     // Enable blending
     glEnable(GL_BLEND)
+    glEnable(GL_MULTISAMPLE)
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
 
     // Initialize the game
