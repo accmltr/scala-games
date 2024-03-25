@@ -64,8 +64,8 @@ object MyGame extends Game {
   )
 
   sprite.position = Vector2(50, 50)
-  // sprite.width = 100
-  // sprite.height = 100
+  sprite.width = 100
+  sprite.height = 100
 
   window.vsync = true
   onInit += { (_) =>
@@ -74,8 +74,10 @@ object MyGame extends Game {
 
   onUpdate += { (delta: Float) =>
 
-    circleSdf.bow = circleSdf.radius * abs(sin(Time.current))
-    circleSdf.position = input.mousePosition
+    // circleSdf.bow = circleSdf.radius * abs(sin(Time.current))
+    // circleSdf.position = input.mousePosition
+
+    sprite.position = input.mousePosition
 
     // renderer.render(
     //   List(
@@ -92,6 +94,17 @@ object MyGame extends Game {
     if (input.justPressed(KeyCode.v)) {
       window.vsync = !window.vsync
     }
+
+    val rotation_speed = pi
+    if (input.pressed(KeyCode.r))
+      sprite.rotation += delta * rotation_speed
+    if (input.pressed(KeyCode.e))
+      sprite.rotation -= delta * rotation_speed
+    val scale_speed = .5f
+    if (input.pressed(KeyCode.d))
+      sprite.scale = sprite.scale + Vector2.one * delta * scale_speed
+    if (input.pressed(KeyCode.f))
+      sprite.scale = sprite.scale + Vector2.one * delta * -scale_speed
 
     if (input.justReleased(KeyCode.escape)) {
       quit()

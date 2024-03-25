@@ -108,6 +108,7 @@ class Window(
 
     // Configure GLFW
     glfwDefaultWindowHints()
+    glfwWindowHint(GLFW_SAMPLES, 16)
     glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE)
     glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE)
     if (_maximized)
