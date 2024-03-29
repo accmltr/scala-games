@@ -20,10 +20,10 @@ import lib.instance_management.InstanceManager
 import lib.instance_management.Instance
 import engine.scene.Signal
 
-abstract class Game extends App {
+abstract class World extends App {
 
   // Givens
-  given Game = this
+  given World = this
 
   private val instanceManager: InstanceManager[Node] =
     InstanceManager()

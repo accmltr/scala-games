@@ -1,5 +1,5 @@
 import engine.core.Node
-import engine.core.Game
+import engine.core.World
 import engine.*
 import engine.input.KeyCode
 import engine.math.*
@@ -24,7 +24,7 @@ import scala.io.Source
 import javax.swing.InputMap
 import engine.render.window.AA
 
-object MyGame extends Game {
+object MyGame extends World {
 
   title = "MyGame"
 

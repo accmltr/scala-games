@@ -5,13 +5,13 @@ import engine.math.Vector2
 import engine.Component
 import lib.instance_management.Instance
 
-class Node private[engine] (game: Game) {
+class Node private[engine] (world: World) {
 
   // Engine Node Management
-  val instance = game.register(this)
+  val instance = world.register(this)
 
   // Givens
-  given Game = game
+  given World = world
 
   var name: String = "unnamed"
   var position: Vector2 = Vector2.zero
@@ -28,5 +28,5 @@ class Node private[engine] (game: Game) {
 }
 
 object Node {
-  def apply()(using game: Game): Instance[Node] = (new Node(game)).instance
+  def apply()(using world: World): Instance[Node] = (new Node(world)).instance
 }

@@ -1,5 +1,5 @@
 package engine.scene
 
-import engine.core.Game
+import engine.core.World
 
-trait Scene(game: Game) extends EngineListener
+trait Scene(game: World) extends EngineListener
