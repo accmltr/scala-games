@@ -1,4 +1,4 @@
-package engine
+package engine.core
 
 import org.lwjgl._
 import org.lwjgl.glfw._
@@ -15,23 +15,22 @@ import engine.input.{MouseListener, KeyListener}
 import engine.math.Vector2
 import engine.render.window.Window
 import engine.input.Input
-import engine.Node
 import engine.input.{KeyListener, MouseListener, Input}
 import lib.instance_management.InstanceManager
 import lib.instance_management.Instance
 import engine.scene.Signal
 
-abstract class Game extends App {
+abstract class World extends App {
 
   // Givens
-  given Game = this
+  given World = this
 
-  private val instanceManager: InstanceManager[Node] =
+  private val instanceManager: InstanceManager[Entity] =
     InstanceManager()
 
   private var _title: String = "Scala Games: Untitled Game"
   private var _initialized: Boolean = false
-  private var _root: Node = null
+  private var _root: Entity = null
   private val _input: Input = Input()
   private val _window: Window = Window(
     _title,
@@ -42,7 +41,7 @@ abstract class Game extends App {
   )
 
   // Node Management
-  def register(node: Node): Instance[Node] = {
+  def register(node: Entity): Instance[Entity] = {
     instanceManager.register(node)
   }
 
@@ -57,9 +56,9 @@ abstract class Game extends App {
     glfwSetWindowShouldClose(window.windowId, true)
   }
 
-  def root: Node = _root
+  def root: Entity = _root
 
-  def root_=(node: Node): Unit = {
+  def root_=(node: Entity): Unit = {
     if (node == null)
       throw new IllegalArgumentException("The root node may not be null")
     if (node.parent.isDefined)
