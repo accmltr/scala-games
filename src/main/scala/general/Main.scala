@@ -30,20 +30,20 @@ object MyGame extends World {
 
   val renderer = DefaultRenderer(window)
 
-  root = {
-    val e = Entity()
-    e.instance.name = "MyFirstNode"
-    e.instance.position = Vector2(0, 0)
-    e.instance.scale = Vector2(1, 1)
-    e.instance.rotation = 0
-    e.instance.children = List(
-      Entity("Child 1"),
-      Entity("Child 2"),
-      Entity("Child 3"),
-      Entity("Child 4")
-    )
-    e
-  }
+  // root = {
+  //   val e = Entity()
+  //   e.instance.name = "MyFirstNode"
+  //   e.instance.position = Vector2(0, 0)
+  //   e.instance.scale = Vector2(1, 1)
+  //   e.instance.rotation = 0
+  //   e.instance.children = List(
+  //     Entity("Child 1"),
+  //     Entity("Child 2"),
+  //     Entity("Child 3"),
+  //     Entity("Child 4")
+  //   )
+  //   e
+  // }
 
   println(root)
 

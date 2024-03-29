@@ -31,7 +31,7 @@ class InstanceManager[T]() {
   }
 
   def instance(refNr: Int): Option[T] =
-    Option(_refs(refNr))
+    _refs.get(refNr)
 
   def managedRefNrs: List[Int] =
     _refs.map(_._1).toList
@@ -45,10 +45,9 @@ class InstanceManager[T]() {
     */
   def register(t: T): Ref[T] = this.synchronized {
     require(t != null, "'t' may not be null")
-    var refNr = _newRefNr()
-    val ref = Ref(refNr, this)
-    _refs += refNr -> t
-    ref
+    var nr = _newRefNr()
+    _refs += nr -> t
+    Ref(nr, this)
   }
 
   private[instance_management] def destroy(refNr: Int): Unit =

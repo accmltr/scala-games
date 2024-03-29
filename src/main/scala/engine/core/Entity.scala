@@ -32,6 +32,6 @@ object Entity {
       world: World
   ): Ref[Entity] =
     var instance = (new Entity(world)).instance
-    instance.name = name
+    // instance.name = name
     instance
 }
