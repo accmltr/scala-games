@@ -1,4 +1,4 @@
-import engine.core.Node
+import engine.core.Entity
 import engine.core.World
 import engine.*
 import engine.input.KeyCode
@@ -31,18 +31,18 @@ object MyGame extends World {
   val renderer = DefaultRenderer(window)
 
   root = {
-    val node = Node()
-    node.name = "MyFirstNode"
-    node.position = Vector2(0, 0)
-    node.scale = Vector2(1, 1)
-    node.rotation = 0
-    node.children = List(
-      Node(),
-      Node(),
-      Node(),
-      Node()
+    val entity = Entity()
+    entity.name = "MyFirstNode"
+    entity.position = Vector2(0, 0)
+    entity.scale = Vector2(1, 1)
+    entity.rotation = 0
+    entity.children = List(
+      Entity(),
+      Entity(),
+      Entity(),
+      Entity()
     )
-    node
+    entity
   }
 
   println(root)

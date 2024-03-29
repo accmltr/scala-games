@@ -25,12 +25,12 @@ abstract class World extends App {
   // Givens
   given World = this
 
-  private val instanceManager: InstanceManager[Node] =
+  private val instanceManager: InstanceManager[Entity] =
     InstanceManager()
 
   private var _title: String = "Scala Games: Untitled Game"
   private var _initialized: Boolean = false
-  private var _root: Node = null
+  private var _root: Entity = null
   private val _input: Input = Input()
   private val _window: Window = Window(
     _title,
@@ -41,7 +41,7 @@ abstract class World extends App {
   )
 
   // Node Management
-  def register(node: Node): Instance[Node] = {
+  def register(node: Entity): Instance[Entity] = {
     instanceManager.register(node)
   }
 
@@ -56,9 +56,9 @@ abstract class World extends App {
     glfwSetWindowShouldClose(window.windowId, true)
   }
 
-  def root: Node = _root
+  def root: Entity = _root
 
-  def root_=(node: Node): Unit = {
+  def root_=(node: Entity): Unit = {
     if (node == null)
       throw new IllegalArgumentException("The root node may not be null")
     if (node.parent.isDefined)
