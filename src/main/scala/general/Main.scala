@@ -37,10 +37,10 @@ object MyGame extends World {
     entity.scale = Vector2(1, 1)
     entity.rotation = 0
     entity.children = List(
-      Entity(),
-      Entity(),
-      Entity(),
-      Entity()
+      Entity("Child 1"),
+      Entity("Child 2"),
+      Entity("Child 3"),
+      Entity("Child 4")
     )
     entity
   }

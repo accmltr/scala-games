@@ -1,6 +1,6 @@
 package lib.instance_management
 
-final class Instance[T] private[instance_management] (
+final class Ref[T] private[instance_management] (
     private var _instance: Option[T],
     val id: Int,
     val manager: InstanceManager[T]
@@ -18,9 +18,9 @@ final class Instance[T] private[instance_management] (
   }
 }
 
-object Instance {
+object Ref {
   // implicitly convert Reference[T] to T
-  implicit def rti[T](ref: Instance[T]): T = {
+  implicit def rti[T](ref: Ref[T]): T = {
     ref._instance match {
       case Some(value) => value
       case None =>

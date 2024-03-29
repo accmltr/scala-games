@@ -9,13 +9,18 @@ import scala.collection.immutable.Queue
   * **Note:** This class was mainly created for a solution to the problem of
   * destroying game objects in a game engine.
   */
-class InstanceManager[T](var historySize: Int = 10000) {
-
-  private var _instances: Map[Int, Instance[T]] = Map.empty
+class InstanceManager[T]() {
+  private var _instances: Map[Int, Ref[T]] = Map.empty
   private var _nextId: Int = 0
+  private var _historySize: Int = 10000
   private var _destroyedIds: Queue[Int] = Queue.empty
 
-  def instances: Vector[Instance[T]] = _instances.values.toVector
+  def instances: Vector[Ref[T]] = _instances.values.toVector
+  def historySize: Int = _historySize
+  def historySize_=(value: Int): Unit =
+    _historySize = value
+    if (_destroyedIds.size > _historySize)
+      _destroyedIds = _destroyedIds.drop(_destroyedIds.size - _historySize)
   def destroyedIds: Vector[Int] = _destroyedIds.toVector
 
   def newId: Int = this.synchronized {
@@ -32,17 +37,17 @@ class InstanceManager[T](var historySize: Int = 10000) {
     *   class.
     * @return
     */
-  def register(rawInstance: T): Instance[T] = this.synchronized {
+  def register(rawInstance: T): Ref[T] = this.synchronized {
     require(rawInstance != null, "'rawInstance' parameter may not be null")
-    val ref = Instance(Option(rawInstance), newId, this)
+    val ref = Ref(Option(rawInstance), newId, this)
     _instances += ref.id -> ref
     ref
   }
 
-  private[instance_management] def _onDestroyed(instance: Instance[T]): Unit =
+  private[instance_management] def _onDestroyed(instance: Ref[T]): Unit =
     this.synchronized {
       _instances -= instance.id
-      if (_destroyedIds.size >= historySize)
+      if (_destroyedIds.size >= _historySize)
         _destroyedIds = _destroyedIds.dequeue._2
       _destroyedIds = _destroyedIds.enqueue(instance.id)
     }
