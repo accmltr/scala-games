@@ -1,4 +1,4 @@
-package engine
+package engine.core
 
 import org.lwjgl._
 import org.lwjgl.glfw._
@@ -15,7 +15,6 @@ import engine.input.{MouseListener, KeyListener}
 import engine.math.Vector2
 import engine.render.window.Window
 import engine.input.Input
-import engine.Node
 import engine.input.{KeyListener, MouseListener, Input}
 import lib.instance_management.InstanceManager
 import lib.instance_management.Instance

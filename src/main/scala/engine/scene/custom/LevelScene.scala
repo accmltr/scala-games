@@ -1,7 +1,7 @@
 package engine.scene.custom
 
 import engine.scene.Scene
-import engine.Game
+import engine.core.Game
 import engine.input.KeyCode
 import engine.render.window.Resolution
 

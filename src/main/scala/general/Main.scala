@@ -1,3 +1,5 @@
+import engine.core.Node
+import engine.core.Game
 import engine.*
 import engine.input.KeyCode
 import engine.math.*
