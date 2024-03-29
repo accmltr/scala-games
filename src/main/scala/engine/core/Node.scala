@@ -4,7 +4,6 @@ import scala.reflect.ClassTag
 import engine.math.Vector2
 import engine.Component
 import lib.instance_management.Instance
-import core.Game
 
 class Node private[engine] (game: Game) {
 
