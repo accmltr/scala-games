@@ -1,6 +1,14 @@
 package lib.instance_management
 
-/** @param number
+/** The Ref[T] class provides a safe mechanism for accessing objects that can be
+  * destroyed by its InstanceManager. The idea is that only the InstanceManager
+  * object may contain the original references to the objects that it manages,
+  * making it possible to free any object at any time by erasing its original
+  * reference and having the garbage-collector free that object from system
+  * memory. Externally, these objects should only be stored in fields or
+  * closures using the Ref class!
+  *
+  * @param number
   *   Represents the total number of instances managed by this InstanceManager
   *   after this instance was added to it. Also used as the ID for the instance
   *   by the InstanceManager.
