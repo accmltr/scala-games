@@ -1,8 +1,14 @@
 import engine.render.window.AA
 
-AA.nearestToMax(AA.x16, 0)
-AA.nearestToMax(AA.x16, 2)
-AA.nearestToMax(AA.x16, 4)
-AA.nearestToMax(AA.x16, 8)
-AA.nearestToMax(AA.x16, 16)
-AA.nearestToMax(AA.x8, 16)
+val optionInt: Option[Int] = Option(3)
+val optionInt2: Option[Int] = None
+val optionInt3: Option[Int] = Option.empty
+
+val transformedOptionInt = optionInt.map(_ * 2)
+val transformedOptionInt2 = optionInt2.map(_ * 2)
+val transformedOptionInt3 = optionInt3.map(_ - 1)
+
+for
+  i1 <- optionInt
+  i2 <- transformedOptionInt
+yield i1 + i2

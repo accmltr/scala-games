@@ -3,7 +3,7 @@ package engine.core
 import scala.reflect.ClassTag
 import engine.math.Vector2
 import engine.Component
-import lib.instance_management.Instance
+import lib.instance_management.Ref
 
 class Entity private[engine] (world: World) {
 
@@ -13,12 +13,12 @@ class Entity private[engine] (world: World) {
   // Givens
   given World = world
 
-  var name: String = "unnamed"
+  var name: String = "entity"
   var position: Vector2 = Vector2.zero
   var rotation: Float = 0
   var scale: Vector2 = Vector2.one
-  var parent: Option[Instance[Entity]] = None
-  var children: List[Instance[Entity]] = List.empty
+  var parent: Option[Ref[Entity]] = None
+  var children: List[Ref[Entity]] = List.empty
   var components: List[Component] = List.empty
 
   // Generic Overrides
@@ -28,6 +28,10 @@ class Entity private[engine] (world: World) {
 }
 
 object Entity {
-  def apply()(using world: World): Instance[Entity] =
-    (new Entity(world)).instance
+  def apply(name: String = "entity")(using
+      world: World
+  ): Ref[Entity] =
+    var instance = (new Entity(world)).instance
+    // instance.name = name
+    instance
 }

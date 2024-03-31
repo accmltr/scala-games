@@ -17,7 +17,7 @@ import engine.render.window.Window
 import engine.input.Input
 import engine.input.{KeyListener, MouseListener, Input}
 import lib.instance_management.InstanceManager
-import lib.instance_management.Instance
+import lib.instance_management.Ref
 import engine.scene.Signal
 
 abstract class World extends App {
@@ -41,7 +41,7 @@ abstract class World extends App {
   )
 
   // Node Management
-  def register(node: Entity): Instance[Entity] = {
+  def register(node: Entity): Ref[Entity] = {
     instanceManager.register(node)
   }
 
