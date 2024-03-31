@@ -47,7 +47,7 @@ class InstanceManager[T]() {
     require(t != null, "'t' may not be null")
     var nr = _newRefNr()
     _refs += nr -> t
-    Instance(nr, this)
+    Ref(nr, this)
   }
 
   private[instance_management] def destroy(refNr: Int): Unit =
