@@ -30,6 +30,13 @@ object MyGame extends World {
 
   val renderer = DefaultRenderer(window)
 
+  var myFirstEntity = Entity("My First Entity")
+  for e <- myFirstEntity
+  do
+    e.children = List(
+      Entity("Child 1")
+    )
+
   // root = {
   //   val e = Entity()
   //   e.instance.name = "MyFirstNode"
@@ -45,8 +52,6 @@ object MyGame extends World {
   //   e
   // }
 
-  println(root)
-
   window.resolution = Resolution.p720
   window.maximized = false
   window.fpsStats.showAvg = true
@@ -58,6 +63,9 @@ object MyGame extends World {
   window.vsync = true
   onInit += { (_) =>
     window.setCursor("res/cursor.png", 0, 0)
+
+    for e1 <- myFirstEntity
+    do println(e1)
   }
 
   onUpdate += { (delta: Float) =>

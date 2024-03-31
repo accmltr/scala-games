@@ -8,12 +8,12 @@ import lib.instance_management.Ref
 class Entity private[engine] (world: World) {
 
   // Engine Node Management
-  val instance = world.register(this)
+  val ref = world.entityManager.register(this)
 
   // Givens
   given World = world
 
-  var name: String = "entity"
+  var name: String = "Unnamed Entity"
   var position: Vector2 = Vector2.zero
   var rotation: Float = 0
   var scale: Vector2 = Vector2.one
@@ -28,10 +28,10 @@ class Entity private[engine] (world: World) {
 }
 
 object Entity {
-  def apply(name: String = "entity")(using
+  def apply(name: String = "Unnamed Entity")(using
       world: World
   ): Ref[Entity] =
-    var instance = (new Entity(world)).instance
-    // instance.name = name
-    instance
+    var entity = (new Entity(world))
+    entity.name = name
+    entity.ref
 }
