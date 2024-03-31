@@ -1,20 +1,27 @@
 package lib.instance_management
 
-/** The Ref[T] class provides a safe mechanism for accessing objects that can be
-  * destroyed by its InstanceManager. The idea is that only the InstanceManager
-  * object may contain the original references to the objects that it manages,
-  * making it possible to free any object at any time by erasing its original
-  * reference and having the garbage-collector free that object from system
-  * memory. Externally, these objects should only be stored in fields or
-  * closures using the Ref class!
+/** The `Ref[T]` class provides a safe mechanism for accessing objects that can
+  * be destroyed by its `InstanceManager`. The idea is that only the
+  * `InstanceManager` object may contain the original references to the objects
+  * that it manages, making it possible to free any object at any time by
+  * erasing its original reference and having the garbage-collector free that
+  * object from system memory. Externally, these objects should only be stored
+  * in fields or closures using the Ref class!
   *
   * @param number
-  *   Represents the total number of instances managed by this InstanceManager
+  *   Represents the total number of instances managed by this `InstanceManager`
   *   after this instance was added to it. Also used as the ID for the instance
-  *   by the InstanceManager.
+  *   by the `InstanceManager`.
   * @param manager
   */
 final case class Ref[T](val number: Int, val manager: InstanceManager[T]) {
+
+  /** Use this method to access the managed object stored inside this `Ref`'s
+    * `InstanceManager`. It will return an `Option` containing either nothing,
+    * or the instance you are looking for. actual reference
+    *
+    * @return
+    */
   def get: Option[T] = manager.instance(number)
   def destroy(): Unit = manager.destroy(number)
 
