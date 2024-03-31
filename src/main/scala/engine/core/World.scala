@@ -25,8 +25,7 @@ abstract class World extends App {
   // Givens
   given World = this
 
-  private val instanceManager: InstanceManager[Entity] =
-    InstanceManager()
+  private[core] val entityManager = InstanceManager[Entity]()
 
   private var _title: String = "Scala Games: Untitled Game"
   private var _initialized: Boolean = false
@@ -40,11 +39,6 @@ abstract class World extends App {
     updateCallback
   )
 
-  // Node Management
-  def register(node: Entity): Ref[Entity] = {
-    instanceManager.register(node)
-  }
-
   // Public Methods
   def run(): Unit = {
     assert(!_initialized, "Game has already been initialized")
@@ -56,15 +50,14 @@ abstract class World extends App {
     glfwSetWindowShouldClose(window.windowId, true)
   }
 
-  def root: Entity = _root
-
-  def root_=(node: Entity): Unit = {
-    if (node == null)
-      throw new IllegalArgumentException("The root node may not be null")
-    if (node.parent.isDefined)
-      throw new IllegalArgumentException("The root node may not have a parent")
-    _root = node
-  }
+  // def root: Entity = _root
+  // def root_=(node: Entity): Unit = {
+  //   if (node == null)
+  //     throw new IllegalArgumentException("The root node may not be null")
+  //   if (node.parent.isDefined)
+  //     throw new IllegalArgumentException("The root node may not have a parent")
+  //   _root = node
+  // }
 
   // Temp Callback Exposure
   val onInit: Signal[Unit] = Signal()
