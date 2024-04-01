@@ -18,7 +18,6 @@ import engine.input.Input
 import engine.input.{KeyListener, MouseListener, Input}
 import lib.instance_management.InstanceManager
 import lib.instance_management.Ref
-import engine.scene.Signal
 
 abstract class World extends App {
 
@@ -60,8 +59,8 @@ abstract class World extends App {
   // }
 
   // Temp Callback Exposure
-  val onInit: Signal[Unit] = Signal()
-  val onUpdate: Signal[Float] = Signal()
+  val onInit = Event[Unit]
+  val onUpdate = Event[Float]
 
   // Engine-side Methods
   private[engine] def initCallback(): Unit = {
@@ -69,6 +68,10 @@ abstract class World extends App {
   }
   private[engine] def updateCallback(delta: Float): Unit = {
     onUpdate.emit(delta)
+  }
+
+  private[core] def destroy(entity: Entity): Unit = {
+    entityManager.destroy(entity.ref.number)
   }
 
   // Getters

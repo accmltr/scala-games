@@ -68,16 +68,16 @@ final case class Ref[T](val number: Int, val manager: InstanceManager[T]) {
     */
   def get: Option[T] = manager.instance(number)
 
-  /** Tells the `InstanceManager` for this `Ref` to destroy the object that this
-    * `Ref` points to.
-    *
-    * Note: This will only help to encourage the garbage collector to remove the
-    * object from system memory if the object is not being stored in a local
-    * variable or closure somewhere else in code. The object will still be
-    * removed from the `InstanceManager` and will not be accessible from there
-    * or from any related `Ref` anymore.
-    */
-  def destroy(): Unit = manager.destroy(number)
+  // /** Tells the `InstanceManager` for this `Ref` to destroy the object that this
+  //   * `Ref` points to.
+  //   *
+  //   * Note: This will only help to encourage the garbage collector to remove the
+  //   * object from system memory if the object is not being stored in a local
+  //   * variable or closure somewhere else in code. The object will still be
+  //   * removed from the `InstanceManager` and will not be accessible from there
+  //   * or from any related `Ref` anymore.
+  //   */
+  // def destroy(): Unit = manager.destroy(number)
 
   override def toString(): String =
     s"Instance($number)"

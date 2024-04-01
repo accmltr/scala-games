@@ -45,12 +45,10 @@ class InstanceManager[T]() {
     Ref(nr, this)
   }
 
-  private[instance_management] def destroy(refNr: Int): Unit =
-    require(
-      _refs.contains(refNr),
-      "Trying to destroy non-existant Ref instance."
-    )
+  def destroy(refNr: Int): Unit = {
+    require(_refs.contains(refNr), "Trying to destroy non-existant instance.")
     this.synchronized {
       _refs -= refNr
     }
+  }
 }

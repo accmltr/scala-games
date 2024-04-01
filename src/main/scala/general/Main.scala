@@ -31,11 +31,10 @@ object MyGame extends World {
   val renderer = DefaultRenderer(window)
 
   var myFirstEntity = Entity("My First Entity")
-  for e <- myFirstEntity
-  do
-    e.children = List(
-      Entity("Child 1")
-    )
+  for
+    e <- myFirstEntity
+    c <- Entity("Child 1")
+  do e.addChild(c)
 
   // root = {
   //   val e = Entity()
