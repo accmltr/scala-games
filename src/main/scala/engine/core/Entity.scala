@@ -4,11 +4,12 @@ import scala.reflect.ClassTag
 import engine.math.Vector2
 import engine.Component
 import lib.instance_management.Ref
+import scala.compiletime.ops.boolean
 
-class Entity private[engine] (world: World) {
+class Entity(using world: World) {
 
   // Engine Node Management
-  val ref = world.entityManager.register(this)
+  val ref: Ref[this.type] = world.entityManager.register(this)
 
   // Givens
   given World = world
@@ -16,7 +17,8 @@ class Entity private[engine] (world: World) {
   val onAddChild = Event[(Entity, Int)]
   val onRemoveChild = Event[(Entity, Int)]
   val onParentChanged = Event[Entity]
-  val onPreDestroy = Event[Unit]
+  val onDestroyQueued = Event[Unit]
+  val onDestroyed = Event[Unit]
 
   private var _name: String = "Unnamed Entity"
   private var _position: Vector2 = Vector2.zero
@@ -24,6 +26,7 @@ class Entity private[engine] (world: World) {
   private var _scale: Vector2 = Vector2.one
   private var _parent: Option[Entity] = None
   private var _children: List[Entity] = List.empty
+  private var _cancelDestroy: Boolean = false
 
   def name: String = _name
   def name_=(value: String): Unit =
@@ -72,24 +75,38 @@ class Entity private[engine] (world: World) {
     removeChild(c)
 
   def destroy(): Unit = {
+    // Emit pre-destroy event
+    _cancelDestroy = false
+    onDestroyQueued.emit()
+
+    // Cancel destroy if `cancelDestroy()` has been called
+    if (_cancelDestroy)
+      _cancelDestroy = false
+      return
+
     // Destroy all children
     _children.foreach(_.destroy())
     // Remove from parent
-    _parent.map(_.removeChild(this))
+    _parent.map(p => p.removeChild(this))
     // Remove from world
-
+    world.destroy(this)
+    // Emit destroyed event
+    onDestroyed.emit()
   }
+
+  def cancelDestroy(): Unit =
+    _cancelDestroy = true
 
   // Generic Overrides
   override def toString(): String =
-    s"Node(name: $name, position: ${position.formatted(3)}, children: ${children.size})"
+    s"Entity(name: $name, position: ${position.formatted(3)}, children: ${children.size})"
 }
 
-object Entity {
-  def apply(name: String = "Unnamed Entity")(using
-      world: World
-  ): Ref[Entity] =
-    var entity = (new Entity(world))
-    entity.name = name
-    entity.ref
-}
+// object Entity {
+//   def apply(name: String = "Unnamed Entity")(using
+//       world: World
+//   ): Ref[Entity] =
+//     var entity = (new Entity())
+//     entity.name = name
+//     entity.ref
+// }
