@@ -23,6 +23,7 @@ import java.nio.IntBuffer
 import scala.io.Source
 import javax.swing.InputMap
 import engine.render.window.AA
+import general.MyEntity
 
 object MyGame extends World {
 
@@ -30,11 +31,18 @@ object MyGame extends World {
 
   val renderer = DefaultRenderer(window)
 
-  var myFirstEntity = Entity("My First Entity")
+  var entity = Entity().ref
+  entity.map(_.name = "My First Entity")
+  var myEntity = MyEntity()
+  myEntity.name = "My own custom entity"
   for
-    e <- myFirstEntity
-    c <- Entity("Child 1")
+    e <- entity
+    c <- Entity().ref
+    k <- myEntity.ref
   do e.addChild(c)
+
+  myEntity.ref.map(e => println("Yo sddsf " + e.kazam))
+  myEntity.ref.get.map(e => println("Yo sddsf " + e.kazam))
 
   // root = {
   //   val e = Entity()
@@ -63,8 +71,9 @@ object MyGame extends World {
   onInit += { (_) =>
     window.setCursor("res/cursor.png", 0, 0)
 
-    for e1 <- myFirstEntity
+    for e1 <- entity
     do println(e1)
+    println(myEntity)
   }
 
   onUpdate += { (delta: Float) =>

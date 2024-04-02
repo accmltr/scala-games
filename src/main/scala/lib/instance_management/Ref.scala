@@ -14,7 +14,10 @@ package lib.instance_management
   *   by the `InstanceManager`.
   * @param manager
   */
-final case class Ref[T](val number: Int, val manager: InstanceManager[T]) {
+final case class Ref[K, T >: K](
+    val number: Int,
+    val manager: InstanceManager[T]
+) {
 
   /** Use this method to access the managed object stored inside the
     * `InstanceManager` of this `Ref`. It will return an `Option` containing
@@ -66,7 +69,7 @@ final case class Ref[T](val number: Int, val manager: InstanceManager[T]) {
     *
     * @return
     */
-  def get: Option[T] = manager.instance(number)
+  def get: Option[K] = manager.instance(number)
 
   // /** Tells the `InstanceManager` for this `Ref` to destroy the object that this
   //   * `Ref` points to.
@@ -84,7 +87,7 @@ final case class Ref[T](val number: Int, val manager: InstanceManager[T]) {
 }
 
 object Ref {
-  implicit def toGet[T](ref: Ref[T]): Option[T] = ref.get
+  implicit def toGet[K, T >: K](ref: Ref[K, T]): Option[K] = ref.get
 }
 
 case class Person(name: String, var health: Int = 10) {

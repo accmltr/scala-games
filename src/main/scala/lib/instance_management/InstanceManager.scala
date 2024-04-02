@@ -25,8 +25,14 @@ class InstanceManager[T]() {
     id
   }
 
-  def instance(refNr: Int): Option[T] =
-    _refs.get(refNr)
+  def instance[K <: T](refNr: Int): Option[K] =
+    _refs.get(refNr) match
+      case None => None
+      case Some(value) =>
+        value match
+          case k: K => Some(k)
+          case _: T =>
+            throw Exception("Instance found, but was not of type K.")
 
   def managedRefNrs: List[Int] =
     _refs.map(_._1).toList
@@ -38,11 +44,11 @@ class InstanceManager[T]() {
     *   The object to be encapsulated.
     * @return
     */
-  def register(t: T): Ref[T] = this.synchronized {
+  def register[K <: T](t: K): Ref[K, T] = this.synchronized {
     require(t != null, "'t' may not be null")
     var nr = _newRefNr()
     _refs += nr -> t
-    Ref(nr, this)
+    Ref[K, T](nr, this)
   }
 
   def destroy(refNr: Int): Unit = {
