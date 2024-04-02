@@ -2,7 +2,7 @@ package lib.instance_management
 
 import scala.collection.immutable.Queue
 
-/** Tracks instances of a certain type.
+/** Manages instances of a certain type.
   *
   * **Purpose:** Prevent memory leaks and track instances.
   *
