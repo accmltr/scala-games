@@ -24,8 +24,7 @@ abstract class World extends App {
   // Givens
   given World = this
 
-  private[core] val entityManager = InstanceManager[Entity]()
-
+  private[core] val _entityManager = InstanceManager[Entity]()
   private var _title: String = "Scala Games: Untitled Game"
   private var _initialized: Boolean = false
   private var _root: Entity = null
@@ -71,7 +70,7 @@ abstract class World extends App {
   }
 
   private[core] def destroy(entity: Entity): Unit = {
-    entityManager.destroy(entity.ref.number)
+    _entityManager.destroy(entity.ref.number)
   }
 
   // Getters

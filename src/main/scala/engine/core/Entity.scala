@@ -9,7 +9,7 @@ import scala.compiletime.ops.boolean
 class Entity(using world: World) {
 
   // Engine Node Management
-  val ref: Ref[this.type, Entity] = world.entityManager.register(this)
+  val ref: Ref[this.type, Entity] = world._entityManager.register(this)
 
   // Givens
   given World = world
