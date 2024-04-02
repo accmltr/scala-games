@@ -7,7 +7,7 @@ import lib.instance_management.Ref
 import scala.compiletime.ops.boolean
 import lib.event.Event
 
-class Entity private (using val world: World) {
+class Entity protected (using val world: World) {
 
   // Givens
   given World = world
@@ -113,10 +113,18 @@ class Entity private (using val world: World) {
 }
 
 object Entity {
+  // Bugged:
+  // def makeReady(e: Entity): Ref[Entity, Entity] = {
+  //   e._ref = e.world._entityManager.register(e)
+  //   e.onReady.emit()
+  //   return e.ref
+  // }
+
+  // Temp workaround without setting e._ref:
   def makeReady(e: Entity): Ref[Entity, Entity] = {
-    e._ref = e.world._entityManager.register(e)
+    val ref = e.world._entityManager.register(e)
     e.onReady.emit()
-    return e.ref
+    return ref
   }
 
   def apply(name: String = "Unnamed Entity")(using world: World) =
