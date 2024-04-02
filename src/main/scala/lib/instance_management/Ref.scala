@@ -1,5 +1,7 @@
 package lib.instance_management
 
+import scala.reflect.ClassTag
+
 /** The `Ref[T]` class provides a safe mechanism for accessing objects that can
   * be destroyed by its `InstanceManager`. The idea is that only the
   * `InstanceManager` object may contain the original references to the objects
@@ -14,7 +16,7 @@ package lib.instance_management
   *   by the `InstanceManager`.
   * @param manager
   */
-final case class Ref[K, T >: K](
+final case class Ref[K: ClassTag, T >: K](
     val number: Int,
     val manager: InstanceManager[T]
 ) {

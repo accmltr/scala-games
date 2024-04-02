@@ -2,6 +2,7 @@ package lib.instance_management
 
 import scala.collection.immutable.Queue
 import lib.event.Event
+import scala.reflect.ClassTag
 
 /** Manages instances of a certain type.
   *
@@ -12,7 +13,7 @@ import lib.event.Event
   * situation where references to objects should be kept safe and managed in one
   * place.
   */
-class InstanceManager[T]() {
+class InstanceManager[T: ClassTag]() {
 
   val onRegister = Event[(T, Int)]
   val onDestroy = Event[(T, Int)]
@@ -30,7 +31,7 @@ class InstanceManager[T]() {
     id
   }
 
-  def instance[K <: T](refNr: Int): Option[K] =
+  def instance[K <: T: ClassTag](refNr: Int): Option[K] =
     _refs.get(refNr) match
       case None => None
       case Some(value) =>
