@@ -5,21 +5,22 @@ import engine.math.Vector2
 import engine.Component
 import lib.instance_management.Ref
 import scala.compiletime.ops.boolean
+import lib.event.Event
 
-class Entity(using world: World) {
-
-  // Engine Node Management
-  val ref: Ref[this.type, Entity] = world._entityManager.register(this)
+class Entity private (using val world: World) {
 
   // Givens
   given World = world
 
+  val onReady = Event[Unit]
   val onAddChild = Event[(Entity, Int)]
   val onRemoveChild = Event[(Entity, Int)]
   val onParentChanged = Event[Entity]
   val onDestroyQueued = Event[Unit]
   val onDestroyed = Event[Unit]
 
+  private var _ready: Boolean = false
+  private var _ref: Ref[this.type, Entity] = null
   private var _name: String = "Unnamed Entity"
   private var _position: Vector2 = Vector2.zero
   private var _rotation: Float = 0
@@ -27,6 +28,15 @@ class Entity(using world: World) {
   private var _parent: Option[Entity] = None
   private var _children: List[Entity] = List.empty
   private var _cancelDestroy: Boolean = false
+
+  def ready: Boolean = _ready
+
+  /** This only returns a Ref AFTER this Entity has been created with its
+    * factory method.
+    *
+    * @return
+    */
+  def ref: Ref[this.type, Entity] = _ref
 
   def name: String = _name
   def name_=(value: String): Unit =
@@ -102,11 +112,15 @@ class Entity(using world: World) {
     s"Entity(name: $name, position: ${position.formatted(3)}, children: ${children.size})"
 }
 
-// object Entity {
-//   def apply(name: String = "Unnamed Entity")(using
-//       world: World
-//   ): Ref[Entity] =
-//     var entity = (new Entity())
-//     entity.name = name
-//     entity.ref
-// }
+object Entity {
+  def makeReady(e: Entity): Ref[Entity, Entity] = {
+    e._ref = e.world._entityManager.register(e)
+    e.onReady.emit()
+    return e.ref
+  }
+
+  def apply(name: String = "Unnamed Entity")(using world: World) =
+    var entity = new Entity()
+    entity.name = name
+    makeReady(entity)
+}

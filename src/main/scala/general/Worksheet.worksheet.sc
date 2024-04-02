@@ -1,4 +1,4 @@
-import engine.core.Event
+import lib.event.Event
 import engine.render.window.AA
 
 val optionInt: Option[Int] = Option(3)

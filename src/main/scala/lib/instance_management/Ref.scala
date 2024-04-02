@@ -90,25 +90,25 @@ object Ref {
   implicit def toGet[K, T >: K](ref: Ref[K, T]): Option[K] = ref.get
 }
 
-case class Person(name: String, var health: Int = 10) {
-  def damage(amount: Int) =
-    health -= amount
+// case class Person(name: String, var health: Int = 10) {
+//   def damage(amount: Int) =
+//     health -= amount
 
-  override def toString(): String =
-    s"Person(\"$name\", $health)"
-}
+//   override def toString(): String =
+//     s"Person(\"$name\", $health)"
+// }
 
-object Test {
-  def main(args: Array[String]): Unit =
-    val m = InstanceManager[Person]()
-    val p = m.register(Person("Yeet", 13))
+// object Test {
+//   def main(args: Array[String]): Unit =
+//     val m = InstanceManager[Person]()
+//     val p = m.register(Person("Yeet", 13))
 
-    // p.destroy()
+//     // p.destroy()
 
-    p.map(value => value.health)
+//     p.map(value => value.health)
 
-    p.get match
-      case None        => println("Person doesn't exist anymore!")
-      case Some(value) => println(value)
+//     p.get match
+//       case None        => println("Person doesn't exist anymore!")
+//       case Some(value) => println(value)
 
-}
+// }

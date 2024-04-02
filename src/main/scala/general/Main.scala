@@ -31,18 +31,14 @@ object MyGame extends World {
 
   val renderer = DefaultRenderer(window)
 
-  var entity = Entity().ref
-  entity.map(_.name = "My First Entity")
-  var myEntity = MyEntity()
-  myEntity.name = "My own custom entity"
-  for
-    e <- entity
-    c <- Entity().ref
-    k <- myEntity.ref
-  do e.addChild(c)
+  onEntityCreated.connect(e => println(s"Entity Created: " + e.name))
+  onEntityDestroyQueued.connect(e =>
+    println(s"Entity Destroy Queued: " + e.name)
+  )
+  onEntityDestroyed.connect(e => println(s"Entity Destroyed: " + e.name))
 
-  myEntity.ref.map(e => println("Yo sddsf " + e.kazam))
-  myEntity.ref.get.map(e => println("Yo sddsf " + e.kazam))
+  var entity = MyEntity()
+  entity.name = "My own custom entity"
 
   // root = {
   //   val e = Entity()
@@ -70,10 +66,6 @@ object MyGame extends World {
   window.vsync = true
   onInit += { (_) =>
     window.setCursor("res/cursor.png", 0, 0)
-
-    for e1 <- entity
-    do println(e1)
-    println(myEntity)
   }
 
   onUpdate += { (delta: Float) =>

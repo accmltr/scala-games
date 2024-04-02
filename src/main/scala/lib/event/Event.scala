@@ -1,4 +1,4 @@
-package engine.core
+package lib.event
 
 // Todo: Make Signals safe for Node destruction
 class Event[D] {
@@ -9,6 +9,12 @@ class Event[D] {
 
   def -=(f: (D) => Unit): Unit =
     listeners = listeners.filterNot(_ == f)
+
+  def connect(f: (D) => Unit): Unit =
+    this.+=(f)
+
+  def disconnect(f: (D) => Unit): Unit =
+    this.-=(f)
 
   def emit(data: D): Unit = listeners.foreach(_.apply(data))
 

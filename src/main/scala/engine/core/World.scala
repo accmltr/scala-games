@@ -18,13 +18,25 @@ import engine.input.Input
 import engine.input.{KeyListener, MouseListener, Input}
 import lib.instance_management.InstanceManager
 import lib.instance_management.Ref
+import lib.event.Event
 
 abstract class World extends App {
 
   // Givens
   given World = this
 
+  val onEntityCreated = Event[Entity]
+  val onEntityDestroyed = Event[Entity]
+  val onEntityDestroyQueued = Event[Entity]
+
+  // Instance Management
   private[core] val _entityManager = InstanceManager[Entity]()
+  _entityManager.onRegister.connect((e, _) => onEntityCreated.emit(e))
+  onEntityCreated.connect(e =>
+    e.onDestroyQueued.connect(_ => onEntityDestroyQueued.emit(e))
+  )
+  _entityManager.onDestroy.connect((e, _) => onEntityDestroyed.emit(e))
+
   private var _title: String = "Scala Games: Untitled Game"
   private var _initialized: Boolean = false
   private var _root: Entity = null
