@@ -16,8 +16,8 @@ import engine.math.Vector2
 import engine.render.window.Window
 import engine.input.Input
 import engine.input.{KeyListener, MouseListener, Input}
-import lib.instance_management.InstanceManager
-import lib.instance_management.Ref
+import lib.instance_manager.InstanceManager
+import lib.instance_manager.Ref
 import lib.event.Event
 
 abstract class World extends App {

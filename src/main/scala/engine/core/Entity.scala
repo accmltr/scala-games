@@ -3,7 +3,7 @@ package engine.core
 import scala.reflect.ClassTag
 import engine.math.Vector2
 import engine.Component
-import lib.instance_management.Ref
+import lib.instance_manager.Ref
 import scala.compiletime.ops.boolean
 import lib.event.Event
 

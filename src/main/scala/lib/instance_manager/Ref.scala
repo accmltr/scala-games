@@ -1,8 +1,8 @@
-package lib.instance_management
+package lib.instance_manager
 
 import scala.reflect.ClassTag
 
-/** The `Ref[T]` class provides a safe mechanism for accessing objects that can
+/** The `Ref[K]` class provides a safe mechanism for accessing objects that can
   * be destroyed by its `InstanceManager`. The idea is that only the
   * `InstanceManager` object may contain the original references to the objects
   * that it manages, making it possible to free any object at any time by
@@ -16,10 +16,9 @@ import scala.reflect.ClassTag
   *   by the `InstanceManager`.
   * @param manager
   */
-final case class Ref[T](
-    val number: Int,
-    val manager: InstanceManager[T]
-) {
+final case class Ref[+K] private () {
+
+  private var instance: Option[K] = None
 
   /** Use this method to access the managed object stored inside the
     * `InstanceManager` of this `Ref`. It will return an `Option` containing
@@ -71,23 +70,26 @@ final case class Ref[T](
     *
     * @return
     */
-  def get: Option[T] = manager.instance(number)
+  def get: Option[K] =
+    instance
 
-  // /** Tells the `InstanceManager` for this `Ref` to destroy the object that this
-  //   * `Ref` points to.
-  //   *
-  //   * Note: This will only help to encourage the garbage collector to remove the
-  //   * object from system memory if the object is not being stored in a local
-  //   * variable or closure somewhere else in code. The object will still be
-  //   * removed from the `InstanceManager` and will not be accessible from there
-  //   * or from any related `Ref` anymore.
-  //   */
-  // def destroy(): Unit = manager.destroy(number)
-
-  override def toString(): String =
-    s"Instance($number)"
+  /** Note: This will only help to encourage the garbage collector to remove the
+    * object from system memory if the object is not being stored in a local
+    * variable or closure somewhere else in code. The object will still be
+    * removed from the `InstanceManager` and will not be accessible from there
+    * or from any related `Ref` anymore.
+    */
+  private[instance_management] def clear(): Unit =
+    instance = None
 }
 
 object Ref {
-  implicit def toGet[T](ref: Ref[T]): Option[T] = ref.get
+
+  private[instance_management] def apply[K](i: K): Ref[K] =
+    val ref = new Ref[K]
+    ref.instance = Option(i)
+    ref
+
+  implicit def toGet[K](ref: Ref[K]): Option[K] = ref.get
+
 }

@@ -2,7 +2,7 @@ package general
 
 import engine.core.Entity
 import engine.core.World
-import lib.instance_management.Ref
+import lib.instance_manager.Ref
 
 case class MyEntity protected ()(using
     world: World
