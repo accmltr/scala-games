@@ -16,7 +16,7 @@ import scala.reflect.ClassTag
   *   by the `InstanceManager`.
   * @param manager
   */
-final case class Ref[+K] private () {
+final class Ref[+K] private () {
 
   private var instance: Option[K] = None
 
