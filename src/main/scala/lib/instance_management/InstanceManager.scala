@@ -13,7 +13,7 @@ import scala.reflect.ClassTag
   * situation where references to objects should be kept safe and managed in one
   * place.
   */
-class InstanceManager[T: ClassTag]() {
+class InstanceManager[T]() {
 
   val onRegister = Event[(T, Int)]
   val onDestroy = Event[(T, Int)]
@@ -31,14 +31,8 @@ class InstanceManager[T: ClassTag]() {
     id
   }
 
-  def instance[K <: T: ClassTag](refNr: Int): Option[K] =
-    _refs.get(refNr) match
-      case None => None
-      case Some(value) =>
-        value match
-          case k: K => Some(k)
-          case _: T =>
-            throw Exception("Instance found, but was not of type K.")
+  def instance(refNr: Int): Option[T] =
+    _refs.get(refNr)
 
   def managedRefNrs: List[Int] =
     _refs.map(_._1).toList
@@ -50,11 +44,11 @@ class InstanceManager[T: ClassTag]() {
     *   The object to be encapsulated.
     * @return
     */
-  def register[K <: T: ClassTag](t: K): Ref[K, T] = this.synchronized {
+  def register(t: T): Ref[T] = this.synchronized {
     require(t != null, "'t' may not be null")
     var nr = _newRefNr()
     _refs += nr -> t
-    Ref[K, T](nr, this)
+    Ref[T](nr, this)
   }
 
   def destroy(refNr: Int): Unit = {

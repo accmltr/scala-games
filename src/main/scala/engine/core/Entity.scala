@@ -20,7 +20,7 @@ class Entity protected (using val world: World) {
   val onDestroyed = Event[Unit]
 
   private var _ready: Boolean = false
-  private var _ref: Ref[this.type, Entity] = null
+  private var _ref: Ref[Entity] = null
   private var _name: String = "Unnamed Entity"
   private var _position: Vector2 = Vector2.zero
   private var _rotation: Float = 0
@@ -36,7 +36,7 @@ class Entity protected (using val world: World) {
     *
     * @return
     */
-  def ref: Ref[this.type, Entity] = _ref
+  def ref: Ref[Entity] = _ref
 
   def name: String = _name
   def name_=(value: String): Unit =
@@ -107,21 +107,20 @@ class Entity protected (using val world: World) {
   def cancelDestroy(): Unit =
     _cancelDestroy = true
 
+  def makeReady(): Ref[Entity] = {
+    _ref = world._entityManager.register(this)
+    onReady.emit()
+    ref
+  }
+
   // Generic Overrides
   override def toString(): String =
     s"Entity(name: $name, position: ${position.formatted(3)}, children: ${children.size})"
 }
 
 object Entity {
-  def makeReady(e: Entity): Ref[e.type, Entity] = {
-    val r = e.world._entityManager.register[e.type](e)
-    e._ref = r
-    e.onReady.emit()
-    e.ref
-  }
-
   def apply(name: String = "Unnamed Entity")(using world: World) =
     var entity = new Entity()
     entity.name = name
-    makeReady(entity)
+    entity.makeReady()
 }

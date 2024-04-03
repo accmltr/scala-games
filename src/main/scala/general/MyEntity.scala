@@ -10,9 +10,9 @@ final case class MyEntity()(using
   val kazam = "Kazam my man"
 }
 
-// object MyEntity {
-//   def apply(name: String)(using world: World): MyEntity =
-//     val e = new MyEntity
-//     e.name = name
-//     e
-// }
+object MyEntity {
+  def apply(name: String)(using world: World): MyEntity =
+    val e = new MyEntity
+    e.name = name
+    e
+}

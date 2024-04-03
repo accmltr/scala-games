@@ -16,7 +16,7 @@ import scala.reflect.ClassTag
   *   by the `InstanceManager`.
   * @param manager
   */
-final case class Ref[K <: T: ClassTag, T](
+final case class Ref[T](
     val number: Int,
     val manager: InstanceManager[T]
 ) {
@@ -71,7 +71,7 @@ final case class Ref[K <: T: ClassTag, T](
     *
     * @return
     */
-  def get: Option[K] = manager.instance(number)
+  def get: Option[T] = manager.instance(number)
 
   // /** Tells the `InstanceManager` for this `Ref` to destroy the object that this
   //   * `Ref` points to.
@@ -89,28 +89,5 @@ final case class Ref[K <: T: ClassTag, T](
 }
 
 object Ref {
-  implicit def toGet[K, T >: K](ref: Ref[K, T]): Option[K] = ref.get
+  implicit def toGet[T](ref: Ref[T]): Option[T] = ref.get
 }
-
-// case class Person(name: String, var health: Int = 10) {
-//   def damage(amount: Int) =
-//     health -= amount
-
-//   override def toString(): String =
-//     s"Person(\"$name\", $health)"
-// }
-
-// object Test {
-//   def main(args: Array[String]): Unit =
-//     val m = InstanceManager[Person]()
-//     val p = m.register(Person("Yeet", 13))
-
-//     // p.destroy()
-
-//     p.map(value => value.health)
-
-//     p.get match
-//       case None        => println("Person doesn't exist anymore!")
-//       case Some(value) => println(value)
-
-// }
