@@ -123,4 +123,5 @@ object Entity {
     var entity = new Entity()
     entity.name = name
     entity.makeReady()
+    entity
 }
