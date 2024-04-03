@@ -114,7 +114,8 @@ class Entity protected (using val world: World) {
 
 object Entity {
   def makeReady(e: Entity): Ref[e.type, Entity] = {
-    e._ref = e.world._entityManager.register(e)
+    val r = e.world._entityManager.register[e.type](e)
+    e._ref = r
     e.onReady.emit()
     e.ref
   }
