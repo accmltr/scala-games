@@ -79,13 +79,13 @@ final case class Ref[+K] private () {
     * removed from the `InstanceManager` and will not be accessible from there
     * or from any related `Ref` anymore.
     */
-  private[instance_management] def clear(): Unit =
+  private[instance_manager] def clear(): Unit =
     instance = None
 }
 
 object Ref {
 
-  private[instance_management] def apply[K](i: K): Ref[K] =
+  private[instance_manager] def apply[K](i: K): Ref[K] =
     val ref = new Ref[K]
     ref.instance = Option(i)
     ref
