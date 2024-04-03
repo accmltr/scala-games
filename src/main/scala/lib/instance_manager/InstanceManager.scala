@@ -42,6 +42,7 @@ class InstanceManager[T]() {
     this.synchronized {
       val updated = _refs.filterNot(_.get == ref.get)
       require(_refs != updated, "Trying to destroy non-existant instance.")
+      onDestroying.emit(ref)
       _refs = updated
       onDestroy.emit(ref)
     }
