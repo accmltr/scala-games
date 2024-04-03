@@ -113,18 +113,10 @@ class Entity protected (using val world: World) {
 }
 
 object Entity {
-  // Bugged:
-  // def makeReady(e: Entity): Ref[Entity, Entity] = {
-  //   e._ref = e.world._entityManager.register(e)
-  //   e.onReady.emit()
-  //   return e.ref
-  // }
-
-  // Temp workaround without setting e._ref:
-  def makeReady(e: Entity): Ref[Entity, Entity] = {
-    val ref = e.world._entityManager.register(e)
+  def makeReady(e: Entity): Ref[e.type, Entity] = {
+    e._ref = e.world._entityManager.register(e)
     e.onReady.emit()
-    return ref
+    e.ref
   }
 
   def apply(name: String = "Unnamed Entity")(using world: World) =

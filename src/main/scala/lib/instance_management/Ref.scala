@@ -16,7 +16,7 @@ import scala.reflect.ClassTag
   *   by the `InstanceManager`.
   * @param manager
   */
-final case class Ref[K: ClassTag, T >: K](
+final case class Ref[K <: T: ClassTag, T](
     val number: Int,
     val manager: InstanceManager[T]
 ) {

@@ -50,12 +50,11 @@ class InstanceManager[T: ClassTag]() {
     *   The object to be encapsulated.
     * @return
     */
-  def register(t: T): Ref[T, T] = this.synchronized {
+  def register[K <: T: ClassTag](t: K): Ref[K, T] = this.synchronized {
     require(t != null, "'t' may not be null")
     var nr = _newRefNr()
     _refs += nr -> t
-    onRegister.emit((t, nr))
-    Ref[T, T](nr, this)
+    Ref[K, T](nr, this)
   }
 
   def destroy(refNr: Int): Unit = {

@@ -39,6 +39,8 @@ object MyGame extends World {
 
   var entity = MyEntity()
   entity.name = "My own custom entity"
+  println(s"Made ${entity.name}")
+  println(s"Ref:  ${entity.ref}")
 
   // root = {
   //   val e = Entity()
