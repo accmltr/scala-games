@@ -12,6 +12,8 @@ class Entity protected (using val world: World) {
   // Givens
   given World = world
 
+  val ref: Ref[Entity, Entity] = world._entityManager.register(this)
+
   val onReady = Event[Unit]
   val onAddChild = Event[(Entity, Int)]
   val onRemoveChild = Event[(Entity, Int)]
@@ -20,7 +22,6 @@ class Entity protected (using val world: World) {
   val onDestroyed = Event[Unit]
 
   private var _ready: Boolean = false
-  private var _ref: Ref[Entity] = null
   private var _name: String = "Unnamed Entity"
   private var _position: Vector2 = Vector2.zero
   private var _rotation: Float = 0
@@ -30,13 +31,6 @@ class Entity protected (using val world: World) {
   private var _cancelDestroy: Boolean = false
 
   def ready: Boolean = _ready
-
-  /** This only returns a Ref AFTER this Entity has been created with its
-    * factory method.
-    *
-    * @return
-    */
-  def ref: Ref[Entity] = _ref
 
   def name: String = _name
   def name_=(value: String): Unit =
@@ -107,10 +101,8 @@ class Entity protected (using val world: World) {
   def cancelDestroy(): Unit =
     _cancelDestroy = true
 
-  def makeReady(): Ref[Entity] = {
-    _ref = world._entityManager.register(this)
+  def makeReady() = {
     onReady.emit()
-    ref
   }
 
   // Generic Overrides
@@ -119,7 +111,7 @@ class Entity protected (using val world: World) {
 }
 
 object Entity {
-  def apply(name: String = "Unnamed Entity")(using world: World) =
+  def apply(name: String = "Unnamed Entity")(using world: World): Entity =
     var entity = new Entity()
     entity.name = name
     entity.makeReady()

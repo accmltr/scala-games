@@ -23,7 +23,8 @@ import java.nio.IntBuffer
 import scala.io.Source
 import javax.swing.InputMap
 import engine.render.window.AA
-import general.MyEntity
+import general.Player
+// import general.MyEntity
 
 object MyGame extends World {
 
@@ -37,10 +38,13 @@ object MyGame extends World {
   )
   onEntityDestroyed.connect(e => println(s"Entity Destroyed: " + e.name))
 
-  var entity = MyEntity()
-  entity.name = "My own custom entity"
-  println(s"Made ${entity.name}")
-  println(s"Ref:  ${entity.ref}")
+  // var entity = MyEntity()
+  // entity.name = "My own custom entity"
+  // println(s"Made ${entity.name}")
+  // println(s"Ref:  ${entity.ref}")
+  var playerRef = Player("Frank").ref
+  for player <- playerRef
+  do println(player.userName)
 
   // root = {
   //   val e = Entity()

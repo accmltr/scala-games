@@ -16,7 +16,7 @@ import scala.reflect.ClassTag
   *   by the `InstanceManager`.
   * @param manager
   */
-final class Ref[+K] private () {
+final class Ref[+K <: T, T] private (val manager: InstanceManager[T]) {
 
   private var instance: Option[K] = None
 
@@ -85,11 +85,14 @@ final class Ref[+K] private () {
 
 object Ref {
 
-  private[instance_manager] def apply[K](i: K): Ref[K] =
-    val ref = new Ref[K]
+  private[instance_manager] def apply[K <: T, T](
+      i: K,
+      m: InstanceManager[T]
+  ): Ref[K, T] =
+    val ref = new Ref[K, T](m)
     ref.instance = Option(i)
     ref
 
-  implicit def toGet[K](ref: Ref[K]): Option[K] = ref.get
+  implicit def toGet[K <: T, T](ref: Ref[K, T]): Option[K] = ref.get
 
 }

@@ -31,11 +31,16 @@ abstract class World extends App {
 
   // Instance Management
   private[core] val _entityManager = InstanceManager[Entity]()
-  _entityManager.onRegister.connect((e, _) => onEntityCreated.emit(e))
+  _entityManager.onRegister.connect(r =>
+    for e <- r.get do onEntityCreated.emit(e)
+  )
   onEntityCreated.connect(e =>
     e.onDestroyQueued.connect(_ => onEntityDestroyQueued.emit(e))
   )
-  _entityManager.onDestroy.connect((e, _) => onEntityDestroyed.emit(e))
+  _entityManager.onDestroy.connect(r =>
+    for e <- r.get do onEntityDestroyed.emit(e)
+  )
+  def entityManager: InstanceManager[Entity] = _entityManager
 
   private var _title: String = "Scala Games: Untitled Game"
   private var _initialized: Boolean = false
@@ -82,7 +87,7 @@ abstract class World extends App {
   }
 
   private[core] def destroy(entity: Entity): Unit = {
-    _entityManager.destroy(entity.ref.number)
+    // _entityManager.destroy(entity
   }
 
   // Getters
