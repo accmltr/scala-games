@@ -10,18 +10,18 @@ import lib.event.Event
 class Entity protected (using val world: World) {
 
   // Givens
-  given World = world
+  final given World = world
 
-  private var _ref: Ref[Entity, Entity] = _
+  final private var _ref: Ref[Entity, Entity] = _
 
   def ref: Ref[Entity, Entity] = _ref
 
-  val onReady = Event[Unit]
-  val onAddChild = Event[(Entity, Int)]
-  val onRemoveChild = Event[(Entity, Int)]
-  val onParentChanged = Event[Entity]
-  val onDestroyQueued = Event[Unit]
-  val onDestroyed = Event[Unit]
+  final val onReady = Event[Unit]
+  final val onAddChild = Event[(Entity, Int)]
+  final val onRemoveChild = Event[(Entity, Int)]
+  final val onParentChanged = Event[Entity]
+  final val onDestroyQueued = Event[Unit]
+  final val onDestroyed = Event[Unit]
 
   private var _ready: Boolean = false
   private var _name: String = "Unnamed Entity"
@@ -51,7 +51,7 @@ class Entity protected (using val world: World) {
     _scale = value
 
   def parent: Option[Entity] = _parent
-  def parent_=(value: Entity): Unit =
+  final def parent_=(value: Entity): Unit =
     Option(value) match
       case None =>
         throw new IllegalArgumentException(
@@ -66,21 +66,22 @@ class Entity protected (using val world: World) {
 
   def children: List[Entity] = _children
 
-  def addChild(child: Entity, index: Int = -1): Unit =
+  final def addChild(child: Entity, index: Int = -1): Unit =
+    require(child != this, "Cannot add an entity to itself as a child.")
     val n = if index < -1 then _children.size - index + 1 else index
     _children = _children.take(n) ::: List(child) ::: _children.drop(n)
     onAddChild.emit((child, n))
 
-  def removeChild(child: Entity): Unit =
+  final def removeChild(child: Entity): Unit =
     val n = _children.indexOf(child)
     _children = _children.filterNot(_ == child)
     onRemoveChild.emit((child, n))
 
-  def removeChildAt(index: Int): Unit =
+  final def removeChildAt(index: Int): Unit =
     val c = _children(index)
     removeChild(c)
 
-  def destroy(): Unit = {
+  final def destroy(): Unit = {
     // Emit pre-destroy event
     _cancelDestroy = false
     onDestroyQueued.emit()
@@ -100,17 +101,17 @@ class Entity protected (using val world: World) {
     onDestroyed.emit()
   }
 
-  def cancelDestroy(): Unit =
+  final def cancelDestroy(): Unit =
     _cancelDestroy = true
 
-  def makeReady() = {
+  final def makeReady() = {
     _ref = world._entityManager.register(this)
     onReady.emit()
   }
 
-  // Generic Overrides
-  override def toString(): String =
-    s"Entity(name: $name, position: ${position.formatted(3)}, children: ${children.size})"
+  // // Generic Overrides
+  // override def toString(): String =
+  //   s"Entity(name: $name, position: ${position.formatted(3)}, children: ${children.size})"
 }
 
 object Entity {

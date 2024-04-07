@@ -23,9 +23,7 @@ import java.nio.IntBuffer
 import scala.io.Source
 import javax.swing.InputMap
 import engine.render.window.AA
-import general.Player
-import general.SpecPlayer
-// import general.MyEntity
+import general.Wolf
 
 object MyGame extends World {
 
@@ -37,28 +35,7 @@ object MyGame extends World {
   onEntityDestroyQueued += (e => println(s"Entity Destroy Queued: " + e.name))
   onEntityDestroyed += (e => println(s"Entity Destroyed: " + e.name))
 
-  // var entity = MyEntity()
-  // entity.name = "My own custom entity"
-  // println(s"Made ${entity.name}")
-  // println(s"Ref:  ${entity.ref}")
-  var playerRef = Player("Frank").ref
-  for player <- playerRef
-  do println(player.name)
-
-  // root = {
-  //   val e = Entity()
-  //   e.instance.name = "MyFirstNode"
-  //   e.instance.position = Vector2(0, 0)
-  //   e.instance.scale = Vector2(1, 1)
-  //   e.instance.rotation = 0
-  //   e.instance.children = List(
-  //     Entity("Child 1"),
-  //     Entity("Child 2"),
-  //     Entity("Child 3"),
-  //     Entity("Child 4")
-  //   )
-  //   e
-  // }
+  val wolf = Wolf("Razor")
 
   window.resolution = Resolution.p720
   window.maximized = false
@@ -71,12 +48,6 @@ object MyGame extends World {
   window.vsync = true
   onInit += { (_) =>
     window.setCursor("res/cursor.png", 0, 0)
-
-    val specPlayerRef = SpecPlayer("Yeetro").ref
-    for p <- specPlayerRef
-    do println(p.name)
-
-    playerRef.map(_.destroy())
   }
 
   onUpdate += { (delta: Float) =>
