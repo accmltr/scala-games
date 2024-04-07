@@ -23,16 +23,16 @@ class Entity protected (using val world: World) {
   final val onDestroyQueued = Event[Unit]
   final val onDestroyed = Event[Unit]
 
-  private var _ready: Boolean = false
-  private var _name: String = "Unnamed Entity"
-  private var _position: Vector2 = Vector2.zero
-  private var _rotation: Float = 0
-  private var _scale: Vector2 = Vector2.one
-  private var _parent: Option[Entity] = None
-  private var _children: List[Entity] = List.empty
-  private var _cancelDestroy: Boolean = false
+  final private var _ready: Boolean = false
+  final private var _name: String = "Unnamed Entity"
+  final private var _position: Vector2 = Vector2.zero
+  final private var _rotation: Float = 0
+  final private var _scale: Vector2 = Vector2.one
+  final private var _parent: Option[Entity] = None
+  final private var _children: List[Entity] = List.empty
+  final private var _cancelDestroy: Boolean = false
 
-  def ready: Boolean = _ready
+  private def ready: Boolean = _ready
 
   def name: String = _name
   def name_=(value: String): Unit =
