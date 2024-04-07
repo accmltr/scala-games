@@ -21,6 +21,8 @@ class Entity protected (using val world: World) {
   final val onReady = Event[Unit]
   final val onAddChild = Event[(Entity, Int)]
   final val onRemoveChild = Event[(Entity, Int)]
+  final val onAddRenderElement = Event[RenderElement]
+  final val onRemoveRenderElement = Event[RenderElement]
   final val onParentChanged = Event[Entity]
   final val onDestroyQueued = Event[Unit]
   final val onDestroyed = Event[Unit]
@@ -42,8 +44,10 @@ class Entity protected (using val world: World) {
   final def renderElements: List[RenderElement] = _renderElements
   final def addRenderElement(renderElement: RenderElement): Unit =
     _renderElements = _renderElements :+ renderElement
+    onAddRenderElement.emit(renderElement)
   final def removeRenderElement(renderElement: RenderElement): Unit =
     _renderElements = _renderElements.filterNot(_ == renderElement)
+    onRemoveRenderElement.emit(renderElement)
 
   /** Returns all children recursively with a depth-first search.
     */
