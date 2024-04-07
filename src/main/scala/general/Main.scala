@@ -29,8 +29,6 @@ object MyGame extends World {
 
   title = "MyGame"
 
-  val renderer = DefaultRenderer(window)
-
   onEntityReady += (e => println(s"Entity Created: " + e.name))
   onEntityDestroyQueued += (e => println(s"Entity Destroy Queued: " + e.name))
   onEntityDestroyed += (e => println(s"Entity Destroyed: " + e.name))
@@ -44,6 +42,7 @@ object MyGame extends World {
   // window.anti_aliasing = AA.x4
 
   val ngonRenderElement = NGonRenderElement(100, 100)
+  wolf.addRenderElement(ngonRenderElement)
 
   window.vsync = true
   onInit += { (_) =>
@@ -52,13 +51,7 @@ object MyGame extends World {
 
   onUpdate += { (delta: Float) =>
 
-    ngonRenderElement.position = input.mousePosition
-
-    renderer.render(
-      List(
-        ngonRenderElement
-      ).map(_.renderData)
-    )
+    wolf.position = input.mousePosition
 
     if (input.justPressed(KeyCode.v)) {
       window.vsync = !window.vsync

@@ -29,14 +29,18 @@ import java.nio.ByteBuffer
 import java.nio.IntBuffer
 import org.lwjgl.stb.STBImage.stbi_load
 import org.lwjgl.stb.STBImage.stbi_failure_reason
+import lib.event.Event
 
 final private[engine] class Window(
     private var _title: String,
     mouseListener: MouseListener,
-    keyListener: KeyListener,
-    initCallback: () => Unit,
-    postRenderCallback: Float => Unit
+    keyListener: KeyListener
 ) {
+
+  // Events
+  val onInit = Event[Unit]
+  val onRender = Event[Float]
+
   // Private Fields
   private var _windowId: Long = -1;
   private var _deltaTime = 0.0f
@@ -212,8 +216,8 @@ final private[engine] class Window(
     glEnable(GL_MULTISAMPLE)
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
 
-    // Initialize the game
-    initCallback()
+    // Init done
+    onInit.emit()
   }
   private def _runLoop(): Unit = {
     var lastTime: Float = Time
@@ -254,8 +258,8 @@ final private[engine] class Window(
       title += " | Mouse: " + mouseListener.position.formatted(0) // Temp
       glfwSetWindowTitle(_windowId, title)
 
-      // Trigger the renderUpdate
-      postRenderCallback(_deltaTime)
+      // Trigger remote render process
+      onRender.emit(_deltaTime)
 
       // EndFrame on Input
       mouseListener.endFrame()
@@ -265,6 +269,9 @@ final private[engine] class Window(
   def requestAttention(): Unit = {
     glfwRequestWindowAttention(_windowId)
   }
+
+  def close(): Unit =
+    glfwSetWindowShouldClose(windowId, true)
 
   import org.lwjgl.glfw.GLFWImage
   private var _cursorPath: String = null

@@ -13,13 +13,14 @@ import scala.reflect.ClassTag
   * situation where references to objects should be kept safe and managed in one
   * place.
   */
-class InstanceManager[T]() {
+final class InstanceManager[T]() {
 
   val onRegister = Event[Ref[T, T]]
   val onDestroying = Event[Ref[T, T]]
   val onDestroy = Event[Ref[T, T]]
 
   private var _refs: List[Ref[T, T]] = Nil
+  def refs: List[Ref[T, T]] = _refs
 
   /** **Note:** Be sure to get rid of local references to the newly registered
     * instance, and use only the returned `Ref` from there on out.

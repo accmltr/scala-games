@@ -7,6 +7,7 @@ import lib.instance_manager.Ref
 import scala.compiletime.ops.boolean
 import lib.event.Event
 import engine.render.renderer.render_element.RenderElement
+import engine.math.Matrix3
 
 class Entity protected (using val world: World) {
 
@@ -30,30 +31,48 @@ class Entity protected (using val world: World) {
   final private var _rotation: Float = 0
   final private var _scale: Vector2 = Vector2.one
   final private var _parent: Option[Entity] = None
-  final private var _children: List[Entity] = List.empty
+  final private var _children: List[Entity] = Nil
   final private var _cancelDestroy: Boolean = false
 
-  final private var _renderElement: RenderElement = _
+  final private var _renderElements: List[RenderElement] = Nil
 
   // Accessors
 
   final private def ready: Boolean = _ready
+  final def renderElements: List[RenderElement] = _renderElements
+  final def addRenderElement(renderElement: RenderElement): Unit =
+    _renderElements = _renderElements :+ renderElement
+  final def removeRenderElement(renderElement: RenderElement): Unit =
+    _renderElements = _renderElements.filterNot(_ == renderElement)
 
-  def name: String = _name
+  /** Returns all children recursively with a depth-first search.
+    */
+  final def descendants: List[Entity] =
+    def f(e: Entity): List[Entity] = e.children.flatMap(f)
+    f(this)
+
+  final def name: String = _name
   def name_=(value: String): Unit =
     _name = value
 
-  def position: Vector2 = _position
+  final def position: Vector2 = _position
   def position_=(value: Vector2): Unit =
     _position = value
 
-  def rotation: Float = _rotation
+  final def rotation: Float = _rotation
   def rotation_=(value: Float): Unit =
     _rotation = value
 
-  def scale: Vector2 = _scale
+  final def scale: Vector2 = _scale
   def scale_=(value: Vector2): Unit =
     _scale = value
+
+  final def transform: Matrix3 =
+    Matrix3.transform(
+      position,
+      rotation,
+      scale
+    )
 
   def parent: Option[Entity] = _parent
   final def parent_=(value: Entity): Unit =

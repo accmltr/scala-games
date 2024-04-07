@@ -2,7 +2,7 @@ package engine.math
 
 import org.joml
 
-case class Vector2(val x: Float, val y: Float) extends NearEqualsable[Vector2] {
+case class Vector2(x: Float, y: Float) extends NearEqualsable[Vector2] {
   def +(o: Vector2) = Vector2(x + o.x, y + o.y)
   def -(o: Vector2) = Vector2(x - o.x, y - o.y)
   def *(f: Float) = Vector2(x * f, y * f)
