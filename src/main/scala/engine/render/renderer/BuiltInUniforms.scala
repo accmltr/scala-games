@@ -1,6 +1,6 @@
 package engine.render.renderer
 
-enum BuiltInUniforms {
+private[render] enum BuiltInUniforms {
   case uRes
   case uLayer
   case uColor

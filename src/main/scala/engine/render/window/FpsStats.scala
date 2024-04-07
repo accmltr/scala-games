@@ -5,7 +5,7 @@ import engine.Time
 import engine.TimeImplicits.given
 
 /** A class used to track FPS stats for a `Window` instance. */
-class FpsStats(
+private[render] class FpsStats(
     var showCurrent: Boolean = false,
     var showAvg: Boolean = false,
     var showMin: Boolean = false,

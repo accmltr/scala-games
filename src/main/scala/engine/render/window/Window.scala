@@ -30,7 +30,7 @@ import java.nio.IntBuffer
 import org.lwjgl.stb.STBImage.stbi_load
 import org.lwjgl.stb.STBImage.stbi_failure_reason
 
-class Window(
+final private[engine] class Window(
     private var _title: String,
     mouseListener: MouseListener,
     keyListener: KeyListener,

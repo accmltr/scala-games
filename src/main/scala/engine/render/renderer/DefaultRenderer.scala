@@ -17,7 +17,7 @@ import java.nio.ByteBuffer
 import org.lwjgl.BufferUtils
 import org.lwjgl.glfw.GLFWImage
 
-final case class DefaultRenderer(
+final private[render] case class DefaultRenderer(
     override val window: Window
 ) extends Renderer(window) {
   override def render(

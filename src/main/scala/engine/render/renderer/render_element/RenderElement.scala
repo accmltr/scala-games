@@ -4,7 +4,7 @@ import engine.render.renderer.RenderData
 import engine.render.Color
 import engine.math.Vector2
 
-trait RenderElement {
+private[engine] trait RenderElement {
   private var _layer: Float = 0
   private var _color: Color = Color.WHITE
   private var _position: Vector2 = Vector2.zero

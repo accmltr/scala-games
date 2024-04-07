@@ -6,6 +6,7 @@ import engine.Component
 import lib.instance_manager.Ref
 import scala.compiletime.ops.boolean
 import lib.event.Event
+import engine.render.renderer.render_element.RenderElement
 
 class Entity protected (using val world: World) {
 
@@ -32,7 +33,7 @@ class Entity protected (using val world: World) {
   final private var _children: List[Entity] = List.empty
   final private var _cancelDestroy: Boolean = false
 
-  // final private var _
+  final private var _renderElement: RenderElement = _
 
   // Accessors
 
