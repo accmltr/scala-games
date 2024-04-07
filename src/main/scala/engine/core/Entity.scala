@@ -12,7 +12,9 @@ class Entity protected (using val world: World) {
   // Givens
   given World = world
 
-  val ref: Ref[Entity, Entity] = world._entityManager.register(this)
+  private var _ref: Ref[Entity, Entity] = _
+
+  def ref: Ref[Entity, Entity] = _ref
 
   val onReady = Event[Unit]
   val onAddChild = Event[(Entity, Int)]
@@ -102,6 +104,7 @@ class Entity protected (using val world: World) {
     _cancelDestroy = true
 
   def makeReady() = {
+    _ref = world._entityManager.register(this)
     onReady.emit()
   }
 

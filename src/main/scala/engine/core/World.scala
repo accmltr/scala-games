@@ -25,21 +25,22 @@ abstract class World extends App {
   // Givens
   given World = this
 
-  val onEntityCreated = Event[Entity]
-  val onEntityDestroyed = Event[Entity]
+  val onEntityReady = Event[Entity]
   val onEntityDestroyQueued = Event[Entity]
+  val onEntityDestroyed = Event[Entity]
 
   // Instance Management
   private[core] val _entityManager = InstanceManager[Entity]()
   _entityManager.onRegister.connect(r =>
-    for e <- r.get do onEntityCreated.emit(e)
+    for e <- r.get
+    do
+      println(s"Registered: $e")
+      // Connect to Entity life-cycle events for broadcasting.
+      e.onReady.connect(_ => onEntityReady.emit(e))
+      e.onDestroyQueued.connect(_ => onEntityDestroyQueued.emit(e))
+      e.onDestroyed.connect(_ => onEntityDestroyed.emit(e))
   )
-  onEntityCreated.connect(e =>
-    e.onDestroyQueued.connect(_ => onEntityDestroyQueued.emit(e))
-  )
-  _entityManager.onDestroy.connect(r =>
-    for e <- r.get do onEntityDestroyed.emit(e)
-  )
+
   def entityManager: InstanceManager[Entity] = _entityManager
 
   private var _title: String = "Scala Games: Untitled Game"

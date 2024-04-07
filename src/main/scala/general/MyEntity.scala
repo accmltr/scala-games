@@ -18,15 +18,28 @@ import lib.instance_manager.Ref
 //     e
 // }
 
-class Player private (val userName: String)(using world: World) extends Entity {
+class Player private[general] (using world: World) extends Entity {
+  override def ref: Ref[Player, Entity] =
+    super.ref.asInstanceOf[Ref[Player, Entity]]
+}
 
-  override val ref: Ref[Player, Entity] = world.entityManager.register(this)
+class SpecPlayer private (using world: World) extends Player {
+  override def ref: Ref[SpecPlayer, Entity] =
+    super.ref.asInstanceOf[Ref[SpecPlayer, Entity]]
 }
 
 object Player {
-  def apply(userName: String)(using world: World): Player =
-    val p = new Player(userName)
-    p.name = userName
+  def apply(name: String)(using world: World): Player =
+    val p = new Player
+    p.name = name
+    p.makeReady()
+    p
+}
+
+object SpecPlayer {
+  def apply(name: String)(using world: World): Player =
+    val p = new SpecPlayer
+    p.name = name
     p.makeReady()
     p
 }

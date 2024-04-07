@@ -1,6 +1,7 @@
 trait Container {
   type T = Any
   val contents: Any
+  def c = contents
 }
 
 class Animal(val name: String)

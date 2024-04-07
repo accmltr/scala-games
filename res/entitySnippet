@@ -1,0 +1,26 @@
+{
+	"Entity Snippet": {
+		"prefix": "entitySnippet",
+		"body": [
+			"import engine.core.World",
+			"import engine.core.Entity",
+			"import lib.instance_manager.Ref",
+			"",
+			"class ${1:EntityName} private (using world: World) extends Entity {",
+			"  override def ref: Ref[${1:EntityName}, Entity] =",
+			"    super.ref.asInstanceOf[Ref[${1:EntityName}, Entity]]",
+			"}",
+			"",
+			"object ${1:EntityName} {",
+			"  def apply(name: String)(using world: World): ${1:EntityName} = {",
+			"    val entity = new ${1:EntityName}()",
+			"    entity.name = name",
+			"    entity.makeReady()",
+			"    entity",
+			"  }",
+			"}",
+			""
+		],
+		"description": "Template for an Entity script"
+	}
+}

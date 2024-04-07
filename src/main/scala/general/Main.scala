@@ -24,6 +24,7 @@ import scala.io.Source
 import javax.swing.InputMap
 import engine.render.window.AA
 import general.Player
+import general.SpecPlayer
 // import general.MyEntity
 
 object MyGame extends World {
@@ -32,11 +33,9 @@ object MyGame extends World {
 
   val renderer = DefaultRenderer(window)
 
-  onEntityCreated.connect(e => println(s"Entity Created: " + e.name))
-  onEntityDestroyQueued.connect(e =>
-    println(s"Entity Destroy Queued: " + e.name)
-  )
-  onEntityDestroyed.connect(e => println(s"Entity Destroyed: " + e.name))
+  onEntityReady += (e => println(s"Entity Created: " + e.name))
+  onEntityDestroyQueued += (e => println(s"Entity Destroy Queued: " + e.name))
+  onEntityDestroyed += (e => println(s"Entity Destroyed: " + e.name))
 
   // var entity = MyEntity()
   // entity.name = "My own custom entity"
@@ -44,7 +43,7 @@ object MyGame extends World {
   // println(s"Ref:  ${entity.ref}")
   var playerRef = Player("Frank").ref
   for player <- playerRef
-  do println(player.userName)
+  do println(player.name)
 
   // root = {
   //   val e = Entity()
@@ -72,6 +71,12 @@ object MyGame extends World {
   window.vsync = true
   onInit += { (_) =>
     window.setCursor("res/cursor.png", 0, 0)
+
+    val specPlayerRef = SpecPlayer("Yeetro").ref
+    for p <- specPlayerRef
+    do println(p.name)
+
+    playerRef.map(_.destroy())
   }
 
   onUpdate += { (delta: Float) =>

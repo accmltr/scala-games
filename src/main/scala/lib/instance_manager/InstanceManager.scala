@@ -35,6 +35,7 @@ class InstanceManager[T]() {
       case Some(value) =>
         val r = Ref[K, T](value, this)
         _refs = r :: _refs
+        onRegister.emit(r)
         r
   }
 
