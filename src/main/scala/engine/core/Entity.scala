@@ -32,7 +32,11 @@ class Entity protected (using val world: World) {
   final private var _children: List[Entity] = List.empty
   final private var _cancelDestroy: Boolean = false
 
-  private def ready: Boolean = _ready
+  // final private var _
+
+  // Accessors
+
+  final private def ready: Boolean = _ready
 
   def name: String = _name
   def name_=(value: String): Unit =
