@@ -1,7 +1,7 @@
 package lib.instance_manager
 
 import scala.collection.immutable.Queue
-import lib.event.*
+import lib.emitter.*
 import scala.reflect.ClassTag
 
 /** Manages instances of a certain type.
@@ -15,12 +15,12 @@ import scala.reflect.ClassTag
   */
 final class InstanceManager[T]() {
 
-  private val onRegisterController = Controller[Ref[T, T]]()
-  val onRegister = onRegisterController.event
-  private val onDestroyingController = Controller[Ref[T, T]]()
-  val onDestroying = onDestroyingController.event
-  private val onDestroyController = Controller[Ref[T, T]]()
-  val onDestroy = onDestroyController.event
+  private val onRegisterController = EControl[Ref[T, T]]()
+  val onRegister = onRegisterController.emitter
+  private val onDestroyingController = EControl[Ref[T, T]]()
+  val onDestroying = onDestroyingController.emitter
+  private val onDestroyController = EControl[Ref[T, T]]()
+  val onDestroy = onDestroyController.emitter
 
   private var _refs: List[Ref[T, T]] = Nil
   def refs: List[Ref[T, T]] = _refs

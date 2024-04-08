@@ -19,7 +19,7 @@ import engine.input.Input
 import engine.input.{KeyListener, MouseListener, Input}
 import lib.instance_manager.InstanceManager
 import lib.instance_manager.Ref
-import lib.event.*
+import lib.emitter.*
 import engine.math.Matrix3
 
 abstract class World extends App {
@@ -27,12 +27,12 @@ abstract class World extends App {
   // Givens
   given World = this
 
-  private val onEntityReadyController = Controller[Entity]()
-  val onEntityReady = onEntityReadyController.event
-  private val onEntityDestroyQueuedController = Controller[Entity]()
-  val onEntityDestroyQueued = onEntityDestroyQueuedController.event
-  private val onEntityDestroyedController = Controller[Entity]()
-  val onEntityDestroyed = onEntityDestroyedController.event
+  private val onEntityReadyController = EControl[Entity]()
+  val onEntityReady = onEntityReadyController.emitter
+  private val onEntityDestroyQueuedController = EControl[Entity]()
+  val onEntityDestroyQueued = onEntityDestroyQueuedController.emitter
+  private val onEntityDestroyedController = EControl[Entity]()
+  val onEntityDestroyed = onEntityDestroyedController.emitter
 
   // Instance Management
   private[core] val _entityManager = InstanceManager[Entity]()
@@ -91,10 +91,10 @@ abstract class World extends App {
   // }
 
   // Temp Callback Exposure
-  private val onInitController = Controller[Unit]()
-  val onInit = onInitController.event
-  private val onUpdateController = Controller[Float]()
-  val onUpdate = onUpdateController.event
+  private val onInitController = EControl[Unit]()
+  val onInit = onInitController.emitter
+  private val onUpdateController = EControl[Float]()
+  val onUpdate = onUpdateController.emitter
 
   // Handle window events
   _window.onInit.connect(_ => onInitController.emit(()))

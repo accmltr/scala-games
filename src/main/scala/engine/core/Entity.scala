@@ -5,10 +5,9 @@ import engine.math.Vector2
 import engine.Component
 import lib.instance_manager.Ref
 import scala.compiletime.ops.boolean
-import lib.event.Event
 import engine.render.renderer.render_element.RenderElement
 import engine.math.Matrix3
-import lib.event.Controller
+import lib.emitter.*
 
 class Entity protected (using val world: World) {
 
@@ -19,23 +18,22 @@ class Entity protected (using val world: World) {
 
   def ref: Ref[Entity, Entity] = _ref
 
-  private final val onReadyController = Controller[Unit]()
-  final val onReady = onReadyController.event
-  private final val onAddChildController = Controller[(Entity, Int)]()
-  final val onAddChild = onAddChildController.event
-  private final val onRemoveChildController = Controller[(Entity, Int)]()
-  final val onRemoveChild = onRemoveChildController.event
-  private final val onAddRenderElementController = Controller[RenderElement]()
-  final val onAddRenderElement = onAddRenderElementController.event
-  private final val onRemoveRenderElementController =
-    Controller[RenderElement]()
-  final val onRemoveRenderElement = onRemoveRenderElementController.event
-  private final val onParentChangedController = Controller[Entity]()
-  final val onParentChanged = onParentChangedController.event
-  private final val onDestroyQueuedController = Controller[Unit]()
-  final val onDestroyQueued = onDestroyQueuedController.event
-  private final val onDestroyedController = Controller[Unit]()
-  final val onDestroyed = onDestroyedController.event
+  private final val onReadyController = EControl[Unit]()
+  final val onReady = onReadyController.emitter
+  private final val onAddChildController = EControl[(Entity, Int)]()
+  final val onAddChild = onAddChildController.emitter
+  private final val onRemoveChildController = EControl[(Entity, Int)]()
+  final val onRemoveChild = onRemoveChildController.emitter
+  private final val onAddRenderElementController = EControl[RenderElement]()
+  final val onAddRenderElement = onAddRenderElementController.emitter
+  private final val onRemoveRenderElementController = EControl[RenderElement]()
+  final val onRemoveRenderElement = onRemoveRenderElementController.emitter
+  private final val onParentChangedController = EControl[Entity]()
+  final val onParentChanged = onParentChangedController.emitter
+  private final val onDestroyQueuedController = EControl[Unit]()
+  final val onDestroyQueued = onDestroyQueuedController.emitter
+  private final val onDestroyedController = EControl[Unit]()
+  final val onDestroyed = onDestroyedController.emitter
 
   final private var _ready: Boolean = false
   final private var _name: String = "Unnamed Entity"

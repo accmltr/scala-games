@@ -1,7 +1,6 @@
 package lib.operation
 
-import lib.event.Event
-import lib.event.Controller
+import lib.emitter.*
 
 final case class Op() {
   private var _state = OpState.Idle
@@ -16,10 +15,10 @@ final case class Op() {
     // onOpstateSet.emit((previous, value))
 
   def state = _state
-  private val onStartController = Controller[Unit]()
-  private val onCompleteController = Controller[Unit]()
-  val onStart = onStartController.event
-  val onComplete = onCompleteController.event
+  private val onStartController = EControl[Unit]()
+  private val onCompleteController = EControl[Unit]()
+  val onStart = onStartController.emitter
+  val onComplete = onCompleteController.emitter
 
   /** This event contains the previous and new value for the `state` property.
     */

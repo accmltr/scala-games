@@ -29,7 +29,7 @@ import java.nio.ByteBuffer
 import java.nio.IntBuffer
 import org.lwjgl.stb.STBImage.stbi_load
 import org.lwjgl.stb.STBImage.stbi_failure_reason
-import lib.event.*
+import lib.emitter.*
 
 final private[engine] class Window(
     private var _title: String,
@@ -38,10 +38,10 @@ final private[engine] class Window(
 ) {
 
   // Events
-  private val onInitController = Controller[Unit]()
-  val onInit = onInitController.event
-  private val onRenderController = Controller[Float]()
-  val onRender = onRenderController.event
+  private val onInitController = EControl[Unit]()
+  val onInit = onInitController.emitter
+  private val onRenderController = EControl[Float]()
+  val onRender = onRenderController.emitter
 
   // Private Fields
   private var _windowId: Long = -1;
