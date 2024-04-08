@@ -8,6 +8,7 @@ import scala.compiletime.ops.boolean
 import lib.event.Event
 import engine.render.renderer.render_element.RenderElement
 import engine.math.Matrix3
+import lib.event.Controller
 
 class Entity protected (using val world: World) {
 
@@ -18,14 +19,23 @@ class Entity protected (using val world: World) {
 
   def ref: Ref[Entity, Entity] = _ref
 
-  final val onReady = Event[Unit]
-  final val onAddChild = Event[(Entity, Int)]
-  final val onRemoveChild = Event[(Entity, Int)]
-  final val onAddRenderElement = Event[RenderElement]
-  final val onRemoveRenderElement = Event[RenderElement]
-  final val onParentChanged = Event[Entity]
-  final val onDestroyQueued = Event[Unit]
-  final val onDestroyed = Event[Unit]
+  private final val onReadyController = Controller[Unit]()
+  final val onReady = onReadyController.event
+  private final val onAddChildController = Controller[(Entity, Int)]()
+  final val onAddChild = onAddChildController.event
+  private final val onRemoveChildController = Controller[(Entity, Int)]()
+  final val onRemoveChild = onRemoveChildController.event
+  private final val onAddRenderElementController = Controller[RenderElement]()
+  final val onAddRenderElement = onAddRenderElementController.event
+  private final val onRemoveRenderElementController =
+    Controller[RenderElement]()
+  final val onRemoveRenderElement = onRemoveRenderElementController.event
+  private final val onParentChangedController = Controller[Entity]()
+  final val onParentChanged = onParentChangedController.event
+  private final val onDestroyQueuedController = Controller[Unit]()
+  final val onDestroyQueued = onDestroyQueuedController.event
+  private final val onDestroyedController = Controller[Unit]()
+  final val onDestroyed = onDestroyedController.event
 
   final private var _ready: Boolean = false
   final private var _name: String = "Unnamed Entity"
@@ -44,10 +54,10 @@ class Entity protected (using val world: World) {
   final def renderElements: List[RenderElement] = _renderElements
   final def addRenderElement(renderElement: RenderElement): Unit =
     _renderElements = _renderElements :+ renderElement
-    onAddRenderElement.emit(renderElement)
+    onAddRenderElementController.emit(renderElement)
   final def removeRenderElement(renderElement: RenderElement): Unit =
     _renderElements = _renderElements.filterNot(_ == renderElement)
-    onRemoveRenderElement.emit(renderElement)
+    onRemoveRenderElementController.emit(renderElement)
 
   /** Returns all children recursively with a depth-first search.
     */
@@ -90,7 +100,7 @@ class Entity protected (using val world: World) {
           throw new IllegalArgumentException(s"Already have $value as parent.")
         else
           _parent = Option(value)
-          onParentChanged.emit(value)
+          onParentChangedController.emit(value)
 
   def children: List[Entity] = _children
 
@@ -98,12 +108,12 @@ class Entity protected (using val world: World) {
     require(child != this, "Cannot add an entity to itself as a child.")
     val n = if index < -1 then _children.size - index + 1 else index
     _children = _children.take(n) ::: List(child) ::: _children.drop(n)
-    onAddChild.emit((child, n))
+    onAddChildController.emit((child, n))
 
   final def removeChild(child: Entity): Unit =
     val n = _children.indexOf(child)
     _children = _children.filterNot(_ == child)
-    onRemoveChild.emit((child, n))
+    onRemoveChildController.emit((child, n))
 
   final def removeChildAt(index: Int): Unit =
     val c = _children(index)
@@ -112,7 +122,7 @@ class Entity protected (using val world: World) {
   final def destroy(): Unit = {
     // Emit pre-destroy event
     _cancelDestroy = false
-    onDestroyQueued.emit()
+    onDestroyQueuedController.emit()
 
     // Cancel destroy if `cancelDestroy()` has been called
     if (_cancelDestroy)
@@ -126,15 +136,16 @@ class Entity protected (using val world: World) {
     // Remove from world
     world.destroy(this)
     // Emit destroyed event
-    onDestroyed.emit()
+    onDestroyedController.emit()
   }
 
   final def cancelDestroy(): Unit =
+    // require()
     _cancelDestroy = true
 
   final def makeReady() = {
     _ref = world._entityManager.register(this)
-    onReady.emit()
+    onReadyController.emit()
   }
 
   // // Generic Overrides

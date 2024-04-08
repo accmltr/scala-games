@@ -19,7 +19,7 @@ import engine.input.Input
 import engine.input.{KeyListener, MouseListener, Input}
 import lib.instance_manager.InstanceManager
 import lib.instance_manager.Ref
-import lib.event.Event
+import lib.event.*
 import engine.math.Matrix3
 
 abstract class World extends App {
@@ -27,9 +27,12 @@ abstract class World extends App {
   // Givens
   given World = this
 
-  val onEntityReady = Event[Entity]
-  val onEntityDestroyQueued = Event[Entity]
-  val onEntityDestroyed = Event[Entity]
+  private val onEntityReadyController = Controller[Entity]()
+  val onEntityReady = onEntityReadyController.event
+  private val onEntityDestroyQueuedController = Controller[Entity]()
+  val onEntityDestroyQueued = onEntityDestroyQueuedController.event
+  private val onEntityDestroyedController = Controller[Entity]()
+  val onEntityDestroyed = onEntityDestroyedController.event
 
   // Instance Management
   private[core] val _entityManager = InstanceManager[Entity]()
@@ -57,9 +60,9 @@ abstract class World extends App {
         case _ =>
 
       // Connect to Entity life-cycle events for broadcasting.
-      e.onReady.connect(_ => onEntityReady.emit(e))
-      e.onDestroyQueued.connect(_ => onEntityDestroyQueued.emit(e))
-      e.onDestroyed.connect(_ => onEntityDestroyed.emit(e))
+      e.onReady.connect(_ => onEntityReadyController.emit(e))
+      e.onDestroyQueued.connect(_ => onEntityDestroyQueuedController.emit(e))
+      e.onDestroyed.connect(_ => onEntityDestroyedController.emit(e))
     )
 
   private def _onEntityManagerDestroying(ref: Ref[Entity, Entity]): Unit =
@@ -88,13 +91,15 @@ abstract class World extends App {
   // }
 
   // Temp Callback Exposure
-  val onInit = Event[Unit]
-  val onUpdate = Event[Float]
+  private val onInitController = Controller[Unit]()
+  val onInit = onInitController.event
+  private val onUpdateController = Controller[Float]()
+  val onUpdate = onUpdateController.event
 
   // Handle window events
-  _window.onInit.connect(_ => onInit.emit(()))
+  _window.onInit.connect(_ => onInitController.emit(()))
   _window.onRender.connect(delta =>
-    onUpdate.emit(delta)
+    onUpdateController.emit(delta)
 
     // Render all render elements set on the entities in the order of the entity hierarchy
     _renderer.render(

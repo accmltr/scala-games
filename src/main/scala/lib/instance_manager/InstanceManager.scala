@@ -1,7 +1,7 @@
 package lib.instance_manager
 
 import scala.collection.immutable.Queue
-import lib.event.Event
+import lib.event.*
 import scala.reflect.ClassTag
 
 /** Manages instances of a certain type.
@@ -15,9 +15,12 @@ import scala.reflect.ClassTag
   */
 final class InstanceManager[T]() {
 
-  val onRegister = Event[Ref[T, T]]
-  val onDestroying = Event[Ref[T, T]]
-  val onDestroy = Event[Ref[T, T]]
+  private val onRegisterController = Controller[Ref[T, T]]()
+  val onRegister = onRegisterController.event
+  private val onDestroyingController = Controller[Ref[T, T]]()
+  val onDestroying = onDestroyingController.event
+  private val onDestroyController = Controller[Ref[T, T]]()
+  val onDestroy = onDestroyController.event
 
   private var _refs: List[Ref[T, T]] = Nil
   def refs: List[Ref[T, T]] = _refs
@@ -36,7 +39,7 @@ final class InstanceManager[T]() {
       case Some(value) =>
         val r = Ref[K, T](value, this)
         _refs = r :: _refs
-        onRegister.emit(r)
+        onRegisterController.emit(r)
         r
   }
 
@@ -44,9 +47,9 @@ final class InstanceManager[T]() {
     this.synchronized {
       val updated = _refs.filterNot(_.get == ref.get)
       require(_refs != updated, "Trying to destroy non-existant instance.")
-      onDestroying.emit(ref)
+      onDestroyingController.emit(ref)
       _refs = updated
-      onDestroy.emit(ref)
+      onDestroyController.emit(ref)
     }
   }
 }

@@ -29,7 +29,7 @@ import java.nio.ByteBuffer
 import java.nio.IntBuffer
 import org.lwjgl.stb.STBImage.stbi_load
 import org.lwjgl.stb.STBImage.stbi_failure_reason
-import lib.event.Event
+import lib.event.*
 
 final private[engine] class Window(
     private var _title: String,
@@ -38,8 +38,10 @@ final private[engine] class Window(
 ) {
 
   // Events
-  val onInit = Event[Unit]
-  val onRender = Event[Float]
+  private val onInitController = Controller[Unit]()
+  val onInit = onInitController.event
+  private val onRenderController = Controller[Float]()
+  val onRender = onRenderController.event
 
   // Private Fields
   private var _windowId: Long = -1;
@@ -217,7 +219,7 @@ final private[engine] class Window(
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
 
     // Init done
-    onInit.emit()
+    onInitController.emit()
   }
   private def _runLoop(): Unit = {
     var lastTime: Float = Time
@@ -259,7 +261,7 @@ final private[engine] class Window(
       glfwSetWindowTitle(_windowId, title)
 
       // Trigger remote render process
-      onRender.emit(_deltaTime)
+      onRenderController.emit(_deltaTime)
 
       // EndFrame on Input
       mouseListener.endFrame()
