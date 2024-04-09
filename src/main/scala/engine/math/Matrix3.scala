@@ -20,6 +20,60 @@ final case class Matrix3(
     )
   }
 
+  def inverse: Matrix3 = {
+    val det = c0r0 * (c1r1 * c2r2 - c1r2 * c2r1) -
+      c1r0 * (c0r1 * c2r2 - c0r2 * c2r1) +
+      c2r0 * (c0r1 * c1r2 - c0r2 * c1r1)
+
+    if (det == 0) {
+      throw new ArithmeticException(
+        "Matrix is singular and cannot be inverted."
+      )
+    }
+
+    val invDet = 1f / det
+
+    Matrix3(
+      // format: off
+      (c1r1 * c2r2 - c1r2 * c2r1) * invDet,
+      (c0r2 * c2r1 - c0r1 * c2r2) * invDet,
+      (c0r1 * c1r2 - c0r2 * c1r1) * invDet,
+      (c1r2 * c2r0 - c1r0 * c2r2) * invDet,
+      (c0r0 * c2r2 - c0r2 * c2r0) * invDet,
+      (c0r2 * c1r0 - c0r0 * c1r2) * invDet,
+      (c1r0 * c2r1 - c1r1 * c2r0) * invDet,
+      (c0r1 * c2r0 - c0r0 * c2r1) * invDet,
+      (c0r0 * c1r1 - c0r1 * c1r0) * invDet
+      // format: on
+    )
+  }
+
+  def translated(x: Float, y: Float): Matrix3 = {
+    this * Matrix3.translation(x, y)
+  }
+
+  def rotated(radians: Float): Matrix3 = {
+    this * Matrix3.rotation(radians)
+  }
+
+  def scaled(x: Float, y: Float): Matrix3 = {
+    this * Matrix3.scaling(x, y)
+  }
+
+  def scaled(v: Vector2): Matrix3 = {
+    this * Matrix3.scaling(v)
+  }
+
+  def *(scalar: Float): Matrix3 = {
+    Matrix3(
+      // format: off
+      c0r0 * scalar, c0r1 * scalar, c0r2 * scalar,  // column 0
+      c1r0 * scalar, c1r1 * scalar, c1r2 * scalar,  // column 1
+      c2r0 * scalar, c2r1 * scalar, c2r2 * scalar   // column 2
+      // format: on
+    )
+  }
+
   def *(v3: Vector3): Vector3 = {
     Vector3(
       (v3.x * c0r0) + (v3.y * c1r0) + (v3.z * c2r0),
