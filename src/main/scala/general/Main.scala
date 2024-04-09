@@ -29,11 +29,19 @@ object MyGame extends World {
 
   title = "MyGame"
 
-  onEntityReady += (e => println(s"Entity Created: " + e.name))
-  onEntityDestroyQueued += (e => println(s"Entity Destroy Queued: " + e.name))
-  onEntityDestroyed += (e => println(s"Entity Destroyed: " + e.name))
+  // onEntityReady += (e => println(s"Entity Created: " + e.name))
+  // onEntityDestroyQueued += (e => println(s"Entity Destroy Queued: " + e.name))
+  // onEntityDestroyed += (e => println(s"Entity Destroyed: " + e.name))
 
   val wolf = Wolf("Razor")
+  val wolfCub = Wolf("Razorine")
+  wolf.addChild(wolfCub)
+  wolfCub.globalPosition = Vector2(150, 200)
+  wolfCub.addRenderElement(
+    NGonRenderElement(30, 30)
+  )
+  println(s"Wolf children: ${wolf.children}")
+  println(s"WolfCub parent: ${wolfCub.parent}")
 
   window.resolution = Resolution.p720
   window.maximized = false
@@ -51,7 +59,7 @@ object MyGame extends World {
 
   onUpdate += { (delta: Float) =>
 
-    wolf.position = input.mousePosition
+    wolf.globalPosition = input.mousePosition
 
     if (input.justPressed(KeyCode.v)) {
       window.vsync = !window.vsync

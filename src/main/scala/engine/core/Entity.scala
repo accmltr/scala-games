@@ -28,7 +28,7 @@ class Entity protected (using val world: World) {
   final val onAddRenderElement = onAddRenderElementController.emitter
   private final val onRemoveRenderElementController = EControl[RenderElement]()
   final val onRemoveRenderElement = onRemoveRenderElementController.emitter
-  private final val onParentChangedController = EControl[Entity]()
+  private final val onParentChangedController = EControl[Option[Entity]]()
   final val onParentChanged = onParentChangedController.emitter
   private final val onDestroyQueuedController = EControl[Unit]()
   final val onDestroyQueued = onDestroyQueuedController.emitter
@@ -37,9 +37,9 @@ class Entity protected (using val world: World) {
 
   final private var _ready: Boolean = false
   final private var _name: String = "Unnamed Entity"
-  final private var _position: Vector2 = Vector2.zero
-  final private var _rotation: Float = 0
-  final private var _scale: Vector2 = Vector2.one
+  final private var _localPosition: Vector2 = Vector2.zero
+  final private var _localRotation: Float = 0
+  final private var _localScale: Vector2 = Vector2.one
   final private var _parent: Option[Entity] = None
   final private var _children: List[Entity] = Nil
   final private var _cancelDestroy: Boolean = false
@@ -67,38 +67,84 @@ class Entity protected (using val world: World) {
   def name_=(value: String): Unit =
     _name = value
 
-  final def position: Vector2 = _position
-  def position_=(value: Vector2): Unit =
-    _position = value
+  final def localPosition: Vector2 = _localPosition
 
-  final def rotation: Float = _rotation
-  def rotation_=(value: Float): Unit =
-    _rotation = value
+  final def localPosition_=(value: Vector2): Unit =
+    _localPosition = value
 
-  final def scale: Vector2 = _scale
-  def scale_=(value: Vector2): Unit =
-    _scale = value
+  final def globalPosition: Vector2 =
+    parent.match
+      case None    => _localPosition
+      case Some(p) => p.globalPosition + localPosition
 
-  final def transform: Matrix3 =
+  final def globalPosition_=(value: Vector2): Unit =
+    parent.match
+      case None    => _localPosition = value
+      case Some(p) => _localPosition = value - p.globalPosition
+
+  final def localRotation: Float = _localRotation
+
+  final def localRotation_=(value: Float): Unit =
+    _localRotation = value
+
+  final def globalRotation: Float =
+    parent.match
+      case None    => _localRotation
+      case Some(p) => p.globalRotation + _localRotation
+
+  final def globalRotation_=(value: Float): Unit =
+    parent.match
+      case None    => _localRotation = value
+      case Some(p) => _localRotation = value - p.globalRotation
+
+  final def localScale: Vector2 = _localScale
+
+  final def localScale_=(value: Vector2): Unit =
+    _localScale = value
+
+  final def globalScale: Vector2 =
+    parent.match
+      case None => _localScale
+      case Some(p) =>
+        Vector2(
+          p.globalScale.x * _localScale.x,
+          p.globalScale.y * _localScale.y
+        )
+
+  final def globalScale_=(value: Vector2): Unit =
+    parent.match
+      case None => _localScale = value
+      case Some(p) =>
+        _localScale =
+          Vector2(value.x / p.globalScale.x, value.y / p.globalScale.y)
+
+  final def localTransform: Matrix3 =
     Matrix3.transform(
-      position,
-      rotation,
-      scale
+      localPosition,
+      localRotation,
+      localScale
+    )
+
+  final def globalTransform: Matrix3 =
+    Matrix3.transform(
+      globalPosition,
+      globalRotation,
+      globalScale
     )
 
   def parent: Option[Entity] = _parent
-  final def parent_=(value: Entity): Unit =
-    Option(value) match
-      case None =>
-        throw new IllegalArgumentException(
-          "Cannot set `parent` to null value. If you want to remove this Entity from its parent, call `removeChild` on the parent instead."
-        )
-      case Some(value) =>
-        if (value == parent)
-          throw new IllegalArgumentException(s"Already have $value as parent.")
-        else
-          _parent = Option(value)
-          onParentChangedController.emit(value)
+  // final def parent_=(value: Entity): Unit =
+  //   Option(value) match
+  //     case None =>
+  //       throw new IllegalArgumentException(
+  //         "Cannot set `parent` to null value. If you want to remove this Entity from its parent, call `removeChild` on the parent instead."
+  //       )
+  //     case Some(value) =>
+  //       if (value == parent)
+  //         throw new IllegalArgumentException(s"Already have $value as parent.")
+  //       else
+  //         _parent = Option(value)
+  //         onParentChangedController.emit(Option(value))
 
   def children: List[Entity] = _children
 
@@ -106,6 +152,8 @@ class Entity protected (using val world: World) {
     require(child != this, "Cannot add an entity to itself as a child.")
     val n = if index < -1 then _children.size - index + 1 else index
     _children = _children.take(n) ::: List(child) ::: _children.drop(n)
+    child._parent = Some(this)
+    child.onParentChangedController.emit(child.parent)
     onAddChildController.emit((child, n))
 
   final def removeChild(child: Entity): Unit =

@@ -109,7 +109,7 @@ abstract class World extends App {
             .map(re =>
               val rd = re.renderData
               rd.copy(
-                transform = e.transform * rd.transform
+                transform = e.globalTransform * rd.transform
               )
             )
         )
