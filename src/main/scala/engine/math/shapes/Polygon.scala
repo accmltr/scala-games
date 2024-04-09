@@ -29,6 +29,11 @@ case class Polygon(points: Vector[Vector2])
   }
   def rotate(degrees: Float): Polygon = ???
   def rotateAround(degrees: Float, point: Vector2): Polygon = ???
+  def scale(multiplier: Float): Polygon = {
+    Polygon(points.map(_ * multiplier))
+  }
+  def *(value: Float): Polygon = scale(value)
+  def /(value: Float): Polygon = *(1f / value)
 
   /** Returns true if `point` is inside of polygon (excluding the polygon
     * outline).
@@ -48,10 +53,6 @@ case class Polygon(points: Vector[Vector2])
     */
   def contains(line: Line): Boolean = {
     contains(line.a) && contains(line.b)
-  }
-
-  def scale(amount: Float): Polygon = {
-    Polygon(points.map(_ * amount))
   }
 
   /** Moves each point of the polygon along its normal by the given amount.

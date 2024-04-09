@@ -33,12 +33,22 @@ object MyGame extends World {
   // onEntityDestroyQueued += (e => println(s"Entity Destroy Queued: " + e.name))
   // onEntityDestroyed += (e => println(s"Entity Destroyed: " + e.name))
 
+  val diamond = Polygon(
+    Vector(
+      Vector2(-1, 0),
+      Vector2(0, 2),
+      Vector2(1, 0),
+      Vector2(0, -1.3)
+    ).map(_ * 13)
+  )
   val wolf = Wolf("Razor")
+  wolf.addRenderElement(PolygonRenderElement(diamond * 3))
+  wolf.globalPosition = Vector2(100, 300)
   val wolfCub = Wolf("Razorine")
   wolf.addChild(wolfCub)
   wolfCub.globalPosition = Vector2(150, 200)
   wolfCub.addRenderElement(
-    NGonRenderElement(30, 30)
+    PolygonRenderElement(diamond)
   )
   println(s"Wolf children: ${wolf.children}")
   println(s"WolfCub parent: ${wolfCub.parent}")
@@ -47,10 +57,7 @@ object MyGame extends World {
   window.maximized = false
   window.fpsStats.showAvg = true
   window.backgroundColor = Vector3.one * 0.12
-  // window.anti_aliasing = AA.x4
-
-  val ngonRenderElement = NGonRenderElement(100, 100)
-  wolf.addRenderElement(ngonRenderElement)
+  window.anti_aliasing = AA.x8
 
   window.vsync = true
   onInit += { (_) =>
@@ -59,15 +66,19 @@ object MyGame extends World {
 
   onUpdate += { (delta: Float) =>
 
-    wolf.globalPosition = input.mousePosition
+    wolfCub.globalPosition = input.mousePosition
 
-    if (input.justPressed(KeyCode.v)) {
+    if (input.pressed(KeyCode.e))
+      wolf.globalRotation += pi * delta * 0.1f
+      println("Setting wolf rotation")
+    if (input.pressed(KeyCode.r))
+      wolfCub.globalRotation += pi * delta * 0.1f
+
+    if (input.justPressed(KeyCode.v))
       window.vsync = !window.vsync
-    }
 
-    if (input.justReleased(KeyCode.escape)) {
+    if (input.justReleased(KeyCode.escape))
       quit()
-    }
   }
 
   run()

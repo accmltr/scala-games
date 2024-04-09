@@ -37,9 +37,11 @@ class Entity protected (using val world: World) {
 
   final private var _ready: Boolean = false
   final private var _name: String = "Unnamed Entity"
-  final private var _localPosition: Vector2 = Vector2.zero
-  final private var _localRotation: Float = 0
-  final private var _localScale: Vector2 = Vector2.one
+  final private var _active: Boolean = true
+  final private var _localTransform = Matrix3.IDENTITY
+  // final private var _localPosition: Vector2 = Vector2.zero
+  // final private var _localRotation: Float = 0
+  // final private var _localScale: Vector2 = Vector2.one
   final private var _parent: Option[Entity] = None
   final private var _children: List[Entity] = Nil
   final private var _cancelDestroy: Boolean = false
@@ -67,70 +69,74 @@ class Entity protected (using val world: World) {
   def name_=(value: String): Unit =
     _name = value
 
-  final def localPosition: Vector2 = _localPosition
+  final def localPosition: Vector2 =
+    localTransform.translationValue
 
   final def localPosition_=(value: Vector2): Unit =
-    _localPosition = value
-
-  final def globalPosition: Vector2 =
-    parent.match
-      case None    => _localPosition
-      case Some(p) => p.globalPosition + localPosition
-
-  final def globalPosition_=(value: Vector2): Unit =
-    parent.match
-      case None    => _localPosition = value
-      case Some(p) => _localPosition = value - p.globalPosition
-
-  final def localRotation: Float = _localRotation
-
-  final def localRotation_=(value: Float): Unit =
-    _localRotation = value
-
-  final def globalRotation: Float =
-    parent.match
-      case None    => _localRotation
-      case Some(p) => p.globalRotation + _localRotation
-
-  final def globalRotation_=(value: Float): Unit =
-    parent.match
-      case None    => _localRotation = value
-      case Some(p) => _localRotation = value - p.globalRotation
-
-  final def localScale: Vector2 = _localScale
-
-  final def localScale_=(value: Vector2): Unit =
-    _localScale = value
-
-  final def globalScale: Vector2 =
-    parent.match
-      case None => _localScale
-      case Some(p) =>
-        Vector2(
-          p.globalScale.x * _localScale.x,
-          p.globalScale.y * _localScale.y
-        )
-
-  final def globalScale_=(value: Vector2): Unit =
-    parent.match
-      case None => _localScale = value
-      case Some(p) =>
-        _localScale =
-          Vector2(value.x / p.globalScale.x, value.y / p.globalScale.y)
-
-  final def localTransform: Matrix3 =
-    Matrix3.transform(
-      localPosition,
+    localTransform = Matrix3(
+      value,
       localRotation,
       localScale
     )
 
-  final def globalTransform: Matrix3 =
-    Matrix3.transform(
-      globalPosition,
-      globalRotation,
-      globalScale
+  final def globalPosition: Vector2 =
+    parent.match
+      case None    => localPosition
+      case Some(p) => globalTransform.translationValue
+
+  final def globalPosition_=(value: Vector2): Unit =
+    parent match
+      case None => localPosition = value
+      case Some(p) =>
+        localPosition = p.globalTransform.inverse * value
+
+  final def localRotation: Float = localTransform.rotationValue
+
+  final def localRotation_=(value: Float): Unit =
+    localTransform = Matrix3(
+      localPosition,
+      value,
+      localScale
     )
+
+  final def globalRotation: Float =
+    parent.match
+      case None    => localRotation
+      case Some(p) => p.globalTransform.rotationValue
+
+  final def globalRotation_=(value: Float): Unit =
+    parent match
+      case None    => localRotation = value
+      case Some(p) => localRotation = value - p.globalRotation
+
+  final def localScale: Vector2 = localTransform.scalingValue
+
+  final def localScale_=(value: Vector2): Unit =
+    parent match
+      case None    => localScale = value
+      case Some(p) => localScale = value - p.globalScale
+
+  final def globalScale: Vector2 =
+    parent.match
+      case None    => localScale
+      case Some(p) => globalTransform.scalingValue
+
+  final def globalScale_=(value: Vector2): Unit =
+    parent match
+      case None    => localScale = value
+      case Some(p) => localScale = value - p.globalScale
+
+  final def localTransform: Matrix3 = _localTransform
+  final def localTransform_=(value: Matrix3): Unit = _localTransform = value
+
+  final def globalTransform: Matrix3 =
+    parent.match
+      case None    => localTransform
+      case Some(p) => p.globalTransform * localTransform
+  final def globalTransform_=(value: Matrix3): Unit =
+    parent.match
+      case None    => localTransform = value
+      case Some(p) => localTransform = p.globalTransform.inverse * value
 
   def parent: Option[Entity] = _parent
   // final def parent_=(value: Entity): Unit =

@@ -32,7 +32,7 @@ final case class PolylineRenderElement private () extends RenderElement {
       indices = indices,
       layer = layer,
       color = color,
-      transform = Matrix3.transform(
+      transform = Matrix3(
         position,
         rotation,
         scale

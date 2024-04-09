@@ -48,6 +48,13 @@ final case class Matrix3(
     )
   }
 
+  def translationValue: Vector2 = Vector2(c2r0, c2r1)
+  def rotationValue: Float = math.atan2(c1r0, c0r0).toFloat
+  def scalingValue: Vector2 = Vector2(c0r0, c1r1)
+  def translationMatrix = Matrix3.translation(translationValue)
+  def rotationMatrix = Matrix3.rotation(rotationValue)
+  def scalingMatrix = Matrix3.scaling(scalingValue)
+
   def translated(x: Float, y: Float): Matrix3 = {
     this * Matrix3.translation(x, y)
   }
@@ -251,7 +258,7 @@ object Matrix3 {
     scaling(scale.x, scale.y)
   }
 
-  def transform(
+  def apply(
       translation: Vector2 = Vector2.zero,
       rotation: Float = 0,
       scale: Vector2 = Vector2.one
