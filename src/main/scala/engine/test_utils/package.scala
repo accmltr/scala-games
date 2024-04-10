@@ -1,5 +1,6 @@
 package engine
 import math.NearEqualsable
+import engine.math.anglesEqual
 
 package object test_utils {
   def assertNearEquals[T](
@@ -23,6 +24,18 @@ package object test_utils {
     assert(
       !o1.nearEquals(o2, epsilon),
       s"$o1 did equal $o2 " + message
+    )
+  }
+
+  def assertAnglesEqual(
+      a1: Float,
+      a2: Float,
+      epsilon: Float = 0.0001f,
+      message: String = ""
+  ): Unit = {
+    assert(
+      anglesEqual(a1, a2, epsilon),
+      s"$a1 did not equal $a2 " + message
     )
   }
 }

@@ -2,6 +2,7 @@ package engine.math
 import org.scalatest.freespec.AnyFreeSpec
 import engine.math.pi
 import engine.test_utils.assertNearEquals
+import engine.test_utils.assertAnglesEqual
 
 class Vector2Test extends AnyFreeSpec {
   "Vector2" - {
@@ -104,6 +105,11 @@ class Vector2Test extends AnyFreeSpec {
       assert(anglesEqual(Vector2(-1, -1).angle, (5f / 4f) * pi))
       assert(anglesEqual(Vector2(0, -1).angle, (3f / 2f) * pi))
       assert(anglesEqual(Vector2(1, -1).angle, (7f / 4f) * pi))
+    }
+
+    "should return opposite angle" in {
+      assertAnglesEqual(Vector2(1, 0).angle, -Vector2(-1, 0).angle)
+
     }
   }
 

@@ -49,7 +49,7 @@ package object math {
     * @return
     */
   def anglesEqual(a1: Float, a2: Float, epsilon: Float = 0f): Boolean =
-    nearEquals(normalAngle(a1), normalAngle(a2), epsilon)
+    angleInBounds(a1, a2 - epsilon, a2 + epsilon, false)
   def rad(deg: Float): Float = joml.Math.toRadians(deg)
   def deg(rad: Float): Float = joml.Math.toDegrees(rad).toFloat
   def sin(rad: Float): Float = joml.Math.sin(rad)

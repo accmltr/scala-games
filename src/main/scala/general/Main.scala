@@ -63,32 +63,33 @@ object MyGame extends World {
   onInit += { (_) =>
     window.setCursor("res/cursor.png", 0, 0)
 
-    println(s"Wolf rotation 1: ${wolf.globalRotation}")
-    wolf.globalRotation = pi / 4
-    println(s"Wolf rotation 2: ${wolf.globalRotation}")
-    wolf.globalRotation = pi / 2
-    println(s"Wolf rotation 3: ${wolf.globalRotation}")
-    wolf.globalRotation = pi
-    println(s"Wolf rotation 4: ${wolf.globalRotation}")
-    wolf.globalRotation = 3 * pi / 2
-    println(s"Wolf rotation 5: ${wolf.globalRotation}")
-    wolf.globalRotation = 2 * pi
-    println(s"Wolf rotation 6: ${wolf.globalRotation}")
-    wolf.globalRotation = -pi / 2
-    println(s"Wolf rotation 7: ${wolf.globalRotation}")
-    wolf.globalRotation = -pi
-    println(s"Wolf rotation 8: ${wolf.globalRotation}")
-    wolf.globalRotation = -3 * pi / 2
-    println(s"Wolf rotation 9: ${wolf.globalRotation}")
-    wolf.globalRotation = -2 * pi
-    println(s"Wolf rotation 10: ${wolf.globalRotation}")
-    wolf.globalRotation = 0
-    println(s"Wolf rotation 11: ${wolf.globalRotation}")
+    // println(s"Wolf rotation 1: ${wolf.globalRotation}")
+    // wolf.globalRotation = pi / 4
+    // println(s"Wolf rotation 2: ${wolf.globalRotation}")
+    // wolf.globalRotation = pi / 2
+    // println(s"Wolf rotation 3: ${wolf.globalRotation}")
+    // wolf.globalRotation = pi
+    // println(s"Wolf rotation 4: ${wolf.globalRotation}")
+    // wolf.globalRotation = 3 * pi / 2
+    // println(s"Wolf rotation 5: ${wolf.globalRotation}")
+    // wolf.globalRotation = 2 * pi
+    // println(s"Wolf rotation 6: ${wolf.globalRotation}")
+    // wolf.globalRotation = -pi / 2
+    // println(s"Wolf rotation 7: ${wolf.globalRotation}")
+    // wolf.globalRotation = -pi
+    // println(s"Wolf rotation 8: ${wolf.globalRotation}")
+    // wolf.globalRotation = -3 * pi / 2
+    // println(s"Wolf rotation 9: ${wolf.globalRotation}")
+    // wolf.globalRotation = -2 * pi
+    // println(s"Wolf rotation 10: ${wolf.globalRotation}")
+    // wolf.globalRotation = 0
+    // println(s"Wolf rotation 11: ${wolf.globalRotation}")
   }
 
   onUpdate += { (delta: Float) =>
 
     // wolf.globalPosition = input.mousePosition
+    wolf.globalRotation = (wolf.globalPosition - input.mousePosition).angle
 
     // Rotate Wolf
     if (input.pressed(KeyCode.w))

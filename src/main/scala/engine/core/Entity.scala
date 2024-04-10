@@ -105,7 +105,7 @@ class Entity protected (using val world: World) {
   final def globalRotation_=(value: Float): Unit =
     parent match
       case None    => localRotation = value
-      case Some(p) => localRotation = value - p.globalRotation
+      case Some(p) => localRotation = p.globalRotation - value
 
   final def localScale: Vector2 = localTransform.scalingValue
 
