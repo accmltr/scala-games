@@ -66,13 +66,28 @@ object MyGame extends World {
 
   onUpdate += { (delta: Float) =>
 
-    wolfCub.globalPosition = input.mousePosition
+    wolf.globalPosition = input.mousePosition
 
+    // Rotate Wolf
+    if (input.pressed(KeyCode.w))
+      wolf.globalRotation -= pi * delta * 0.4f
     if (input.pressed(KeyCode.e))
-      wolf.globalRotation += pi * delta * 0.1f
-      println("Setting wolf rotation")
+      wolf.globalRotation += pi * delta * 0.4f
+    // Scale Wolf
+    if (input.pressed(KeyCode.s))
+      wolf.globalScale -= Vector2.one * delta
+    if (input.pressed(KeyCode.d))
+      wolf.globalScale += Vector2.one * delta
+    // Rotate Wolf Cub
     if (input.pressed(KeyCode.r))
-      wolfCub.globalRotation += pi * delta * 0.1f
+      wolfCub.globalRotation -= pi * delta * 0.4f
+    if (input.pressed(KeyCode.t))
+      wolfCub.globalRotation += pi * delta * 0.4f
+    // Scale Wolf Cub
+    if (input.pressed(KeyCode.f))
+      wolfCub.globalScale -= Vector2.one * delta
+    if (input.pressed(KeyCode.g))
+      wolfCub.globalScale += Vector2.one * delta
 
     if (input.justPressed(KeyCode.v))
       window.vsync = !window.vsync

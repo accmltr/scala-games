@@ -135,6 +135,17 @@ object Matrix3 {
           // format: on
     )
 
+  def apply(
+      translation: Vector2 = Vector2.zero,
+      rotation: Float = 0,
+      scale: Vector2 = Vector2.one
+  ): Matrix3 = {
+    val rot = Matrix3.rotation(rotation)
+    val sca = Matrix3.scaling(scale)
+    val tra = Matrix3.translation(translation)
+    tra * rot * sca
+  }
+
   /** Create a 3x3 matrix which applies a translation when multiplied with a 2D
     * vector.
     *
@@ -256,16 +267,5 @@ object Matrix3 {
     */
   def scaling(scale: Vector2): Matrix3 = {
     scaling(scale.x, scale.y)
-  }
-
-  def apply(
-      translation: Vector2 = Vector2.zero,
-      rotation: Float = 0,
-      scale: Vector2 = Vector2.one
-  ): Matrix3 = {
-    val rot = Matrix3.rotation(rotation)
-    val sca = Matrix3.scaling(scale)
-    val tra = Matrix3.translation(translation)
-    tra * rot * sca
   }
 }

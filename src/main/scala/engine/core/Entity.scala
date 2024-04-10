@@ -8,6 +8,7 @@ import scala.compiletime.ops.boolean
 import engine.render.renderer.render_element.RenderElement
 import engine.math.Matrix3
 import lib.emitter.*
+import engine.math.Matrix3.rotation
 
 class Entity protected (using val world: World) {
 
@@ -73,11 +74,7 @@ class Entity protected (using val world: World) {
     localTransform.translationValue
 
   final def localPosition_=(value: Vector2): Unit =
-    localTransform = Matrix3(
-      value,
-      localRotation,
-      localScale
-    )
+    localTransform = Matrix3.translation(value - localPosition) * localTransform
 
   final def globalPosition: Vector2 =
     parent.match
@@ -93,11 +90,7 @@ class Entity protected (using val world: World) {
   final def localRotation: Float = localTransform.rotationValue
 
   final def localRotation_=(value: Float): Unit =
-    localTransform = Matrix3(
-      localPosition,
-      value,
-      localScale
-    )
+    localTransform = localTransform * Matrix3.rotation(value - localRotation)
 
   final def globalRotation: Float =
     parent.match
@@ -112,9 +105,9 @@ class Entity protected (using val world: World) {
   final def localScale: Vector2 = localTransform.scalingValue
 
   final def localScale_=(value: Vector2): Unit =
-    parent match
-      case None    => localScale = value
-      case Some(p) => localScale = value - p.globalScale
+    localTransform = localTransform * Matrix3.scaling(
+      Vector2(value.x / localScale.x, value.y / localScale.y)
+    )
 
   final def globalScale: Vector2 =
     parent.match
@@ -136,7 +129,7 @@ class Entity protected (using val world: World) {
   final def globalTransform_=(value: Matrix3): Unit =
     parent.match
       case None    => localTransform = value
-      case Some(p) => localTransform = p.globalTransform.inverse * value
+      case Some(p) => localTransform = value * p.globalTransform.inverse
 
   def parent: Option[Entity] = _parent
   // final def parent_=(value: Entity): Unit =

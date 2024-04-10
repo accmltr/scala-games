@@ -1,25 +1,47 @@
-import lib.property.Property
+import engine.core.Entity
+import engine.math.*
 
-class Character(val name: String, val maxHp: Int) {
-  val hp = Property(
-    maxHp,
-    i =>
-      require(
-        i <= maxHp && i >= 0,
-        "Cannot set hp to higher than max or lower than 0"
-      )
-      i
-  )
-}
+val T1 = Matrix3.translation(0, 1)
+val T2 = Matrix3.rotation(pi)
+// val T3 = T1 * T2
+// val T4 = T2 * T1
 
-val wolf = new Character("Wolf", 70)
+val v = T1 * T2 * Vector2.zero
+T2.inverse * T1.inverse * v
+T1.inverse * T2.inverse * v
 
-wolf.hp.value
+/*
 
-wolf.hp.onChange += ((o, n) => println(s"hp changed from $o to $n"))
 
-wolf.hp.value = 54
 
-wolf.hp.value
 
-wolf.hp.value = 71
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ */
+
+var localTransform = Matrix3()
+var origin = Vector2.zero
+
+localTransform * origin
+localTransform * Vector2.one
+
+localTransform = Matrix3(
+  Vector2(0, 10),
+  pi,
+  Vector2.one
+)
+
+val v2 = localTransform * origin
+localTransform.inverse * v2

@@ -34,19 +34,19 @@ class Matrix3Spec extends AnyFlatSpec with Matchers {
   }
 
   it should "create a transform matrix with proper translation" in {
-    val transform = Matrix3.transform(translation = Vector2(3f, 2f))
+    val transform = Matrix3(translation = Vector2(3f, 2f))
     val v2 = Vector2(0f, 0f)
     assertNearEquals(Vector2(3f, 2f), transform * v2)
   }
 
   it should "create a transform matrix with proper rotation" in {
-    val transform = Matrix3.transform(rotation = -pi / 2f)
+    val transform = Matrix3(rotation = -pi / 2f)
     val v2 = Vector2(10f, 5f)
     assertNearEquals(Vector2(-5.0f, 10.0f), transform * v2)
   }
 
   it should "create a transform matrix with proper scaling" in {
-    val transform = Matrix3.transform(scale = Vector2(2f, 3f))
+    val transform = Matrix3(scale = Vector2(2f, 3f))
     val v2 = Vector2(10f, 5f)
     assertNearEquals(Vector2(20f, 15f), transform * v2)
   }
