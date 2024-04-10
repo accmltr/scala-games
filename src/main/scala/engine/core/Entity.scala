@@ -77,9 +77,7 @@ class Entity protected (using val world: World) {
     localTransform = Matrix3.translation(value - localPosition) * localTransform
 
   final def globalPosition: Vector2 =
-    parent.match
-      case None    => localPosition
-      case Some(p) => globalTransform.translationValue
+    globalTransform.translationValue
 
   final def globalPosition_=(value: Vector2): Unit =
     parent match
@@ -93,9 +91,7 @@ class Entity protected (using val world: World) {
     localTransform = localTransform * Matrix3.rotation(value - localRotation)
 
   final def globalRotation: Float =
-    parent.match
-      case None    => localRotation
-      case Some(p) => p.globalTransform.rotationValue
+    globalTransform.rotationValue
 
   final def globalRotation_=(value: Float): Unit =
     parent match
@@ -110,9 +106,7 @@ class Entity protected (using val world: World) {
     )
 
   final def globalScale: Vector2 =
-    parent.match
-      case None    => localScale
-      case Some(p) => globalTransform.scalingValue
+    globalTransform.scalingValue
 
   final def globalScale_=(value: Vector2): Unit =
     parent match
