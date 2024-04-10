@@ -66,7 +66,7 @@ case class Vector2(x: Float, y: Float) extends NearEqualsable[Vector2] {
       case _          => false
   }
 
-  override def toString = "(%.1f, %.1f)".format(x, y)
+  override def toString = "(%f, %f)".format(x, y)
 
   /** Returns a new vector with the given number of decimals.
     */

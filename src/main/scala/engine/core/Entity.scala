@@ -9,6 +9,7 @@ import engine.render.renderer.render_element.RenderElement
 import engine.math.Matrix3
 import lib.emitter.*
 import engine.math.Matrix3.rotation
+import engine.math.normalAngle
 
 class Entity protected (using val world: World) {
 
@@ -74,7 +75,11 @@ class Entity protected (using val world: World) {
     localTransform.translationValue
 
   final def localPosition_=(value: Vector2): Unit =
-    localTransform = Matrix3.translation(value - localPosition) * localTransform
+    localTransform = Matrix3(
+      translation = value,
+      rotation = localTransform.rotationValue,
+      scale = localTransform.scalingValue
+    )
 
   final def globalPosition: Vector2 =
     globalTransform.translationValue
@@ -85,13 +90,17 @@ class Entity protected (using val world: World) {
       case Some(p) =>
         localPosition = p.globalTransform.inverse * value
 
-  final def localRotation: Float = localTransform.rotationValue
+  final def localRotation: Float = normalAngle(localTransform.rotationValue)
 
   final def localRotation_=(value: Float): Unit =
-    localTransform = localTransform * Matrix3.rotation(value - localRotation)
+    localTransform = Matrix3(
+      translation = localTransform.translationValue,
+      rotation = value,
+      scale = localTransform.scalingValue
+    )
 
   final def globalRotation: Float =
-    globalTransform.rotationValue
+    normalAngle(globalTransform.rotationValue)
 
   final def globalRotation_=(value: Float): Unit =
     parent match
@@ -101,8 +110,10 @@ class Entity protected (using val world: World) {
   final def localScale: Vector2 = localTransform.scalingValue
 
   final def localScale_=(value: Vector2): Unit =
-    localTransform = localTransform * Matrix3.scaling(
-      Vector2(value.x / localScale.x, value.y / localScale.y)
+    localTransform = Matrix3(
+      translation = localTransform.translationValue,
+      rotation = localTransform.rotationValue,
+      scale = value
     )
 
   final def globalScale: Vector2 =
@@ -110,8 +121,10 @@ class Entity protected (using val world: World) {
 
   final def globalScale_=(value: Vector2): Unit =
     parent match
-      case None    => localScale = value
-      case Some(p) => localScale = value - p.globalScale
+      case None => localScale = value
+      case Some(p) =>
+        localScale =
+          Vector2(value.x / p.globalScale.x, value.y / p.globalScale.y)
 
   final def localTransform: Matrix3 = _localTransform
   final def localTransform_=(value: Matrix3): Unit = _localTransform = value

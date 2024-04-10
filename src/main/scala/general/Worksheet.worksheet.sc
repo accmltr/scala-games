@@ -3,8 +3,8 @@ import engine.math.*
 
 val T1 = Matrix3.translation(0, 1)
 val T2 = Matrix3.rotation(pi)
-// val T3 = T1 * T2
-// val T4 = T2 * T1
+T2.rotationValue
+T2.scalingValue
 
 val v = T1 * T2 * Vector2.zero
 T2.inverse * T1.inverse * v

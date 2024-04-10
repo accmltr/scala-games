@@ -31,7 +31,7 @@ package object math {
     *   Angle in radians
     * @return
     */
-  def positiveAngle(rad: Float): Float = {
+  def normalAngle(rad: Float): Float = {
     val modded = rad % (2 * pi)
     val pos =
       if modded < 0
@@ -116,9 +116,9 @@ package object math {
       b: Float,
       clockwise: Boolean = false
   ): Boolean = {
-    val kp = positiveAngle(k)
-    val ap = positiveAngle(a)
-    val bp = positiveAngle(b)
+    val kp = normalAngle(k)
+    val ap = normalAngle(a)
+    val bp = normalAngle(b)
 
     if (ap < bp) {
       if !clockwise

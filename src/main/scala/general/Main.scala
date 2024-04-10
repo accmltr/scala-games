@@ -71,11 +71,15 @@ object MyGame extends World {
     // Rotate Wolf
     if (input.pressed(KeyCode.w))
       wolf.globalRotation -= pi * delta * 0.4f
+      println("Wolf Rotation: " + wolf.globalRotation)
     if (input.pressed(KeyCode.e))
       wolf.globalRotation += pi * delta * 0.4f
+      println("Wolf Rotation: " + wolf.globalRotation)
     // Scale Wolf
     if (input.pressed(KeyCode.s))
-      wolf.globalScale -= Vector2.one * delta
+      val s = Vector2.one * delta
+      val prev = wolf.globalScale
+      wolf.globalScale -= s
     if (input.pressed(KeyCode.d))
       wolf.globalScale += Vector2.one * delta
     // Rotate Wolf Cub
