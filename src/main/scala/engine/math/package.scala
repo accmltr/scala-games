@@ -22,9 +22,9 @@ package object math {
     *
     * E.g:
     * {{{
-    *  positiveAngle(radians(-315)) == radians(45)
-    *  positiveAngle(raFdians(45)) == radians(45)
-    *  positiveAngle(radians(-90)) == radians(270)
+    *  normalAngle(radians(-315)) == radians(45)
+    *  normalAngle(raFdians(45)) == radians(45)
+    *  normalAngle(radians(-90)) == radians(270)
     * }}}
     *
     * @param rad
@@ -39,6 +39,17 @@ package object math {
       else modded
     if pos == 2 * pi then 0 else pos
   }
+
+  /** Checks whether two angles are equal within a certain threshold of error
+    * `epsilon`.
+    *
+    * @param a1
+    * @param a2
+    * @param epsilon
+    * @return
+    */
+  def anglesEqual(a1: Float, a2: Float, epsilon: Float = 0f): Boolean =
+    nearEquals(normalAngle(a1), normalAngle(a2), epsilon)
   def rad(deg: Float): Float = joml.Math.toRadians(deg)
   def deg(rad: Float): Float = joml.Math.toDegrees(rad).toFloat
   def sin(rad: Float): Float = joml.Math.sin(rad)

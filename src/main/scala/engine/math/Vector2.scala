@@ -46,15 +46,29 @@ case class Vector2(x: Float, y: Float) extends NearEqualsable[Vector2] {
 
   /** Returns angle of vector (in radians).
     */
-  def angle: Float = math.atan2(y, x).toFloat
+  def angle: Float = normalAngle(math.atan2(y, x).toFloat)
 
-  def angleBetween(other: Vector2): Float = {
+  /** Returns the angle between this vector and another vector, if you drew a
+    * line from the origin to each vector.
+    *
+    * @param other
+    * @return
+    */
+  def angleBetween(other: Vector2): Float =
     val v1 = Vector3(x, y, 0)
     val v2 = Vector3(other.x, other.y, 0)
     val dot = v1 dot v2
     val det = (v1 cross v2).length
     math.atan2(det, dot).toFloat
-  }
+
+  /** Returns the angle between this vector and another vector, if you drew a
+    * line from the origin to each vector.
+    *
+    * @param other
+    * @return
+    */
+  def angleTo(other: Vector2): Float =
+    (other - this).angle
 
   def nearEquals(other: Vector2, epsilon: Float = 0.0001f): Boolean = {
     (x nearEquals (other.x, epsilon)) && (y nearEquals (other.y, epsilon))

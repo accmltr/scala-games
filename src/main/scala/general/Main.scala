@@ -62,24 +62,42 @@ object MyGame extends World {
   window.vsync = true
   onInit += { (_) =>
     window.setCursor("res/cursor.png", 0, 0)
+
+    println(s"Wolf rotation 1: ${wolf.globalRotation}")
+    wolf.globalRotation = pi / 4
+    println(s"Wolf rotation 2: ${wolf.globalRotation}")
+    wolf.globalRotation = pi / 2
+    println(s"Wolf rotation 3: ${wolf.globalRotation}")
+    wolf.globalRotation = pi
+    println(s"Wolf rotation 4: ${wolf.globalRotation}")
+    wolf.globalRotation = 3 * pi / 2
+    println(s"Wolf rotation 5: ${wolf.globalRotation}")
+    wolf.globalRotation = 2 * pi
+    println(s"Wolf rotation 6: ${wolf.globalRotation}")
+    wolf.globalRotation = -pi / 2
+    println(s"Wolf rotation 7: ${wolf.globalRotation}")
+    wolf.globalRotation = -pi
+    println(s"Wolf rotation 8: ${wolf.globalRotation}")
+    wolf.globalRotation = -3 * pi / 2
+    println(s"Wolf rotation 9: ${wolf.globalRotation}")
+    wolf.globalRotation = -2 * pi
+    println(s"Wolf rotation 10: ${wolf.globalRotation}")
+    wolf.globalRotation = 0
+    println(s"Wolf rotation 11: ${wolf.globalRotation}")
   }
 
   onUpdate += { (delta: Float) =>
 
-    wolf.globalPosition = input.mousePosition
+    // wolf.globalPosition = input.mousePosition
 
     // Rotate Wolf
     if (input.pressed(KeyCode.w))
-      wolf.globalRotation -= pi * delta * 0.4f
-      println("Wolf Rotation: " + wolf.globalRotation)
+      wolf.localRotation -= pi * delta * 0.4f
     if (input.pressed(KeyCode.e))
       wolf.globalRotation += pi * delta * 0.4f
-      println("Wolf Rotation: " + wolf.globalRotation)
     // Scale Wolf
-    if (input.pressed(KeyCode.s))
-      val s = Vector2.one * delta
-      val prev = wolf.globalScale
-      wolf.globalScale -= s
+    if (input.justPressed(KeyCode.s))
+      wolf.globalScale -= Vector2.one
     if (input.pressed(KeyCode.d))
       wolf.globalScale += Vector2.one * delta
     // Rotate Wolf Cub

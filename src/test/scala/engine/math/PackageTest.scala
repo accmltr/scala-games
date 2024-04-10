@@ -37,4 +37,17 @@ class PackageTest extends AnyFreeSpec {
       assert(angleInBounds(2, 0, 2))
     }
   }
+
+  "normalAngle" - {
+    "should return angle in bounds" in {
+      assert(normalAngle(-pi) == pi)
+      assert(normalAngle(-pi / 2) == 3 * pi / 2)
+      assert(normalAngle(-pi / 4) == 7 * pi / 4)
+      assert(normalAngle(0) == 0)
+      assert(normalAngle(pi / 4) == pi / 4)
+      assert(normalAngle(pi / 2) == pi / 2)
+      assert(normalAngle(pi) == pi)
+      assert(normalAngle(2 * pi) == 0)
+    }
+  }
 }

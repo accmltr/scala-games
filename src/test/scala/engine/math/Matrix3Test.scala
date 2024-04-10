@@ -50,6 +50,4 @@ class Matrix3Spec extends AnyFlatSpec with Matchers {
     val v2 = Vector2(10f, 5f)
     assertNearEquals(Vector2(20f, 15f), transform * v2)
   }
-
-  "Matrix3.rotation"
 }
