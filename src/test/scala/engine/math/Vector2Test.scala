@@ -108,8 +108,12 @@ class Vector2Test extends AnyFreeSpec {
     }
 
     "should return opposite angle" in {
-      assertAnglesEqual(Vector2(1, 0).angle, -Vector2(-1, 0).angle)
-
+      assertAnglesEqual(Vector2(1, 0).angle, pi + Vector2(-1, 0).angle)
+      assertAnglesEqual(Vector2(0, 1).angle, pi + Vector2(0, -1).angle)
+      assertAnglesEqual(Vector2(-1, 0).angle, pi + Vector2(1, 0).angle)
+      assertAnglesEqual(Vector2(0, -1).angle, pi + Vector2(0, 1).angle)
+      assertAnglesEqual(Vector2(-1, -1).angle, pi + Vector2(1, 1).angle)
+      assertAnglesEqual(Vector2(1, 1).angle, pi + Vector2(-1, -1).angle)
     }
   }
 

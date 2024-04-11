@@ -33,11 +33,9 @@ package object math {
     */
   def normalAngle(rad: Float): Float = {
     val modded = rad % (2 * pi)
-    val pos =
-      if modded < 0
-      then modded + (2 * pi)
-      else modded
-    if pos == 2 * pi then 0 else pos
+    if modded < 0
+    then modded + (2 * pi)
+    else modded
   }
 
   /** Checks whether two angles are equal within a certain threshold of error
@@ -82,6 +80,55 @@ package object math {
     then b2 <= k && k <= b1
     else b1 <= k && k <= b2
 
+  /** Checks whether an angle is within two bounds `a` and `b`, when counting
+    * counter-clockwise as the positive direction.
+    *
+    * E.g:
+    * {{{
+    * angleInBounds(radians(45), radians(0), radians(90)) == true
+    * angleInBounds(radians(45), radians(0), radians(90), true) == false
+    * angleInBounds(radians(45), radians(90), radians(0), true) == true
+    *
+    * angleInBounds(radians(-315), radians(0), radians(90)) == true
+    * angleInBounds(radians(-315), radians(0), radians(-270), true) == false
+    * angleInBounds(radians(45), radians(-270), radians(0), true) == true
+    * }}}
+    *
+    * **Note:** The order of the bounds matter.
+    *
+    * @param k
+    *   \- angle to check
+    * @param a
+    *   \- first bound [inclusive]
+    * @param b
+    *   \- second bound [inclusive]
+    * @param clockwise
+    *   \- whether to count clockwise as the positive direction
+    * @return
+    */
+  def angleInBounds(
+      k: Float,
+      a: Float,
+      b: Float,
+      clockwise: Boolean = false
+  ): Boolean = {
+    val nk = normalAngle(k)
+    val na = normalAngle(a)
+    val nb = normalAngle(b)
+
+    if (na == nb) {
+      nk == na
+    } else if (na < nb) {
+      if !clockwise
+      then inBounds(nk, na, nb)
+      else !inBounds(nk, na, nb)
+    } else {
+      if !clockwise
+      then !inBounds(nk, nb, na)
+      else inBounds(nk, nb, na)
+    }
+  }
+
   /** Checks whether two floats are equal up to a given epsilon value.
     *
     * Take note that floating point inprecisions may occur, for example:
@@ -98,51 +145,6 @@ package object math {
     * @return
     *   `true` if the floats are within epsilon of each other
     */
-
-  /** Checks whether an angle is within a lower and upper bound range, when
-    * counting counter-clockwise as the positive direction.
-    *
-    * E.g:
-    * {{{
-    * angleInBounds(radians(45), radians(0), radians(90)) == true
-    * angleInBounds(radians(45), radians(0), radians(90), true) == false
-    * angleInBounds(radians(45), radians(90), radians(0), true) == true
-    *
-    * angleInBounds(radians(-315), radians(0), radians(90)) == true
-    * angleInBounds(radians(-315), radians(0), radians(-270), true) == false
-    * angleInBounds(radians(45), radians(-270), radians(0), true) == true
-    * }}}
-    *
-    * @param angle
-    *   The angle in radians
-    * @param lower
-    *   The lower bound in radians
-    * @param upper
-    *   The upper bound in radians
-    * @return
-    */
-  def angleInBounds(
-      k: Float,
-      a: Float,
-      b: Float,
-      clockwise: Boolean = false
-  ): Boolean = {
-    val kp = normalAngle(k)
-    val ap = normalAngle(a)
-    val bp = normalAngle(b)
-
-    if (ap < bp) {
-      if !clockwise
-      then inBounds(kp, ap, bp)
-      else !inBounds(kp, ap, bp)
-    } else {
-      if !clockwise
-      then !inBounds(kp, bp, ap)
-      else inBounds(kp, bp, ap)
-    }
-
-  }
-
   def nearEquals(a: Float, b: Float, epsilon: Float = 0.0001f): Boolean = {
     if (a + b) < (a + a)
     then (a + b + epsilon) >= (a + a)

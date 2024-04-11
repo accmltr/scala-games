@@ -1,6 +1,6 @@
 package engine
 import math.NearEqualsable
-import engine.math.anglesEqual
+import engine.math.*
 
 package object test_utils {
   def assertNearEquals[T](
@@ -24,6 +24,32 @@ package object test_utils {
     assert(
       !o1.nearEquals(o2, epsilon),
       s"$o1 did equal $o2 " + message
+    )
+  }
+
+  def assertAngleInBounds(
+      value: Float,
+      a: Float,
+      b: Float,
+      clockwise: Boolean = false,
+      message: String = ""
+  ): Unit = {
+    assert(
+      angleInBounds(value, a, b, clockwise),
+      s"$value was not in bounds of $a and $b, when clockwise $clockwise" + message
+    )
+  }
+
+  def assertNotAngleInBounds(
+      value: Float,
+      a: Float,
+      b: Float,
+      clockwise: Boolean = false,
+      message: String = ""
+  ): Unit = {
+    assert(
+      !angleInBounds(value, a, b, clockwise),
+      s"$value was in bounds of $a and $b, when clockwise $clockwise" + message
     )
   }
 
