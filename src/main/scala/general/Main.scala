@@ -24,6 +24,10 @@ import scala.io.Source
 import javax.swing.InputMap
 import engine.render.window.AA
 import general.Wolf
+import java.awt.RenderingHints.Key
+import engine.input.MouseCode
+import engine.math.Matrix3.rotation
+import engine.math.Matrix3.scaling
 
 object MyGame extends World {
 
@@ -86,13 +90,55 @@ object MyGame extends World {
     // println(s"Wolf rotation 11: ${wolf.globalRotation}")
   }
 
+  enum UseMode {
+    case None
+    case Grab
+    case Rotate
+    case Scale
+  }
+  var itrans = Matrix3.IDENTITY
+  var mstart = Vector2.zero
+  var _useMode = UseMode.None
+
+  final private def useMode = _useMode
+  final private def useMode_=(mode: UseMode) =
+    itrans = wolf.localTransform
+    mstart = input.mousePosition
+    _useMode = mode
+
   onUpdate += { (delta: Float) =>
 
-    wolf.globalPosition = input.mousePosition
+    // wolf.globalPosition = input.mousePosition
     // wolf.globalRotation =
     //   (-pi / 2f) + (input.mousePosition - wolf.globalPosition).angle
 
+    wolf.localScale = Vector2.one * sin(Time.current)
+
+    useMode match
+      case MyGame.UseMode.None => ()
+      case UseMode.Grab =>
+        wolf.localTransform =
+          Matrix3(translation = (input.mousePosition - mstart)) * itrans
+      case UseMode.Rotate =>
+        val i = itrans.translationValue angleTo mstart
+        val c = itrans.translationValue angleTo input.mousePosition
+        val d = c - i
+        wolf.localTransform = itrans * Matrix3(rotation = d)
+      case UseMode.Scale =>
+        val i = itrans.translationValue distanceTo mstart
+        var c = itrans.translationValue distanceTo input.mousePosition
+        val d = c / i
+        wolf.localTransform = itrans * Matrix3(scale = Vector2.one * d)
+
     // Rotate Wolf
+    if (input justPressed KeyCode.q)
+      useMode = UseMode.Grab
+    if (input justPressed KeyCode.a)
+      useMode = UseMode.Rotate
+    if (input justPressed KeyCode.b)
+      useMode = UseMode.Scale
+    if (input justPressed MouseCode.left)
+      useMode = UseMode.None
     if (input.pressed(KeyCode.w))
       wolf.localRotation -= pi * delta * 0.4f
     if (input.pressed(KeyCode.e))
