@@ -221,8 +221,8 @@ object Matrix3 {
   def rotation(radians: Float): Matrix3 = {
     Matrix3(
       // format: off
-      cos(radians), -sin(radians), 0f, // column 0
-      sin(radians), cos(radians), 0f,  // column 1
+      cos(radians), sin(radians), 0f, // column 0
+      -sin(radians), cos(radians), 0f,  // column 1
       0f, 0f, 1f                       // column 2
       // format: on
     )

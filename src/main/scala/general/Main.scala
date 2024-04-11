@@ -89,7 +89,8 @@ object MyGame extends World {
   onUpdate += { (delta: Float) =>
 
     // wolf.globalPosition = input.mousePosition
-    wolf.globalRotation = (wolf.globalPosition - input.mousePosition).angle
+    wolf.globalRotation =
+      (-pi / 2f) + (input.mousePosition - wolf.globalPosition).angle
 
     // Rotate Wolf
     if (input.pressed(KeyCode.w))
