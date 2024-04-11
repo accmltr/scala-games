@@ -23,7 +23,7 @@ class Matrix3Spec extends AnyFreeSpec with Matchers {
     "create a propper rotation matrix" in {
       val r = Matrix3.rotation(pi / 2f)
       val v2 = Vector2(10f, 5f)
-      assertNearEquals(r * v2, Vector2(5.0f, -10.0f))
+      assertNearEquals(r * v2, Vector2(-5.0f, 10.0f))
     }
 
     "create a propper scaling matrix" in {
@@ -41,7 +41,7 @@ class Matrix3Spec extends AnyFreeSpec with Matchers {
     }
 
     "create a transform matrix with propper rotation" in {
-      val transform = Matrix3(rotation = -pi / 2f)
+      val transform = Matrix3(rotation = pi / 2f)
       val v2 = Vector2(10f, 5f)
       assertNearEquals(Vector2(-5.0f, 10.0f), transform * v2)
     }

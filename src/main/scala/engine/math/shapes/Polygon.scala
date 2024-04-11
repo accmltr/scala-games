@@ -108,7 +108,7 @@ case class Polygon(points: Vector[Vector2])
     val closestPointIndex = other.points.zipWithIndex.foldLeft(0) {
       case (acc, (point, index)) =>
         if (
-          (points(0) distanceSquared point) < (points(0) distanceSquared
+          (points(0) distanceToSquared point) < (points(0) distanceToSquared
             other.points(acc))
         )
           index

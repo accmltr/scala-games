@@ -10,8 +10,8 @@ import engine.math.pi
   */
 final case class Line(a: Vector2, b: Vector2) {
 
-  def length: Float = a.distance(b)
-  def lengthSquared: Float = a.distanceSquared(b)
+  def length: Float = a.distanceTo(b)
+  def lengthSquared: Float = a.distanceToSquared(b)
 
   def angle: Float = {
     val dx = b.x - a.x

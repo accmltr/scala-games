@@ -22,16 +22,34 @@ case class Vector2(x: Float, y: Float) extends NearEqualsable[Vector2] {
     if len == 0 then Vector2.zero
     else Vector2(x / len, y / len)
   }
-  def distance(other: Vector2) = joml.Vector2f.distance(x, y, other.x, other.y)
 
-  /** More efficient than the `distance` method, because it doesn't do the
-    * square root. Try to use this instead of `distance` when possible.
+  /** Calculates the length of the space between this Vector2 and another.
+    *
+    * Always returns a non-negative value
+    *
+    * @param other
+    * @return
+    */
+  def distanceTo(other: Vector2) =
+    joml.Vector2f.distance(x, y, other.x, other.y)
+
+  /** More efficient than the `distanceTo` method, because it skips doing the
+    * square-root when calculating. Try to use this instead of `distance` when
+    * possible.
+    *
+    * ### Example
+    * {{{
+    * // This is inside an imaginary "Character" class, which extends Entity.
+    * def inRange(target: Character, range: Float): Boolean =
+    *   val d = globalPosition.distanceToSquared(target.globalPosition)
+    *   d <= range * range
+    * }}}
     *
     * @param other
     * @return
     *   distance squared between this and another `Vector2`
     */
-  def distanceSquared(other: Vector2) = {
+  def distanceToSquared(other: Vector2) = {
     joml.Vector2f.distanceSquared(x, y, other.x, other.y)
   }
 
@@ -46,7 +64,13 @@ case class Vector2(x: Float, y: Float) extends NearEqualsable[Vector2] {
 
   /** Returns angle of vector (in radians).
     */
-  def angle: Float = normalAngle(math.atan2(y, x).toFloat)
+  def angle: Float = normalAngle(rawAngle)
+
+  /** Returns the angle of the vector (in radians), without normalizing it.
+    *
+    * This can be used to save a bit on performance in some scenarios.
+    */
+  def rawAngle: Float = math.atan2(y, x).toFloat
 
   /** Returns the angle between this vector and another vector, if you drew a
     * line from the origin to each vector.

@@ -10,12 +10,12 @@ final case class Polyline(points: List[Vector2]) {
   def length: Float = {
     points
       .sliding(2)
-      .foldLeft(0f)((acc, pair) => acc + pair(0).distance(pair(1)))
+      .foldLeft(0f)((acc, pair) => acc + pair(0).distanceTo(pair(1)))
   }
 
   def lengthSquared: Float = {
     points
       .sliding(2)
-      .foldLeft(0f)((acc, pair) => acc + pair(0).distanceSquared(pair(1)))
+      .foldLeft(0f)((acc, pair) => acc + pair(0).distanceToSquared(pair(1)))
   }
 }
