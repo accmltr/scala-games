@@ -43,10 +43,10 @@ object MyGame extends World {
   )
   val wolf = Wolf("Razor")
   wolf.addRenderElement(PolygonRenderElement(diamond * 3))
-  wolf.globalPosition = Vector2(100, 300)
+  wolf.globalPosition = Vector2(500, 400)
   val wolfCub = Wolf("Razorine")
   wolf.addChild(wolfCub)
-  wolfCub.globalPosition = Vector2(150, 200)
+  wolfCub.localPosition = Vector2(70, -30)
   wolfCub.addRenderElement(
     PolygonRenderElement(diamond)
   )
@@ -88,9 +88,9 @@ object MyGame extends World {
 
   onUpdate += { (delta: Float) =>
 
-    // wolf.globalPosition = input.mousePosition
-    wolf.globalRotation =
-      (-pi / 2f) + (input.mousePosition - wolf.globalPosition).angle
+    wolf.globalPosition = input.mousePosition
+    // wolf.globalRotation =
+    //   (-pi / 2f) + (input.mousePosition - wolf.globalPosition).angle
 
     // Rotate Wolf
     if (input.pressed(KeyCode.w))
@@ -98,8 +98,8 @@ object MyGame extends World {
     if (input.pressed(KeyCode.e))
       wolf.globalRotation += pi * delta * 0.4f
     // Scale Wolf
-    if (input.justPressed(KeyCode.s))
-      wolf.globalScale -= Vector2.one
+    if (input.pressed(KeyCode.s))
+      wolf.globalScale -= Vector2.one * delta
     if (input.pressed(KeyCode.d))
       wolf.globalScale += Vector2.one * delta
     // Rotate Wolf Cub

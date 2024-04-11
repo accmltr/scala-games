@@ -3,6 +3,7 @@ package engine.math
 import org.scalatest.matchers.should.Matchers
 import engine.test_utils.assertNearEquals
 import org.scalatest.freespec.AnyFreeSpec
+import engine.test_utils.assertAnglesEqual
 
 class Matrix3Spec extends AnyFreeSpec with Matchers {
 
@@ -53,24 +54,31 @@ class Matrix3Spec extends AnyFreeSpec with Matchers {
     }
   }
 
-  "Matrix3 constructor" - {
-    "when creating a rotation matrix" - {
-      "should rotate a Vector2 by the given rotation" in {
-        assertNearEquals(Matrix3(rotation = pi) * Vector2(1, 0), Vector2(-1, 0))
-        assertNearEquals(
-          Matrix3(rotation = pi / 2f) * Vector2(1, 0),
-          Vector2(0, 1)
-        )
-        assertNearEquals(
-          Matrix3(rotation = pi / 4f) * Vector2(1, 0),
-          Vector2(1 / Math.sqrt(2).toFloat, 1 / Math.sqrt(2).toFloat)
-        )
-        assertNearEquals(
-          Matrix3(rotation = pi / 4f) * Vector2(0, 1),
-          Vector2(-1 / Math.sqrt(2).toFloat, 1 / Math.sqrt(2).toFloat)
-        )
+  "Matrix3 rotation matrix" - {
+    "should rotate a Vector2 by the given rotation" in {
+      assertNearEquals(Matrix3(rotation = pi) * Vector2(1, 0), Vector2(-1, 0))
+      assertNearEquals(
+        Matrix3(rotation = pi / 2f) * Vector2(1, 0),
+        Vector2(0, 1)
+      )
+      assertNearEquals(
+        Matrix3(rotation = pi / 4f) * Vector2(1, 0),
+        Vector2(1 / Math.sqrt(2).toFloat, 1 / Math.sqrt(2).toFloat)
+      )
+      assertNearEquals(
+        Matrix3(rotation = pi / 4f) * Vector2(0, 1),
+        Vector2(-1 / Math.sqrt(2).toFloat, 1 / Math.sqrt(2).toFloat)
+      )
 
-      }
+    }
+    "should have a rotation component with the same angle" in {
+      assertAnglesEqual(Matrix3(rotation = pi).rotationValue, pi)
+      assertAnglesEqual(Matrix3(rotation = pi / 2f).rotationValue, pi / 2f)
+      assertAnglesEqual(Matrix3(rotation = pi / 4f).rotationValue, pi / 4f)
+      assertAnglesEqual(Matrix3(rotation = -pi).rotationValue, pi)
+      assertAnglesEqual(Matrix3(rotation = -pi / 2f).rotationValue, -pi / 2f)
+      assertAnglesEqual(Matrix3(rotation = -pi / 4f).rotationValue, -pi / 4f)
+
     }
   }
 }

@@ -39,3 +39,7 @@ anglesEqual(a1, a2)
 pi % -pi
 -3.1 % 3.2
 normalAngle(-pi)
+Matrix3(rotation = (3f / 4f) * pi).rotationValue
+
+Matrix3(rotation = -pi / 2f).rotationValue
+Matrix3(rotation = pi / 2f).rotationValue

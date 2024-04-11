@@ -50,7 +50,7 @@ final case class Matrix3(
 
   private def decompose: (Vector2, Float, Vector2) = {
     val scale = Vector2(math.hypot(c0r0, c1r0), math.hypot(c0r1, c1r1))
-    val rotation = math.atan2(c1r0 / scale.y, c0r0 / scale.x).toFloat
+    val rotation = -math.atan2(c1r0 / scale.y, c0r0 / scale.x).toFloat
     val translation = Vector2(c2r0, c2r1)
     (scale, rotation, translation)
   }
