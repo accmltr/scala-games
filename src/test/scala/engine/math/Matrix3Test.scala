@@ -24,18 +24,49 @@ class Matrix3Spec extends AnyFreeSpec with Matchers {
     }
 
     "should decompose back into components" in {
-      val translation = Vector2(11f, 44f)
-      val rotation = pi / 2f
-      val scale = Vector2(2f, 3f)
-      val m = Matrix3(
-        translation = translation,
-        rotation = rotation,
-        scale = scale
-      )
-      assert(
-        (translation, rotation, scale)
-          == (m.translationValue, m.rotationValue, m.scalingValue)
-      )
+      def matrixComponentsEqual(
+          m: Matrix3,
+          c: (Vector2, Float, Vector2),
+          epsilon: Float = 0.0001f
+      ) = {
+        val (t, r, s) = m.decompose
+        assert(
+          t.nearEquals(c._1, epsilon) &&
+            anglesEqual(r, c._2, epsilon) &&
+            s.nearEquals(c._3, epsilon),
+          s"Expected $c, got ($t, $r, $s)"
+        )
+      }
+      {
+        var m = Matrix3(Vector2(11f, 44f), pi / 4f, Vector2(2f, 3f))
+        val (t, r, s) = m.decompose
+        matrixComponentsEqual(m, (Vector2(11f, 44f), pi / 4f, Vector2(2f, 3f)))
+      }
+      {
+        var m = Matrix3(Vector2(11f, 44f), pi, Vector2(2f, 3f))
+        val (t, r, s) = m.decompose
+        matrixComponentsEqual(m, (Vector2(11f, 44f), pi, Vector2(2f, 3f)))
+      }
+      {
+        var m = Matrix3(Vector2(11f, 44f), -pi, Vector2(2f, 3f))
+        val (t, r, s) = m.decompose
+        matrixComponentsEqual(m, (Vector2(11f, 44f), -pi, Vector2(2f, 3f)))
+      }
+      {
+        var m = Matrix3(Vector2(11f, 44f), -pi, Vector2(-2f, 3f))
+        val (t, r, s) = m.decompose
+        matrixComponentsEqual(m, (Vector2(11f, 44f), -pi, Vector2(-2f, 3f)))
+      }
+      {
+        var m = Matrix3(Vector2(11f, 44f), -pi, Vector2(2f, -3f))
+        val (t, r, s) = m.decompose
+        matrixComponentsEqual(m, (Vector2(11f, 44f), -pi, Vector2(2f, -3f)))
+      }
+      {
+        var m = Matrix3(Vector2(11f, 44f), -pi, Vector2(-2f, -3f))
+        val (t, r, s) = m.decompose
+        matrixComponentsEqual(m, (Vector2(11f, 44f), -pi, Vector2(-2f, -3f)))
+      }
     }
 
     "create a propper translation matrix" in {

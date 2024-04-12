@@ -60,8 +60,11 @@ package object test_utils {
       message: String = ""
   ): Unit = {
     assert(
-      anglesEqual(a1, a2, epsilon),
-      s"$a1 did not equal $a2 " + message
+      anglesEqual(a1, a2, epsilon), {
+        val a1r = "%.11f".format(a1 / pi)
+        val a2r = "%.11f".format(a2 / pi)
+        s"${a1r}Pi did not equal ${a2r}Pi " + message
+      }
     )
   }
 }
