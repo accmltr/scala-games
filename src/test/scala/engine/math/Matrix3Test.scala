@@ -8,9 +8,34 @@ import engine.test_utils.assertAnglesEqual
 class Matrix3Spec extends AnyFreeSpec with Matchers {
 
   "Matrix3" - {
-    "multiplying IDENTITY with a Vector2 should not change it" in {
-      val v2 = Vector2(3f, 7f)
-      assertNearEquals(Matrix3.IDENTITY * v2, v2)
+    "when multiplying" - {
+      "IDENTITY with" - {
+        "Vector2" in {
+          val v2 = Vector2(3f, 7f)
+          assert(Matrix3.IDENTITY * v2 == v2)
+        }
+        "any Matrix3" in {
+          val m = Matrix3(1f, 2f, 3f, 4f, 5f, 6f, 7f, 8f, 9f)
+          assert(Matrix3.IDENTITY * m == m)
+          val m2 = Matrix3(0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f)
+          assert(Matrix3.IDENTITY * m2 == m2)
+        }
+      }
+    }
+
+    "should decompose back into components" in {
+      val translation = Vector2(11f, 44f)
+      val rotation = pi / 2f
+      val scale = Vector2(2f, 3f)
+      val m = Matrix3(
+        translation = translation,
+        rotation = rotation,
+        scale = scale
+      )
+      assert(
+        (translation, rotation, scale)
+          == (m.translationValue, m.rotationValue, m.scalingValue)
+      )
     }
 
     "create a propper translation matrix" in {
@@ -51,6 +76,12 @@ class Matrix3Spec extends AnyFreeSpec with Matchers {
       val transform = Matrix3(scale = Vector2(2f, 3f))
       val v2 = Vector2(10f, 5f)
       assertNearEquals(Vector2(20f, 15f), transform * v2)
+      val transform2 = Matrix3(scale = Vector2(-7f, 2.1f))
+      assertNearEquals(Vector2(-70f, 10.5f), transform2 * v2)
+      val transform3 = Matrix3(scale = Vector2(7f, -2.1f))
+      assertNearEquals(Vector2(70f, -10.5f), transform3 * v2)
+      val transform4 = Matrix3(scale = Vector2(-7f, -2.1f))
+      assertNearEquals(Vector2(-70f, -10.5f), transform4 * v2)
     }
   }
 
