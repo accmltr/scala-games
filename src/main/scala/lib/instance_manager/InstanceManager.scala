@@ -13,7 +13,7 @@ import scala.reflect.ClassTag
   * situation where references to objects should be kept safe and managed in one
   * place.
   */
-final class InstanceManager[T]() {
+final class InstanceManager[T] {
 
   private val onRegisterController = EControl[Ref[T, T]]()
   val onRegister = onRegisterController.emitter

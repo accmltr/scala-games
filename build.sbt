@@ -5,7 +5,7 @@ ThisBuild / scalaVersion := "3.4.1"
 lazy val root = (project in file("."))
   .settings(
     name := "scala_games",
-    idePackagePrefix := Some("com.scala_games")
+    //    idePackagePrefix := Some("com.scala_games")
   )
 
 val lwjglVersion = "3.3.3"
