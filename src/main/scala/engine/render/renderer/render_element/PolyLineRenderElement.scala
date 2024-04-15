@@ -4,11 +4,11 @@ import engine.math.{pi, cos, sin}
 import engine.render.renderer.RenderData
 import engine.render.Color
 import engine.math.Matrix3
-import engine.math.geometry.Polyline
+import engine.math.geometry.PolyLine
 import engine.math.Vector2
 import engine.math.geometry.Line
 
-final case class PolylineRenderElement private () extends RenderElement {
+final case class PolyLineRenderElement private() extends RenderElement {
 
   private var _points: List[Vector2] = List.empty
   private var _width: Float = 1
@@ -26,7 +26,7 @@ final case class PolylineRenderElement private () extends RenderElement {
 
   override def renderData: RenderData = {
     val (verts, indices) =
-      PolylineRenderElement.vertsAndIndicesFromPolyline(points, width)
+      PolyLineRenderElement.vertsAndIndicesFromPolyline(points, width)
     RenderData(
       vertices = verts,
       indices = indices,
@@ -42,10 +42,10 @@ final case class PolylineRenderElement private () extends RenderElement {
 
 }
 
-object PolylineRenderElement {
+object PolyLineRenderElement {
 
-  def apply(points: List[Vector2], width: Float = 1): PolylineRenderElement =
-    val polylineRe = PolylineRenderElement()
+  def apply(points: List[Vector2], width: Float = 1): PolyLineRenderElement =
+    val polylineRe = PolyLineRenderElement()
     polylineRe.points = points
     polylineRe.width = width
     polylineRe

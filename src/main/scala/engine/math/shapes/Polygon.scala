@@ -1,8 +1,10 @@
 package engine.math.shapes
 
-import engine.math._
-import scala.annotation.tailrec
-import scala.util.boundary, boundary.break
+import engine.math.*
+
+import scala.annotation.{tailrec, targetName}
+import scala.util.boundary
+import boundary.break
 import engine.math.geometry.Line
 
 case class Polygon(points: Vector[Vector2])
@@ -32,14 +34,13 @@ case class Polygon(points: Vector[Vector2])
   def scale(multiplier: Float): Polygon = {
     Polygon(points.map(_ * multiplier))
   }
+  @targetName("scaleShorthand")
   def *(value: Float): Polygon = scale(value)
+  @targetName("inverseScaleShorthand")
   def /(value: Float): Polygon = *(1f / value)
 
   /** Returns true if `point` is inside of polygon (excluding the polygon
     * outline).
-    *
-    * @param point
-    * @return
     */
   override def contains(point: Vector2): Boolean = {
     polygonIntersection.testPoint(point.x, point.y)
@@ -47,9 +48,6 @@ case class Polygon(points: Vector[Vector2])
 
   /** Returns true when both points of `line` are inside this polygon (excluding
     * polygon outline)
-    *
-    * @param line
-    * @return
     */
   def contains(line: Line): Boolean = {
     contains(line.a) && contains(line.b)
@@ -57,7 +55,6 @@ case class Polygon(points: Vector[Vector2])
 
   /** Moves each point of the polygon along its normal by the given amount.
     *
-    * @param amount
     * @return
     *   the grown polygon
     */
@@ -76,7 +73,7 @@ case class Polygon(points: Vector[Vector2])
         if isClockwise
         then edge1.angle + pi - halfEdgeAngle
         else edge2.angle + pi + halfEdgeAngle
-      var offset = Vector2.fromAngle(a, l)
+      val offset = Vector2.fromAngle(a, l)
       val newPoint: Vector2 =
         p2 + offset
       newPoint
@@ -108,8 +105,7 @@ case class Polygon(points: Vector[Vector2])
     val closestPointIndex = other.points.zipWithIndex.foldLeft(0) {
       case (acc, (point, index)) =>
         if (
-          (points(0) distanceToSquared point) < (points(0) distanceToSquared
-            other.points(acc))
+          points(0).distanceToSquared(point) < points(0).distanceToSquared(other.points(acc))
         )
           index
         else acc
@@ -117,10 +113,10 @@ case class Polygon(points: Vector[Vector2])
 
     // Return
     boundary:
-      for (i <- 0 until points.size) {
+      for (i <- points.indices) {
         val thisPoint = points(i)
         val otherPoint = other.points((i + closestPointIndex) % points.size)
-        if (!(thisPoint nearEquals (otherPoint, epsilon)))
+        if (!thisPoint.nearEquals(otherPoint, epsilon))
           boundary.break(false)
       }
       true
@@ -137,7 +133,7 @@ case class Polygon(points: Vector[Vector2])
   private def _hasDuplicates: Boolean = {
     boundary(
       for
-        i <- 0 until points.size
+        i <- points.indices
         j <- i + 1 until points.size
       do if points(i) == points(j) then boundary.break(true)
     )
