@@ -30,5 +30,6 @@ libraryDependencies ++= Seq(
   "org.lwjgl" % "lwjgl-openal" % lwjglVersion classifier nativeOS,
   "org.lwjgl" % "lwjgl-opengl" % lwjglVersion classifier nativeOS,
   "org.lwjgl" % "lwjgl-stb" % lwjglVersion classifier nativeOS,
-  "org.joml" % "joml" % jomlVersion
+  "org.joml" % "joml" % jomlVersion,
+  "org.dyn4j" % "dyn4j" % "5.0.2"
 )
