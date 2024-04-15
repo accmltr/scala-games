@@ -23,7 +23,7 @@ class Matrix3Test extends AnyFreeSpec with Matchers {
       }
     }
     
-    "create a propper translation matrix" in {
+    "create a proper translation matrix" in {
       val t = Matrix3.translation(3f, 2f)
       val t2 = Matrix3.translation(Vector2(3f, 2f))
       val v2 = Vector2(0f, 0f)
@@ -31,13 +31,13 @@ class Matrix3Test extends AnyFreeSpec with Matchers {
       assertNearEquals(t2 * v2, Vector2(3f, 2f))
     }
 
-    "create a propper rotation matrix" in {
+    "create a proper rotation matrix" in {
       val r = Matrix3.rotation(pi / 2f)
       val v2 = Vector2(10f, 5f)
       assertNearEquals(r * v2, Vector2(-5.0f, 10.0f))
     }
 
-    "create a propper scaling matrix" in {
+    "create a proper scaling matrix" in {
       val s = Matrix3.scaling(2f, 3f)
       val s2 = Matrix3.scaling(Vector2(2f, 3f))
       val v2 = Vector2(10f, 5f)
@@ -45,19 +45,19 @@ class Matrix3Test extends AnyFreeSpec with Matchers {
       assertNearEquals(s2 * v2, Vector2(20f, 15f))
     }
 
-    "create a transform matrix with propper translation" in {
+    "create a transform matrix with proper translation" in {
       val transform = Matrix3(translation = Vector2(3f, 2f))
       val v2 = Vector2(0f, 0f)
       assertNearEquals(Vector2(3f, 2f), transform * v2)
     }
 
-    "create a transform matrix with propper rotation" in {
+    "create a transform matrix with proper rotation" in {
       val transform = Matrix3(rotation = pi / 2f)
       val v2 = Vector2(10f, 5f)
       assertNearEquals(Vector2(-5.0f, 10.0f), transform * v2)
     }
 
-    "create a transform matrix with propper scaling" in {
+    "create a transform matrix with proper scaling" in {
       val transform = Matrix3(scale = Vector2(2f, 3f))
       val v2 = Vector2(10f, 5f)
       assertNearEquals(Vector2(20f, 15f), transform * v2)
