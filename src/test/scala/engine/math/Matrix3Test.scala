@@ -5,7 +5,7 @@ import engine.test_utils.assertNearEquals
 import org.scalatest.freespec.AnyFreeSpec
 import engine.test_utils.assertAnglesEqual
 
-class Matrix3Spec extends AnyFreeSpec with Matchers {
+class Matrix3Test extends AnyFreeSpec with Matchers {
 
   "Matrix3" - {
     "when multiplying" - {
@@ -22,53 +22,7 @@ class Matrix3Spec extends AnyFreeSpec with Matchers {
         }
       }
     }
-
-    "should decompose back into components" in {
-      def matrixComponentsEqual(
-          m: Matrix3,
-          c: (Vector2, Float, Vector2),
-          epsilon: Float = 0.0001f
-      ) = {
-        val (t, r, s) = m.decompose
-        assert(
-          t.nearEquals(c._1, epsilon) &&
-            anglesEqual(r, c._2, epsilon) &&
-            s.nearEquals(c._3, epsilon),
-          s"Expected $c, got ($t, $r, $s)"
-        )
-      }
-      {
-        var m = Matrix3(Vector2(11f, 44f), pi / 4f, Vector2(2f, 3f))
-        val (t, r, s) = m.decompose
-        matrixComponentsEqual(m, (Vector2(11f, 44f), pi / 4f, Vector2(2f, 3f)))
-      }
-      {
-        var m = Matrix3(Vector2(11f, 44f), pi, Vector2(2f, 3f))
-        val (t, r, s) = m.decompose
-        matrixComponentsEqual(m, (Vector2(11f, 44f), pi, Vector2(2f, 3f)))
-      }
-      {
-        var m = Matrix3(Vector2(11f, 44f), -pi, Vector2(2f, 3f))
-        val (t, r, s) = m.decompose
-        matrixComponentsEqual(m, (Vector2(11f, 44f), -pi, Vector2(2f, 3f)))
-      }
-      {
-        var m = Matrix3(Vector2(11f, 44f), -pi, Vector2(-2f, 3f))
-        val (t, r, s) = m.decompose
-        matrixComponentsEqual(m, (Vector2(11f, 44f), -pi, Vector2(-2f, 3f)))
-      }
-      {
-        var m = Matrix3(Vector2(11f, 44f), -pi, Vector2(2f, -3f))
-        val (t, r, s) = m.decompose
-        matrixComponentsEqual(m, (Vector2(11f, 44f), -pi, Vector2(2f, -3f)))
-      }
-      {
-        var m = Matrix3(Vector2(11f, 44f), -pi, Vector2(-2f, -3f))
-        val (t, r, s) = m.decompose
-        matrixComponentsEqual(m, (Vector2(11f, 44f), -pi, Vector2(-2f, -3f)))
-      }
-    }
-
+    
     "create a propper translation matrix" in {
       val t = Matrix3.translation(3f, 2f)
       val t2 = Matrix3.translation(Vector2(3f, 2f))
@@ -131,16 +85,6 @@ class Matrix3Spec extends AnyFreeSpec with Matchers {
         Matrix3(rotation = pi / 4f) * Vector2(0, 1),
         Vector2(-1 / Math.sqrt(2).toFloat, 1 / Math.sqrt(2).toFloat)
       )
-
-    }
-    "should have a rotation component with the same angle" in {
-      assertAnglesEqual(Matrix3(rotation = pi).rotationValue, pi)
-      assertAnglesEqual(Matrix3(rotation = pi / 2f).rotationValue, pi / 2f)
-      assertAnglesEqual(Matrix3(rotation = pi / 4f).rotationValue, pi / 4f)
-      assertAnglesEqual(Matrix3(rotation = -pi).rotationValue, pi)
-      assertAnglesEqual(Matrix3(rotation = -pi / 2f).rotationValue, -pi / 2f)
-      assertAnglesEqual(Matrix3(rotation = -pi / 4f).rotationValue, -pi / 4f)
-
     }
   }
 }

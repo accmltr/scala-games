@@ -278,7 +278,7 @@ public final class Billiards extends SimulationFrame {
 		this.render(g, elapsedTime, cueStick);
 	}
 	
-	private final boolean allBallsAtRest() {
+	private boolean allBallsAtRest() {
 		final int n = this.world.getBodyCount();
 		for (int i = 0; i < n; i++) {
 			SimulationBody b = this.world.getBody(i);

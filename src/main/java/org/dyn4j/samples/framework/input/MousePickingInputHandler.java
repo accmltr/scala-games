@@ -192,9 +192,8 @@ public class MousePickingInputHandler extends AbstractMouseInputHandler implemen
 		// 2. mouse picking continues
 		if (dragging && this.mouseHandle != null && point != null) {
 			Joint<SimulationBody> joint = this.mouseHandle;
-			if (joint instanceof PinJoint) {
-				PinJoint<?> pj = (PinJoint<?>)joint;
-				pj.setTarget(new Vector2(point.x, point.y));
+			if (joint instanceof PinJoint<?> pj) {
+                pj.setTarget(new Vector2(point.x, point.y));
 			}
 			return;
 		}
@@ -206,8 +205,7 @@ public class MousePickingInputHandler extends AbstractMouseInputHandler implemen
 				this.onPickingEnd(body);
 			}
 			this.mouseHandle = null;
-			return;
-		}
+        }
 	}
 	
 	public void onPickingStart(SimulationBody body) {

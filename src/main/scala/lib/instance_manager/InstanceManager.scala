@@ -16,11 +16,11 @@ import scala.reflect.ClassTag
 final class InstanceManager[T] {
 
   private val onRegisterController = EControl[Ref[T, T]]()
-  val onRegister = onRegisterController.emitter
+  val onRegister: Emitter[Ref[T, T]] = onRegisterController.emitter
   private val onDestroyingController = EControl[Ref[T, T]]()
-  val onDestroying = onDestroyingController.emitter
+  val onDestroying: Emitter[Ref[T, T]] = onDestroyingController.emitter
   private val onDestroyController = EControl[Ref[T, T]]()
-  val onDestroy = onDestroyController.emitter
+  val onDestroy: Emitter[Ref[T, T]] = onDestroyController.emitter
 
   private var _refs: List[Ref[T, T]] = Nil
   def refs: List[Ref[T, T]] = _refs
@@ -28,9 +28,8 @@ final class InstanceManager[T] {
   /** **Note:** Be sure to get rid of local references to the newly registered
     * instance, and use only the returned `Ref` from there on out.
     *
-    * @param t
+    * @param instance
     *   The object to be encapsulated.
-    * @return
     */
   def register[K <: T](instance: K): Ref[K, T] = this.synchronized {
     Option(instance) match

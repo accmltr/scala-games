@@ -60,7 +60,7 @@ public final class Graphics2DRenderer {
 	 *              meter))
 	 * @param color the color
 	 */
-	public static final void render(Graphics2D g, Shape shape, double scale, Color color) {
+	public static void render(Graphics2D g, Shape shape, double scale, Color color) {
 		// no-op
 		if (shape == null)
 			return;
@@ -98,7 +98,7 @@ public final class Graphics2DRenderer {
 	 *               meter))
 	 * @param color  the color
 	 */
-	public static final void render(Graphics2D g, Circle circle, double scale, Color color) {
+	public static void render(Graphics2D g, Circle circle, double scale, Color color) {
 		double radius = circle.getRadius();
 		Vector2 center = circle.getCenter();
 
@@ -129,7 +129,7 @@ public final class Graphics2DRenderer {
 	 *                (typically meter))
 	 * @param color   the color
 	 */
-	public static final void render(Graphics2D g, Polygon polygon, double scale, Color color) {
+	public static void render(Graphics2D g, Polygon polygon, double scale, Color color) {
 		Vector2[] vertices = polygon.getVertices();
 		int l = vertices.length;
 
@@ -165,7 +165,7 @@ public final class Graphics2DRenderer {
 	 *                (typically meter))
 	 * @param color   the color
 	 */
-	public static final void render(Graphics2D g, Segment segment, double scale, Color color) {
+	public static void render(Graphics2D g, Segment segment, double scale, Color color) {
 		Vector2[] vertices = segment.getVertices();
 
 		Line2D.Double l = new Line2D.Double(vertices[0].x * scale, vertices[0].y * scale, vertices[1].x * scale,
@@ -186,7 +186,7 @@ public final class Graphics2DRenderer {
 	 *                (typically meter))
 	 * @param color   the color
 	 */
-	public static final void render(Graphics2D g, Capsule capsule, double scale, Color color) {
+	public static void render(Graphics2D g, Capsule capsule, double scale, Color color) {
 		// get the local rotation and translation
 		double rotation = capsule.getRotationAngle();
 		Vector2 center = capsule.getCenter();
@@ -236,7 +236,7 @@ public final class Graphics2DRenderer {
 	 *                (typically meter))
 	 * @param color   the color
 	 */
-	public static final void render(Graphics2D g, Ellipse ellipse, double scale, Color color) {
+	public static void render(Graphics2D g, Ellipse ellipse, double scale, Color color) {
 		// get the local rotation and translation
 		double rotation = ellipse.getRotationAngle();
 		Vector2 center = ellipse.getCenter();
@@ -272,7 +272,7 @@ public final class Graphics2DRenderer {
 	 *              meter))
 	 * @param color the color
 	 */
-	public static final void render(Graphics2D g, Slice slice, double scale, Color color) {
+	public static void render(Graphics2D g, Slice slice, double scale, Color color) {
 		double radius = slice.getSliceRadius();
 		double theta2 = slice.getTheta() * 0.5;
 
@@ -312,7 +312,7 @@ public final class Graphics2DRenderer {
 	 *                    (typically meter))
 	 * @param color       the color
 	 */
-	public static final void render(Graphics2D g, HalfEllipse halfEllipse, double scale, Color color) {
+	public static void render(Graphics2D g, HalfEllipse halfEllipse, double scale, Color color) {
 		double width = halfEllipse.getWidth();
 		double height = halfEllipse.getHeight();
 
@@ -348,7 +348,7 @@ public final class Graphics2DRenderer {
 	 * @param color the fill color
 	 * @return Color
 	 */
-	private static final Color getOutlineColor(Color color) {
+	private static Color getOutlineColor(Color color) {
 		Color oc = color.darker();
 		return new Color(oc.getRed(), oc.getGreen(), oc.getBlue(), color.getAlpha());
 	}
@@ -358,7 +358,7 @@ public final class Graphics2DRenderer {
 	 * 
 	 * @return Color
 	 */
-	public static final Color getRandomColor() {
+	public static Color getRandomColor() {
 		return new Color((float) Math.random() * 0.5f + 0.5f, (float) Math.random() * 0.5f + 0.5f,
 				(float) Math.random() * 0.5f + 0.5f);
 	}

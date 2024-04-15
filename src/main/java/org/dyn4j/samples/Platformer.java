@@ -242,11 +242,8 @@ public class Platformer extends SimulationFrame {
 		// same direction
 		//
 		// another option might be to project both onto the platform normal to see where they are overlapping
-		if (wAABB.getMinY() < pAABB.getMinY()) {
-			return true;
-		}
-		return false;
-	}
+        return wAABB.getMinY() < pAABB.getMinY();
+    }
 	
 	/**
 	 * Disables the constraint if it's between the character and platform and it

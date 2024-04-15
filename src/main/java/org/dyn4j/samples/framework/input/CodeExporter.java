@@ -162,9 +162,8 @@ public class CodeExporter {
 			throw new UnsupportedOperationException("The class " + ap.getClass().getName() + " is not known.");
 		}
 		
-		if (em instanceof StaticValueAABBExpansionMethod) {
-			StaticValueAABBExpansionMethod<?> method = (StaticValueAABBExpansionMethod<?>)em;
-			sb.append(TAB2).append("AABBExpansionMethod<CollisionItem<Body, BodyFixture>> aabbExpansionMethod = new StaticValueAABBExpansionMethod<CollisionItem<Body, BodyFixture>>(" + method.getExpansion() + ");").append(NEW_LINE);
+		if (em instanceof StaticValueAABBExpansionMethod<?> method) {
+            sb.append(TAB2).append("AABBExpansionMethod<CollisionItem<Body, BodyFixture>> aabbExpansionMethod = new StaticValueAABBExpansionMethod<CollisionItem<Body, BodyFixture>>(" + method.getExpansion() + ");").append(NEW_LINE);
 		} else if (em instanceof NullAABBExpansionMethod) {
 			sb.append(TAB2).append("AABBExpansionMethod<CollisionItem<Body, BodyFixture>> aabbExpansionMethod = new NullAABBExpansionMethod<CollisionItem<Body, BodyFixture>>();").append(NEW_LINE);
 		} else {
@@ -216,9 +215,8 @@ public class CodeExporter {
 		Bounds bounds = world.getBounds();
 		if (bounds == null) {
 			// don't output anything since its the default
-		} else if (bounds instanceof AxisAlignedBounds) {
-			AxisAlignedBounds aab = (AxisAlignedBounds)bounds;
-			double w = aab.getWidth();
+		} else if (bounds instanceof AxisAlignedBounds aab) {
+            double w = aab.getWidth();
 			double h = aab.getHeight();
 			sb.append(NEW_LINE)
 			.append(TAB2).append("AxisAlignedBounds bounds = new AxisAlignedBounds(").append(w).append(", ").append(h).append(");").append(NEW_LINE);
@@ -333,41 +331,36 @@ public class CodeExporter {
 			Joint<?> joint = world.getJoint(i - 1);
 			
 			sb.append(TAB2).append("// ").append(joint.getUserData()).append(NEW_LINE);
-			if (joint instanceof AngleJoint) {
-				AngleJoint<?> aj = (AngleJoint<?>)joint;
-				Body body1 = (Body)aj.getBody1();
+			if (joint instanceof AngleJoint<?> aj) {
+                Body body1 = (Body)aj.getBody1();
 				Body body2 = (Body)aj.getBody2();
 				sb.append(TAB2).append("AngleJoint joint").append(i).append(" = new AngleJoint(").append(idNameMap.get(body1)).append(", ").append(idNameMap.get(body2)).append(");").append(NEW_LINE)
 				.append(TAB2).append("joint").append(i).append(".setLimits(Math.toRadians(").append(Math.toDegrees(aj.getLowerLimit())).append("), Math.toRadians(").append(Math.toDegrees(aj.getUpperLimit())).append("));").append(NEW_LINE)
 				.append(TAB2).append("joint").append(i).append(".setLimitEnabled(").append(aj.isLimitsEnabled()).append(");").append(NEW_LINE)
 				.append(TAB2).append("joint").append(i).append(".setLimitsReferenceAngle(Math.toRadians(").append(Math.toDegrees(aj.getLimitsReferenceAngle())).append("));").append(NEW_LINE)
 				.append(TAB2).append("joint").append(i).append(".setRatio(").append(aj.getRatio()).append(");").append(NEW_LINE);
-			} else if (joint instanceof DistanceJoint) {
-				DistanceJoint<?> dj = (DistanceJoint<?>)joint;
-				Body body1 = (Body)dj.getBody1();
+			} else if (joint instanceof DistanceJoint<?> dj) {
+                Body body1 = (Body)dj.getBody1();
 				Body body2 = (Body)dj.getBody2();
 				sb.append(TAB2).append("DistanceJoint joint").append(i).append(" = new DistanceJoint(").append(idNameMap.get(body1)).append(", ").append(idNameMap.get(body2)).append(", ").append(export(dj.getAnchor1())).append(", ").append(export(dj.getAnchor2())).append(");").append(NEW_LINE)
 				.append(TAB2).append("joint").append(i).append(".setSpringFrequency(").append(dj.getSpringFrequency()).append(");").append(NEW_LINE)
 				.append(TAB2).append("joint").append(i).append(".setSpringDampingRatio(").append(dj.getSpringDampingRatio()).append(");").append(NEW_LINE)
 				.append(TAB2).append("joint").append(i).append(".setRestDistance(").append(dj.getRestDistance()).append(");").append(NEW_LINE);
-			} else if (joint instanceof FrictionJoint) {
-				FrictionJoint<?> fj = (FrictionJoint<?>)joint;
-				Body body1 = (Body)fj.getBody1();
+			} else if (joint instanceof FrictionJoint<?> fj) {
+                Body body1 = (Body)fj.getBody1();
 				Body body2 = (Body)fj.getBody2();
 				sb.append(TAB2).append("FrictionJoint joint").append(i).append(" = new FrictionJoint(").append(idNameMap.get(body1)).append(", ").append(idNameMap.get(body2)).append(", ").append(export(fj.getAnchor1())).append(");").append(NEW_LINE)
 				.append(TAB2).append("joint").append(i).append(".setMaximumForce(").append(fj.getMaximumForce()).append(");").append(NEW_LINE)
 				.append(TAB2).append("joint").append(i).append(".setMaximumTorque(").append(fj.getMaximumTorque()).append(");").append(NEW_LINE);
-			} else if (joint instanceof PinJoint) {
-				PinJoint<?> mj = (PinJoint<?>)joint;
-				Body body1 = (Body)mj.getBody();
+			} else if (joint instanceof PinJoint<?> mj) {
+                Body body1 = (Body)mj.getBody();
 				sb.append(TAB2).append("PinJoint joint").append(i).append(" = new PinJoint(").append(idNameMap.get(body1)).append(", ").append(export(mj.getAnchor())).append(");").append(NEW_LINE)
 				.append(TAB2).append("joint").append(i).append(".setSpringFrequency(").append(mj.getSpringFrequency()).append(");").append(NEW_LINE)
 				.append(TAB2).append("joint").append(i).append(".setSpringDampingRatio(").append(mj.getSpringDampingRatio()).append(");").append(NEW_LINE)
 				.append(TAB2).append("joint").append(i).append(".setMaximumSpringForce(").append(mj.getMaximumSpringForce()).append(");").append(NEW_LINE)
 				.append(TAB2).append("joint").append(i).append(".setTarget(").append(export(mj.getAnchor())).append(");").append(NEW_LINE);
-			} else if (joint instanceof PrismaticJoint) {
-				PrismaticJoint<?> pj = (PrismaticJoint<?>)joint;
-				Body body1 = (Body)pj.getBody1();
+			} else if (joint instanceof PrismaticJoint<?> pj) {
+                Body body1 = (Body)pj.getBody1();
 				Body body2 = (Body)pj.getBody2();
 				sb.append(TAB2).append("PrismaticJoint joint").append(i).append(" = new PrismaticJoint(").append(idNameMap.get(body1)).append(", ").append(idNameMap.get(body2)).append(", ").append(export(pj.getAnchor1())).append(", ").append(export(pj.getAxis())).append(");").append(NEW_LINE)
 				.append(TAB2).append("joint").append(i).append(".setLowerLimitEnabled(").append(pj.isLowerLimitEnabled()).append(");").append(NEW_LINE)
@@ -377,15 +370,13 @@ public class CodeExporter {
 				.append(TAB2).append("joint").append(i).append(".setMotorEnabled(").append(pj.isMotorEnabled()).append(");").append(NEW_LINE)
 				.append(TAB2).append("joint").append(i).append(".setMotorSpeed(").append(pj.getMotorSpeed()).append(");").append(NEW_LINE)
 				.append(TAB2).append("joint").append(i).append(".setMaximumMotorForce(").append(pj.getMaximumMotorForce()).append(");").append(NEW_LINE);
-			} else if (joint instanceof PulleyJoint) {
-				PulleyJoint<?> pj = (PulleyJoint<?>)joint;
-				Body body1 = (Body)pj.getBody1();
+			} else if (joint instanceof PulleyJoint<?> pj) {
+                Body body1 = (Body)pj.getBody1();
 				Body body2 = (Body)pj.getBody2();
 				sb.append(TAB2).append("PulleyJoint joint").append(i).append(" = new PulleyJoint(").append(idNameMap.get(body1)).append(", ").append(idNameMap.get(body2)).append(", ").append(export(pj.getPulleyAnchor1())).append(", ").append(export(pj.getPulleyAnchor2())).append(", ").append(export(pj.getAnchor1())).append(", ").append(export(pj.getAnchor2())).append(");").append(NEW_LINE)
 				.append(TAB2).append("joint").append(i).append(".setRatio(").append(pj.getRatio()).append(");").append(NEW_LINE);
-			} else if (joint instanceof RevoluteJoint) {
-				RevoluteJoint<?> rj = (RevoluteJoint<?>)joint;
-				Body body1 = (Body)rj.getBody1();
+			} else if (joint instanceof RevoluteJoint<?> rj) {
+                Body body1 = (Body)rj.getBody1();
 				Body body2 = (Body)rj.getBody2();
 				sb.append(TAB2).append("RevoluteJoint joint").append(i).append(" = new RevoluteJoint(").append(idNameMap.get(body1)).append(", ").append(idNameMap.get(body2)).append(", ").append(export(rj.getAnchor1())).append(");").append(NEW_LINE)
 				.append(TAB2).append("joint").append(i).append(".setLimitsEnabled(").append(rj.isLimitsEnabled()).append(");").append(NEW_LINE)
@@ -394,17 +385,15 @@ public class CodeExporter {
 				.append(TAB2).append("joint").append(i).append(".setMotorEnabled(").append(rj.isMotorEnabled()).append(");").append(NEW_LINE)
 				.append(TAB2).append("joint").append(i).append(".setMotorSpeed(Math.toRadians(").append(Math.toDegrees(rj.getMotorSpeed())).append("));").append(NEW_LINE)
 				.append(TAB2).append("joint").append(i).append(".setMaximumMotorTorque(").append(rj.getMaximumMotorTorque()).append(");").append(NEW_LINE);
-			} else if (joint instanceof WeldJoint) {
-				WeldJoint<?> wj = (WeldJoint<?>)joint;
-				Body body1 = (Body)wj.getBody1();
+			} else if (joint instanceof WeldJoint<?> wj) {
+                Body body1 = (Body)wj.getBody1();
 				Body body2 = (Body)wj.getBody2();
 				sb.append(TAB2).append("WeldJoint joint").append(i).append(" = new WeldJoint(").append(idNameMap.get(body1)).append(", ").append(idNameMap.get(body2)).append(", ").append(export(wj.getAnchor1())).append(");").append(NEW_LINE)
 				.append(TAB2).append("joint").append(i).append(".setSpringFrequency(").append(wj.getSpringFrequency()).append(");").append(NEW_LINE)
 				.append(TAB2).append("joint").append(i).append(".setSpringDampingRatio(").append(wj.getSpringDampingRatio()).append(");").append(NEW_LINE)
 				.append(TAB2).append("joint").append(i).append(".setLimitsReferenceAngle(Math.toRadians(").append(Math.toDegrees(wj.getLimitsReferenceAngle())).append("));").append(NEW_LINE);
-			} else if (joint instanceof WheelJoint) {
-				WheelJoint<?> wj = (WheelJoint<?>)joint;
-				Body body1 = (Body)wj.getBody1();
+			} else if (joint instanceof WheelJoint<?> wj) {
+                Body body1 = (Body)wj.getBody1();
 				Body body2 = (Body)wj.getBody2();
 				sb.append(TAB2).append("WheelJoint joint").append(i).append(" = new WheelJoint(").append(idNameMap.get(body1)).append(", ").append(idNameMap.get(body2)).append(", ").append(export(wj.getAnchor1())).append(", ").append(export(wj.getAxis())).append(");").append(NEW_LINE)
 				.append(TAB2).append("joint").append(i).append(".setSpringFrequency(").append(wj.getSpringFrequency()).append(");").append(NEW_LINE)
@@ -412,9 +401,8 @@ public class CodeExporter {
 				.append(TAB2).append("joint").append(i).append(".setMotorEnabled(").append(wj.isMotorEnabled()).append(");").append(NEW_LINE)
 				.append(TAB2).append("joint").append(i).append(".setMotorSpeed(Math.toRadians(").append(Math.toDegrees(wj.getMotorSpeed())).append("));").append(NEW_LINE)
 				.append(TAB2).append("joint").append(i).append(".setMaximumMotorTorque(").append(wj.getMaximumMotorTorque()).append(");").append(NEW_LINE);
-			} else if (joint instanceof MotorJoint) {
-				MotorJoint<?> mj = (MotorJoint<?>)joint;
-				Body body1 = (Body)mj.getBody1();
+			} else if (joint instanceof MotorJoint<?> mj) {
+                Body body1 = (Body)mj.getBody1();
 				Body body2 = (Body)mj.getBody2();
 				sb.append(TAB2).append("MotorJoint joint").append(i).append(" = new MotorJoint(").append(idNameMap.get(body1)).append(", ").append(idNameMap.get(body2)).append(");").append(NEW_LINE)
 				.append(TAB2).append("joint").append(i).append(".setLinearTarget(").append(export(mj.getLinearTarget())).append(");").append(NEW_LINE)
@@ -529,9 +517,7 @@ public class CodeExporter {
 	 * @return String
 	 */
 	private static final String export(Vector2 v) {
-		StringBuilder sb = new StringBuilder();
-		sb.append("new Vector2(").append(v.x).append(", ").append(v.y).append(")");
-		return sb.toString();
+        return "new Vector2(" + v.x + ", " + v.y + ")";
 	}
 	
 	/**
@@ -543,16 +529,14 @@ public class CodeExporter {
 	private static final String export(Convex c, String tabs) {
 		StringBuilder sb = new StringBuilder();
 		
-		if (c instanceof Circle) {
-			Circle circle = (Circle)c;
-			sb.append(tabs).append("Convex c = Geometry.createCircle(").append(circle.getRadius()).append(");").append(NEW_LINE);
+		if (c instanceof Circle circle) {
+            sb.append(tabs).append("Convex c = Geometry.createCircle(").append(circle.getRadius()).append(");").append(NEW_LINE);
 			// translate only if the center is not (0, 0)
 			if (!circle.getCenter().isZero()) {
 				sb.append(tabs).append("c.translate(").append(export(circle.getCenter())).append(");").append(NEW_LINE);
 			}
-		} else if (c instanceof Rectangle) {
-			Rectangle rectangle = (Rectangle)c;
-			sb.append(tabs).append("Convex c = Geometry.createRectangle(").append(rectangle.getWidth()).append(", ").append(rectangle.getHeight()).append(");").append(NEW_LINE);
+		} else if (c instanceof Rectangle rectangle) {
+            sb.append(tabs).append("Convex c = Geometry.createRectangle(").append(rectangle.getWidth()).append(", ").append(rectangle.getHeight()).append(");").append(NEW_LINE);
 			// rotate only if the rotation is greater than zero
 			if (Math.abs(rectangle.getRotationAngle()) > Epsilon.E) {
 				sb.append(tabs).append("c.rotate(Math.toRadians(").append(Math.toDegrees(rectangle.getRotationAngle())).append("));").append(NEW_LINE);
@@ -561,13 +545,11 @@ public class CodeExporter {
 			if (!rectangle.getCenter().isZero()) {
 				sb.append(tabs).append("c.translate(").append(export(rectangle.getCenter())).append(");").append(NEW_LINE);
 			}
-		} else if (c instanceof Triangle) {
-			Triangle triangle = (Triangle)c;
-			sb.append(tabs).append("Convex c = Geometry.createTriangle(").append(export(triangle.getVertices()[0])).append(", ").append(export(triangle.getVertices()[1])).append(", ").append(export(triangle.getVertices()[2])).append(");").append(NEW_LINE);
+		} else if (c instanceof Triangle triangle) {
+            sb.append(tabs).append("Convex c = Geometry.createTriangle(").append(export(triangle.getVertices()[0])).append(", ").append(export(triangle.getVertices()[1])).append(", ").append(export(triangle.getVertices()[2])).append(");").append(NEW_LINE);
 			// transformations are maintained by the vertices
-		} else if (c instanceof Polygon) {
-			Polygon polygon = (Polygon)c;
-			sb.append(tabs).append("Convex c = Geometry.createPolygon(");
+		} else if (c instanceof Polygon polygon) {
+            sb.append(tabs).append("Convex c = Geometry.createPolygon(");
 			int vSize = polygon.getVertices().length;
 			for (int i = 0; i < vSize; i++) {
 				Vector2 v = polygon.getVertices()[i];
@@ -576,13 +558,11 @@ public class CodeExporter {
 			}
 			sb.append(");").append(NEW_LINE);
 			// transformations are maintained by the vertices
-		} else if (c instanceof Segment) {
-			Segment segment = (Segment)c;
-			sb.append(tabs).append("Convex c = Geometry.createSegment(").append(export(segment.getVertices()[0])).append(", ").append(export(segment.getVertices()[1])).append(");").append(NEW_LINE);
+		} else if (c instanceof Segment segment) {
+            sb.append(tabs).append("Convex c = Geometry.createSegment(").append(export(segment.getVertices()[0])).append(", ").append(export(segment.getVertices()[1])).append(");").append(NEW_LINE);
 			// transformations are maintained by the vertices
-		} else if (c instanceof Capsule) {
-			Capsule capsule = (Capsule)c;
-			sb.append(tabs).append("Convex c = Geometry.createCapsule(").append(capsule.getLength()).append(", ").append(capsule.getCapRadius() * 2.0).append(");").append(NEW_LINE);
+		} else if (c instanceof Capsule capsule) {
+            sb.append(tabs).append("Convex c = Geometry.createCapsule(").append(capsule.getLength()).append(", ").append(capsule.getCapRadius() * 2.0).append(");").append(NEW_LINE);
 			// rotate only if the rotation is greater than zero
 			if (Math.abs(capsule.getRotationAngle()) > Epsilon.E) {
 				sb.append(tabs).append("c.rotate(Math.toRadians(").append(Math.toDegrees(capsule.getRotationAngle())).append("));").append(NEW_LINE);
@@ -591,9 +571,8 @@ public class CodeExporter {
 			if (!capsule.getCenter().isZero()) {
 				sb.append(tabs).append("c.translate(").append(export(capsule.getCenter())).append(");").append(NEW_LINE);
 			}
-		} else if (c instanceof Ellipse) {
-			Ellipse ellipse = (Ellipse)c;
-			sb.append(tabs).append("Convex c = Geometry.createEllipse(").append(ellipse.getHalfWidth() * 2.0).append(", ").append(ellipse.getHalfHeight() * 2.0).append(");").append(NEW_LINE);
+		} else if (c instanceof Ellipse ellipse) {
+            sb.append(tabs).append("Convex c = Geometry.createEllipse(").append(ellipse.getHalfWidth() * 2.0).append(", ").append(ellipse.getHalfHeight() * 2.0).append(");").append(NEW_LINE);
 			// rotate only if the rotation is greater than zero
 			if (Math.abs(ellipse.getRotationAngle()) > Epsilon.E) {
 				sb.append(tabs).append("c.rotate(Math.toRadians(").append(Math.toDegrees(ellipse.getRotationAngle())).append("));").append(NEW_LINE);
@@ -602,10 +581,9 @@ public class CodeExporter {
 			if (!ellipse.getCenter().isZero()) {
 				sb.append(tabs).append("c.translate(").append(export(ellipse.getCenter())).append(");").append(NEW_LINE);
 			}
-		} else if (c instanceof HalfEllipse) {
-			HalfEllipse halfEllipse = (HalfEllipse)c;
-			
-			double width = halfEllipse.getHalfWidth() * 2.0;
+		} else if (c instanceof HalfEllipse halfEllipse) {
+
+            double width = halfEllipse.getHalfWidth() * 2.0;
 			double height = halfEllipse.getHeight();
 			double originalY = (4.0 * height) / (3.0 * Math.PI);
 			
@@ -618,10 +596,9 @@ public class CodeExporter {
 			if (halfEllipse.getCenter().y != originalY) {
 				sb.append(tabs).append("c.translate(").append(export(halfEllipse.getCenter())).append(");").append(NEW_LINE);
 			}
-		} else if (c instanceof Slice) {
-			Slice slice = (Slice)c;
-			
-			double theta = slice.getTheta();
+		} else if (c instanceof Slice slice) {
+
+            double theta = slice.getTheta();
 			double radius = slice.getSliceRadius();
 			double originalX = 2.0 * radius * Math.sin(theta * 0.5) / (1.5 * theta);
 			
@@ -652,9 +629,8 @@ public class CodeExporter {
 		
 		if (f == Filter.DEFAULT_FILTER) {
 			// output nothing
-		} else if (f instanceof CategoryFilter) {
-			CategoryFilter cf = (CategoryFilter)f;
-			sb.append(tabs).append("bf.setFilter(new CategoryFilter(").append(cf.getCategory()).append(", ").append(cf.getMask()).append("));").append(NEW_LINE);
+		} else if (f instanceof CategoryFilter cf) {
+            sb.append(tabs).append("bf.setFilter(new CategoryFilter(").append(cf.getCategory()).append(", ").append(cf.getMask()).append("));").append(NEW_LINE);
 		} else {
 			throw new UnsupportedOperationException("The class " + f.getClass().getName() + " is not known.");
 		}

@@ -27,14 +27,14 @@ package org.dyn4j.samples.framework.input;
 import java.util.List;
 
 public interface InputHandler {
-	public void install();
-	public void uninstall();
-	public boolean isEnabled();
-	public void setEnabled(boolean flag);
-	public boolean isActive();
+	void install();
+	void uninstall();
+	boolean isEnabled();
+	void setEnabled(boolean flag);
+	boolean isActive();
 	
-	public List<InputHandler> getDependentBehaviors();
-	public boolean isDependentBehaviorActive();
-	public boolean isDependentBehaviorsAdditive();
-	public void setDependentBehaviorsAdditive(boolean flag);
+	List<InputHandler> getDependentBehaviors();
+	boolean isDependentBehaviorActive();
+	boolean isDependentBehaviorsAdditive();
+	void setDependentBehaviorsAdditive(boolean flag);
 }

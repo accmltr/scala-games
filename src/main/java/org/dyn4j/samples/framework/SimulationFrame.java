@@ -231,7 +231,7 @@ public abstract class SimulationFrame extends JFrame {
 	}
 	
 	protected void printControl(String name, String input, String message) {
-		System.out.println(String.format("%1$-18s %2$-8s %3$s", name, input, message));
+		System.out.printf("%1$-18s %2$-8s %3$s%n", name, input, message);
 	}
 	
 	protected void printControls() {
@@ -426,9 +426,8 @@ public abstract class SimulationFrame extends JFrame {
 		// draw the bounds (if set)
 		if (this.renderBounds.isActive()) {
 			Bounds bounds = this.world.getBounds();
-			if (bounds != null && bounds instanceof AxisAlignedBounds) {
-				AxisAlignedBounds aab = (AxisAlignedBounds)bounds;
-				AABB aabb = aab.getBounds();
+			if (bounds != null && bounds instanceof AxisAlignedBounds aab) {
+                AABB aabb = aab.getBounds();
 				Rectangle2D.Double ce = new Rectangle2D.Double(
 						aabb.getMinX() * this.camera.scale,
 						aabb.getMinY() * this.camera.scale,
@@ -442,7 +441,7 @@ public abstract class SimulationFrame extends JFrame {
 		// draw all the objects in the world
 		for (int i = 0; i < this.world.getBodyCount(); i++) {
 			// get the object
-			SimulationBody body = (SimulationBody) this.world.getBody(i);
+			SimulationBody body = this.world.getBody(i);
 			this.render(g, elapsedTime, body);
 			
 			// body aabb
@@ -502,9 +501,8 @@ public abstract class SimulationFrame extends JFrame {
 		
 		for (int i = 0; i < this.world.getJointCount(); i++) {
 			Joint<SimulationBody> j = this.world.getJoint(i);
-			if (j instanceof DistanceJoint) {
-				DistanceJoint<SimulationBody> dj = (DistanceJoint<SimulationBody>)j;
-				Line2D.Double vn = new Line2D.Double(
+			if (j instanceof DistanceJoint<SimulationBody> dj) {
+                Line2D.Double vn = new Line2D.Double(
 						dj.getAnchor1().x * this.camera.scale, 
 						dj.getAnchor1().y * this.camera.scale, 
 						dj.getAnchor2().x * this.camera.scale, 
@@ -514,9 +512,8 @@ public abstract class SimulationFrame extends JFrame {
 				int red = (int)Math.floor(Math.min(val, 255));
 				g.setColor(new Color(red, 0, 0));
 				g.draw(vn);
-			} else if (j instanceof PinJoint) {
-				PinJoint<SimulationBody> pj = (PinJoint<SimulationBody>)j;
-				Line2D.Double vn = new Line2D.Double(
+			} else if (j instanceof PinJoint<SimulationBody> pj) {
+                Line2D.Double vn = new Line2D.Double(
 						pj.getTarget().x * this.camera.scale, 
 						pj.getTarget().y * this.camera.scale, 
 						pj.getAnchor().x * this.camera.scale, 

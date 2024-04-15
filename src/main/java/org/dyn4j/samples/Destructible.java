@@ -155,9 +155,9 @@ public class Destructible extends SimulationFrame {
 	
 	// buffer the deletes/adds
 	
-	private List<Joint<SimulationBody>> toDeleteJoints = new ArrayList<Joint<SimulationBody>>();
-	private List<SimulationBody> toDeleteBodies = new ArrayList<SimulationBody>();
-	private List<SimulationBody> toAddBodies = new ArrayList<SimulationBody>();
+	private final List<Joint<SimulationBody>> toDeleteJoints = new ArrayList<Joint<SimulationBody>>();
+	private final List<SimulationBody> toDeleteBodies = new ArrayList<SimulationBody>();
+	private final List<SimulationBody> toAddBodies = new ArrayList<SimulationBody>();
 	
 	/* (non-Javadoc)
 	 * @see org.dyn4j.samples.framework.SimulationFrame#initializeWorld()

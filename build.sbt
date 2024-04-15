@@ -8,6 +8,8 @@ lazy val root = (project in file("."))
     //    idePackagePrefix := Some("com.scala_games")
   )
 
+libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.18" % "test"
+
 val lwjglVersion = "3.3.3"
 val jomlVersion = "1.10.5"
 
@@ -31,5 +33,5 @@ libraryDependencies ++= Seq(
   "org.lwjgl" % "lwjgl-opengl" % lwjglVersion classifier nativeOS,
   "org.lwjgl" % "lwjgl-stb" % lwjglVersion classifier nativeOS,
   "org.joml" % "joml" % jomlVersion,
-  "org.dyn4j" % "dyn4j" % "5.0.2"
+  "org.dyn4j" % "dyn4j" % "5.0.2",
 )

@@ -1,7 +1,6 @@
 package lib.instance_manager
 
 import scala.language.implicitConversions
-import scala.reflect.ClassTag
 
 /** The `Ref` class provides a safe mechanism for accessing objects that can
  * be destroyed by its `InstanceManager`. The idea is that only the
