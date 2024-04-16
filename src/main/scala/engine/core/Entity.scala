@@ -1,15 +1,9 @@
 package engine.core
 
-import scala.reflect.ClassTag
-import engine.math.Vector2
-import engine.Component
-import lib.instance_manager.Ref
-import scala.compiletime.ops.boolean
+import engine.math.{Matrix3, Vector2, normalAngle}
 import engine.render.renderer.render_element.RenderElement
-import engine.math.Matrix3
 import lib.emitter.*
-import engine.math.Matrix3.rotation
-import engine.math.normalAngle
+import lib.instance_manager.Ref
 
 class Entity protected(using val world: World) {
 

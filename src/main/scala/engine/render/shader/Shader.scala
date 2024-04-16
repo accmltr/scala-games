@@ -196,7 +196,7 @@ final private[engine] case class Shader(
 
   def uploadMatrix3(varName: String, mat3: Matrix3): Unit = {
     _uniformUsedCheck()
-    val jomlMat3f = mat3.toJomlMatrix3f
+    val jomlMat3f = mat3.toJOMLMatrix3f
     val varLocation: Int = glGetUniformLocation(id, varName)
     use()
     val matBuffer: FloatBuffer = BufferUtils.createFloatBuffer(9)
