@@ -1,16 +1,12 @@
-import engine.core.Entity
-import engine.math.*
+import lib.emitter.OpenEmitter
 
-val translation = Vector2(11f, 44f)
-val rotation = pi / 2f
-val scale = Vector2(2f, 3f)
+val onHit = OpenEmitter[Unit]()
 
-val m = Matrix3(
-  translation = translation,
-  rotation = rotation,
-  scale = scale
-)
+def f: Unit => Unit = _ => println("Hit!")
+onHit += f
 
-m.translation
-m.rotation
-m.scale
+onHit.emit()
+
+onHit -= f
+
+onHit.emit()

@@ -8,6 +8,7 @@ final class OpenEmitter[T] {
     listeners = f :: listeners
 
   def disconnect(f: T => Unit): Unit =
+    require(listeners.contains(f), "Trying to disconnect non-existent lambda `f`.")
     listeners = listeners.filterNot(_ == f)
 
   def +=(f: T => Unit): Unit =
