@@ -1,6 +1,6 @@
 package lib.emitter
 
-// Todo: Make Signals safe for Node destruction
+// Todo: Make Emitter safe for Node destruction
 class Emitter[T] private[emitter] {
   private var listeners: List[(T) => Unit] = Nil
 

@@ -10,9 +10,10 @@ import scala.language.implicitConversions
  * object from system memory.
  *
  * IMPORTANT:
- * Never store the result of `Ref.get` in a variable or closure directly.
- * Always store the `Ref` object, and only access `Ref.get` when you plan to
- * do a transformation on, or analysis of, the reference it contains.
+ * Never store the result of `Ref.get` or any of its members in a variable or
+ * closure directly. Always store the `Ref` object, and only access `Ref.get`
+ * when you plan to do a transformation on, or analysis of, the reference it
+ * contains.
  */
 final class Ref[+K <: T, T] private(val manager: InstanceManager[T]) {
 

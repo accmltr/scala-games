@@ -6,7 +6,7 @@ package lib.emitter
 final case class EControl[T] private () {
   val emitter: Emitter[T] = new Emitter[T]()
   def emit(data: T): Unit = emitter.emit(data)
-  def emit()(implicit ev: Unit =:= T): Unit = emitter.emit()
+  def emit()(implicit data: Unit =:= T): Unit = emitter.emit()
 }
 
 object EControl {
