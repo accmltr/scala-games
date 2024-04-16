@@ -198,6 +198,7 @@ class Entity protected (using val world: World) {
   final def makeReady() = {
     _ref = world._entityManager.register(this)
     onReadyController.emit()
+    _ready = true
   }
 
   // // Generic Overrides
