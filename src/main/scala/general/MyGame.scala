@@ -1,33 +1,15 @@
-import engine.core.Entity
-import engine.core.World
+package general
+
 import engine.*
-import engine.input.KeyCode
+import engine.core.World
+import engine.input.{KeyCode, MouseCode}
 import engine.math.*
-import engine.math.geometry.*
 import engine.math.shapes.*
 import engine.render.*
 import engine.render.renderer.*
 import engine.render.renderer.render_element.*
-import engine.render.window.Resolution
-import org.joml.Matrix4f
-import org.lwjgl.BufferUtils
+import engine.render.window.{AA, Resolution}
 import org.lwjgl.opengl.GL11.*
-import org.lwjgl.opengl.GL13.*
-import org.lwjgl.opengl.GL15.*
-import org.lwjgl.opengl.GL20.*
-import org.lwjgl.opengl.GL30.*
-
-import java.nio.CharBuffer
-import java.nio.FloatBuffer
-import java.nio.IntBuffer
-import scala.io.Source
-import javax.swing.InputMap
-import engine.render.window.AA
-import general.Wolf
-import java.awt.RenderingHints.Key
-import engine.input.MouseCode
-import engine.math.Matrix3.rotation
-import engine.math.Matrix3.scaling
 
 object MyGame extends World {
 
@@ -96,13 +78,17 @@ object MyGame extends World {
     case Rotate
     case Scale
   }
-  var itrans = Matrix3.IDENTITY
+  var ipos = Vector2.zero
+  var irot = 0f
+  var iscale = Vector2.zero
   var mstart = Vector2.zero
   var _useMode = UseMode.None
 
   final private def useMode = _useMode
-  final private def useMode_=(mode: UseMode) =
-    itrans = wolf.localTransform
+  final private def useMode_=(mode: UseMode): Unit =
+    ipos = wolf.globalPosition
+    irot = wolf.globalRotation
+    iscale = wolf.globalScale
     mstart = input.mousePosition
     _useMode = mode
 
@@ -112,32 +98,31 @@ object MyGame extends World {
     // wolf.globalRotation =
     //   (-pi / 2f) + (input.mousePosition - wolf.globalPosition).angle
 
-    wolf.localScale = Vector2.one * sin(Time.current)
+//    wolf.localScale = Vector2.one * sin(Time.current)
 
     useMode match
       case MyGame.UseMode.None => ()
       case UseMode.Grab =>
-        wolf.localTransform =
-          Matrix3(translation = (input.mousePosition - mstart)) * itrans
+        wolf.globalPosition = input.mousePosition - mstart + ipos
       case UseMode.Rotate =>
-        val i = itrans.translationValue angleTo mstart
-        val c = itrans.translationValue angleTo input.mousePosition
-        val d = c - i
-        wolf.localTransform = itrans * Matrix3(rotation = d)
+        val ia = ipos.angleTo(mstart)
+        val ca = ipos.angleTo(input.mousePosition)
+        val da = ca - ia
+        wolf.globalRotation = irot + da
       case UseMode.Scale =>
-        val i = itrans.translationValue distanceTo mstart
-        var c = itrans.translationValue distanceTo input.mousePosition
+        val i = ipos.distanceTo(mstart)
+        val c = ipos.distanceTo(input.mousePosition)
         val d = c / i
-        wolf.localTransform = itrans * Matrix3(scale = Vector2.one * d)
+        wolf.globalScale = iscale * d
 
     // Rotate Wolf
-    if (input justPressed KeyCode.q)
+    if (input.justPressed(KeyCode.q))
       useMode = UseMode.Grab
-    if (input justPressed KeyCode.a)
+    if (input.justPressed(KeyCode.a))
       useMode = UseMode.Rotate
-    if (input justPressed KeyCode.b)
+    if (input.justPressed(KeyCode.b))
       useMode = UseMode.Scale
-    if (input justPressed MouseCode.left)
+    if (input.justPressed(MouseCode.left))
       useMode = UseMode.None
     if (input.pressed(KeyCode.w))
       wolf.localRotation -= pi * delta * 0.4f

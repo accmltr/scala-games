@@ -13,6 +13,15 @@ case class Vector2(x: Float, y: Float) extends NearEqualsable[Vector2] {
 
   def /(f: Float): Vector2 = this * (1 / f)
 
+  def hadamard(other: Vector2): Vector2 =
+    Vector2(x * other.x, y * other.y)
+
+  def cross(other: Vector2): Float =
+    x * other.y - y * other.x
+
+  def dot(other: Vector2): Float =
+    x * other.x + y * other.y
+
   def length: Float = joml.Vector2f.length(x, y)
 
   /** More efficient than the `length` method, because it doesn't do the square
@@ -83,8 +92,7 @@ case class Vector2(x: Float, y: Float) extends NearEqualsable[Vector2] {
     val det = v1.cross(v2).length
     math.atan2(det, dot).toFloat
 
-  /** Returns the angle between this vector and another vector, if you drew a
-   * line from the origin to each vector.
+  /** Returns the angle of the vector that starts on the position of this vector, and ends on the position of the `other` vector.
    */
   def angleTo(other: Vector2): Float =
     (other - this).angle

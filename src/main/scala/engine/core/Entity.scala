@@ -11,7 +11,7 @@ import lib.emitter.*
 import engine.math.Matrix3.rotation
 import engine.math.normalAngle
 
-class Entity protected (using val world: World) {
+class Entity protected(using val world: World) {
 
   // Givens
   final given World = world
@@ -40,10 +40,9 @@ class Entity protected (using val world: World) {
   final private var _ready: Boolean = false
   final private var _name: String = "Unnamed Entity"
   final private var _active: Boolean = true
-  final private var _localTransform = Matrix3.IDENTITY
-  // final private var _localPosition: Vector2 = Vector2.zero
-  // final private var _localRotation: Float = 0
-  // final private var _localScale: Vector2 = Vector2.one
+  final private var _localPosition: Vector2 = Vector2.zero
+  final private var _localRotation: Float = 0
+  final private var _localScale: Vector2 = Vector2.one
   final private var _parent: Option[Entity] = None
   final private var _children: List[Entity] = Nil
   final private var _cancelDestroy: Boolean = false
@@ -53,71 +52,70 @@ class Entity protected (using val world: World) {
   // Accessors
 
   final private def ready: Boolean = _ready
+
   final def renderElements: List[RenderElement] = _renderElements
+
   final def addRenderElement(renderElement: RenderElement): Unit =
     _renderElements = _renderElements :+ renderElement
     onAddRenderElementController.emit(renderElement)
+
   final def removeRenderElement(renderElement: RenderElement): Unit =
     _renderElements = _renderElements.filterNot(_ == renderElement)
     onRemoveRenderElementController.emit(renderElement)
 
-  /** Returns all children recursively with a depth-first search.
-    */
+  /** Returns all children recursively with a depth-first search. */
   final def descendants: List[Entity] =
     def f(e: Entity): List[Entity] = e.children.flatMap(f)
+
     f(this)
 
   final def name: String = _name
+
   def name_=(value: String): Unit =
     _name = value
 
   final def localPosition: Vector2 =
-    localTransform.translationValue
+    _localPosition
 
   final def localPosition_=(value: Vector2): Unit =
-    localTransform = Matrix3(
-      translation = value,
-      rotation = localTransform.rotationValue,
-      scale = localTransform.scalingValue
-    )
+    _localPosition = value
 
   final def globalPosition: Vector2 =
-    globalTransform.translationValue
+    parent match
+      case Some(p) => p.globalPosition + _localPosition
+      case None => _localPosition
 
   final def globalPosition_=(value: Vector2): Unit =
     parent match
-      case None => localPosition = value
-      case Some(p) =>
-        localPosition = p.globalTransform.inverse * value
+      case None => _localPosition = value
+      case Some(p) => _localPosition = value - p.globalPosition
 
-  final def localRotation: Float = normalAngle(localTransform.rotationValue)
+  final def localRotation: Float =
+    _localRotation
 
   final def localRotation_=(value: Float): Unit =
-    localTransform = Matrix3(
-      translation = localTransform.translationValue,
-      rotation = value,
-      scale = localTransform.scalingValue
-    )
+    _localRotation = normalAngle(value)
 
   final def globalRotation: Float =
-    normalAngle(globalTransform.rotationValue)
+    parent match
+      case Some(p) => normalAngle(p.globalRotation + _localRotation)
+      case None => _localRotation
 
   final def globalRotation_=(value: Float): Unit =
     parent match
-      case None    => localRotation = value
-      case Some(p) => localRotation = p.globalRotation - value
+      case None => _localRotation = normalAngle(value)
+      case Some(p) => localRotation = normalAngle(value - p.globalRotation)
 
-  final def localScale: Vector2 = localTransform.scalingValue
+  final def localScale: Vector2 =
+    _localScale
 
   final def localScale_=(value: Vector2): Unit =
-    localTransform = Matrix3(
-      translation = localTransform.translationValue,
-      rotation = localTransform.rotationValue,
-      scale = value
-    )
+    _localScale = value
 
   final def globalScale: Vector2 =
-    globalTransform.scalingValue
+    parent match
+      case Some(p) => _localScale.hadamard(p.globalScale)
+      case None => _localScale
 
   final def globalScale_=(value: Vector2): Unit =
     parent match
@@ -126,17 +124,20 @@ class Entity protected (using val world: World) {
         localScale =
           Vector2(value.x / p.globalScale.x, value.y / p.globalScale.y)
 
-  final def localTransform: Matrix3 = _localTransform
-  final def localTransform_=(value: Matrix3): Unit = _localTransform = value
+  final def localTransform: Matrix3 =
+    Matrix3(
+      translation = localPosition, rotation = localRotation, scale = localScale
+    )
 
   final def globalTransform: Matrix3 =
     parent.match
-      case None    => localTransform
+      case None => localTransform
       case Some(p) => p.globalTransform * localTransform
-  final def globalTransform_=(value: Matrix3): Unit =
-    parent.match
-      case None    => localTransform = value
-      case Some(p) => localTransform = value * p.globalTransform.inverse
+
+  //  final def globalTransform_=(value: Matrix3): Unit =
+  //    parent.match
+  //      case None    => localTransform = value
+  //      case Some(p) => localTransform = value * p.globalTransform.inverse
 
   def parent: Option[Entity] = _parent
   // final def parent_=(value: Entity): Unit =
@@ -184,7 +185,7 @@ class Entity protected (using val world: World) {
     // Destroy all children
     _children.foreach(_.destroy())
     // Remove from parent
-    _parent.map(p => p.removeChild(this))
+    _parent.foreach(_.removeChild(this))
     // Remove from world
     world.destroy(this)
     // Emit destroyed event
