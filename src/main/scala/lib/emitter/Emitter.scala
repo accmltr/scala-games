@@ -4,17 +4,17 @@ package lib.emitter
 final class Emitter[T] private[emitter] {
   private var listeners: List[T => Unit] = Nil
 
-  def +=(f: T => Unit): Unit =
+  def connect(f: T => Unit): Unit =
     listeners = f :: listeners
 
-  def -=(f: T => Unit): Unit =
+  def disconnect(f: T => Unit): Unit =
     listeners = listeners.filterNot(_ == f)
 
-  def connect(f: T => Unit): Unit =
-    this.+=(f)
+  def +=(f: T => Unit): Unit =
+    this.connect(f)
 
-  def disconnect(f: T => Unit): Unit =
-    this.-=(f)
+  def -=(f: T => Unit): Unit =
+    this.disconnect(f)
 
   private[emitter] def emit(data: T): Unit = listeners.foreach(_.apply(data))
 
