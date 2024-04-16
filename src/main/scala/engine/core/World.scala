@@ -17,11 +17,11 @@ abstract class World extends App {
   // Givens
   given World = this
 
-  private val onEntityReadyController = EControl[Entity]()
+  private val onEntityReadyController = EmitterController[Entity]()
   val onEntityReady = onEntityReadyController.emitter
-  private val onEntityDestroyQueuedController = EControl[Entity]()
+  private val onEntityDestroyQueuedController = EmitterController[Entity]()
   val onEntityDestroyQueued = onEntityDestroyQueuedController.emitter
-  private val onEntityDestroyedController = EControl[Entity]()
+  private val onEntityDestroyedController = EmitterController[Entity]()
   val onEntityDestroyed = onEntityDestroyedController.emitter
 
   // Instance Management
@@ -81,9 +81,9 @@ abstract class World extends App {
   // }
 
   // Temp Callback Exposure
-  private val onInitController = EControl[Unit]()
+  private val onInitController = EmitterController[Unit]()
   val onInit = onInitController.emitter
-  private val onUpdateController = EControl[Float]()
+  private val onUpdateController = EmitterController[Float]()
   val onUpdate = onUpdateController.emitter
 
   // Handle window events

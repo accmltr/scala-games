@@ -13,11 +13,11 @@ import lib.emitter.*
   */
 final class InstanceManager[T] {
 
-  private val onRegisterController = EControl[Ref[T, T]]()
+  private val onRegisterController = EmitterController[Ref[T, T]]()
   val onRegister: Emitter[Ref[T, T]] = onRegisterController.emitter
-  private val onDestroyingController = EControl[Ref[T, T]]()
+  private val onDestroyingController = EmitterController[Ref[T, T]]()
   val onDestroying: Emitter[Ref[T, T]] = onDestroyingController.emitter
-  private val onDestroyController = EControl[Ref[T, T]]()
+  private val onDestroyController = EmitterController[Ref[T, T]]()
   val onDestroy: Emitter[Ref[T, T]] = onDestroyController.emitter
 
   private var _refs: List[Ref[T, T]] = Nil

@@ -15,8 +15,8 @@ final case class Op() {
     // onOpstateSet.emit((previous, value))
 
   def state = _state
-  private val onStartController = EControl[Unit]()
-  private val onCompleteController = EControl[Unit]()
+  private val onStartController = EmitterController[Unit]()
+  private val onCompleteController = EmitterController[Unit]()
   val onStart = onStartController.emitter
   val onComplete = onCompleteController.emitter
 

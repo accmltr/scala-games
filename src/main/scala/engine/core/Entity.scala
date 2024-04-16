@@ -14,21 +14,21 @@ class Entity protected(using val world: World) {
 
   def ref: Ref[Entity, Entity] = _ref
 
-  private final val onReadyController = EControl[Unit]()
+  private final val onReadyController = EmitterController[Unit]()
   final val onReady = onReadyController.emitter
-  private final val onAddChildController = EControl[(Entity, Int)]()
+  private final val onAddChildController = EmitterController[(Entity, Int)]()
   final val onAddChild = onAddChildController.emitter
-  private final val onRemoveChildController = EControl[(Entity, Int)]()
+  private final val onRemoveChildController = EmitterController[(Entity, Int)]()
   final val onRemoveChild = onRemoveChildController.emitter
-  private final val onAddRenderElementController = EControl[RenderElement]()
+  private final val onAddRenderElementController = EmitterController[RenderElement]()
   final val onAddRenderElement = onAddRenderElementController.emitter
-  private final val onRemoveRenderElementController = EControl[RenderElement]()
+  private final val onRemoveRenderElementController = EmitterController[RenderElement]()
   final val onRemoveRenderElement = onRemoveRenderElementController.emitter
-  private final val onParentChangedController = EControl[Option[Entity]]()
+  private final val onParentChangedController = EmitterController[Option[Entity]]()
   final val onParentChanged = onParentChangedController.emitter
-  private final val onDestroyQueuedController = EControl[Unit]()
+  private final val onDestroyQueuedController = EmitterController[Unit]()
   final val onDestroyQueued = onDestroyQueuedController.emitter
-  private final val onDestroyedController = EControl[Unit]()
+  private final val onDestroyedController = EmitterController[Unit]()
   final val onDestroyed = onDestroyedController.emitter
 
   final private var _ready: Boolean = false

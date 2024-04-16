@@ -27,9 +27,9 @@ final private[engine] class Window(
 ) {
 
   // Events
-  private val onInitController = EControl[Unit]()
+  private val onInitController = EmitterController[Unit]()
   val onInit = onInitController.emitter
-  private val onRenderController = EControl[Float]()
+  private val onRenderController = EmitterController[Float]()
   val onRender = onRenderController.emitter
 
   // Private Fields
