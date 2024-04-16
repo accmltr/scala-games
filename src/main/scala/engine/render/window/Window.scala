@@ -1,35 +1,24 @@
 package engine.render.window
 
-import org.lwjgl._
-import org.lwjgl.glfw._
-import org.lwjgl.opengl._
-import org.lwjgl.system._
-import org.lwjgl.glfw.Callbacks._
-import org.lwjgl.glfw.GLFW._
-import org.lwjgl.opengl.GL11._
-import org.lwjgl.opengl.GL12._
-import org.lwjgl.opengl.GL13._
-import org.lwjgl.opengl.GL14._
-import org.lwjgl.opengl.GL15._
-import org.lwjgl.opengl.GL20._
-import org.lwjgl.opengl.GL30._
-import org.lwjgl.opengl.GL45._
-import org.lwjgl.system.MemoryStack._
-import org.lwjgl.system.MemoryUtil._
 import engine.Time
 import engine.TimeImplicits.given
-import engine.input.{MouseListener, KeyListener}
-import engine.math.Vector2
-import scala.collection.mutable.Queue
-import engine.math.Vector3
-import engine.render.window.Resolution
-import engine.render.window.FpsStats
 import engine.input.{KeyListener, MouseListener}
-import java.nio.ByteBuffer
-import java.nio.IntBuffer
-import org.lwjgl.stb.STBImage.stbi_load
-import org.lwjgl.stb.STBImage.stbi_failure_reason
+import engine.math.Vector3
 import lib.emitter.*
+import org.lwjgl.*
+import org.lwjgl.glfw.*
+import org.lwjgl.glfw.Callbacks.*
+import org.lwjgl.glfw.GLFW.*
+import org.lwjgl.opengl.*
+import org.lwjgl.opengl.GL11.*
+import org.lwjgl.opengl.GL13.*
+import org.lwjgl.opengl.GL30.*
+import org.lwjgl.stb.STBImage.{stbi_failure_reason, stbi_load}
+import org.lwjgl.system.*
+import org.lwjgl.system.MemoryStack.*
+import org.lwjgl.system.MemoryUtil.*
+
+import java.nio.{ByteBuffer, IntBuffer}
 
 final private[engine] class Window(
     private var _title: String,

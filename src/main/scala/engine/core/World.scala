@@ -1,26 +1,16 @@
 package engine.core
 
-import org.lwjgl._
-import org.lwjgl.glfw._
-import org.lwjgl.opengl._
-import org.lwjgl.system._
-import org.lwjgl.glfw.Callbacks._
-import org.lwjgl.glfw.GLFW._
-import org.lwjgl.opengl.GL11._
-import org.lwjgl.system.MemoryStack._
-import org.lwjgl.system.MemoryUtil._
-import engine.Time
-import engine.TimeImplicits.given
-import engine.input.{MouseListener, KeyListener}
-import engine.math.Vector2
-import engine.render.window.Window
-import engine.render.renderer.DefaultRenderer
 import engine.input.Input
-import engine.input.{KeyListener, MouseListener, Input}
-import lib.instance_manager.InstanceManager
-import lib.instance_manager.Ref
-import lib.emitter.*
 import engine.math.Matrix3
+import engine.render.renderer.DefaultRenderer
+import engine.render.window.Window
+import lib.emitter.*
+import lib.instance_manager.{InstanceManager, Ref}
+import org.lwjgl.*
+import org.lwjgl.glfw.*
+import org.lwjgl.glfw.Callbacks.*
+import org.lwjgl.opengl.*
+import org.lwjgl.system.*
 
 abstract class World extends App {
 

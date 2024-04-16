@@ -1,8 +1,6 @@
 package lib.instance_manager
 
-import scala.collection.immutable.Queue
 import lib.emitter.*
-import scala.reflect.ClassTag
 
 /** Manages instances of a certain type.
   *
