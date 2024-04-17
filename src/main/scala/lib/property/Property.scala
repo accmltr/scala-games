@@ -4,27 +4,12 @@ import engine.math.normalAngle
 import lib.emitter.*
 
 /** Intended to be used with immutable values where possible!
+ * E.g. `latestCombatInteraction: Property[CombatInteraction]`,
+ * where `CombatInteraction` is immutable.
  *
  * Sometimes mutable data structures are fine. For example,
  * `currentTarget: Property[Character]`, where the Character
  * class has many mutable properties, such as `hp`, `position` etc.
- *
- * @param setter
- * You can optionally provide a function that is used to process any new
- * values before returning them to be set. For example, here is a setter
- * function that makes sure the `hp` of some character in a game cannot be
- * set to a value lower than 0, or higher than the character max hp:
- * {{{
- *   val maxHp = 100
- *   val hpSetter = (newHp: Int) =>
- *     if newHp < 0
- *     then 0
- *     else if newHp > maxHp
- *     then maxHp
- *     else newHp
- *
- *   val hp = Property(maxHp, hpSetter)
- * }}}
  */
 final class Property[T] private[property](initialValue: T) {
 
