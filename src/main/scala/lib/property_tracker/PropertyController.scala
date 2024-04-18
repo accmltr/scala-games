@@ -1,4 +1,4 @@
-package lib.property
+package lib.property_tracker
 
 final case class PropertyController[T](initialValue: T) {
 

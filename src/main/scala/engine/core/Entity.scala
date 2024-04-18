@@ -2,7 +2,7 @@ package engine.core
 
 import engine.math.{Matrix3, Vector2, normalAngle}
 import engine.render.renderer.render_element.RenderElement
-import lib.emitter.*
+import lib.event_emitter.*
 import lib.instance_manager.Ref
 
 class Entity protected(using val world: World) {

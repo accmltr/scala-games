@@ -4,7 +4,7 @@ import engine.Time
 import engine.TimeImplicits.given
 import engine.input.{KeyListener, MouseListener}
 import engine.math.Vector3
-import lib.emitter.*
+import lib.event_emitter.*
 import org.lwjgl.*
 import org.lwjgl.glfw.*
 import org.lwjgl.glfw.Callbacks.*

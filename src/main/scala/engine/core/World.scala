@@ -4,7 +4,7 @@ import engine.input.Input
 import engine.math.Matrix3
 import engine.render.renderer.DefaultRenderer
 import engine.render.window.Window
-import lib.emitter.*
+import lib.event_emitter.*
 import lib.instance_manager.{InstanceManager, Ref}
 import org.lwjgl.*
 import org.lwjgl.glfw.*

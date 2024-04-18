@@ -1,4 +1,4 @@
-package lib.emitter
+package lib.event_emitter
 
 /** This class allows one to emit events on its `Emitter`. Keeping this class
   * private ensures that emits are not triggered from unexpected places.

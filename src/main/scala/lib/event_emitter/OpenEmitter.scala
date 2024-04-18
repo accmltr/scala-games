@@ -1,4 +1,4 @@
-package lib.emitter
+package lib.event_emitter
 
 /** Similar to `Emitter`, but has no controller and comes with public `emit` method. */
 final class OpenEmitter[T] {

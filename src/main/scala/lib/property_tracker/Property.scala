@@ -1,7 +1,7 @@
-package lib.property
+package lib.property_tracker
 
 import engine.math.normalAngle
-import lib.emitter.*
+import lib.event_emitter.*
 
 /** Intended to be used with immutable values where possible!
  * E.g. `latestCombatInteraction: Property[CombatInteraction]`,
@@ -11,11 +11,18 @@ import lib.emitter.*
  * `currentTarget: Property[Character]`, where the Character
  * class has many mutable properties, such as `hp`, `position` etc.
  */
-final class Property[T] private[property](initialValue: T) {
+final class Property[T] private[property_tracker](initialValue: T) {
 
-  private[property] var setter: T => T = (t: T) => t
-  private[property] var getter: T => T = (t: T) => t
+  private var _setter: T => T = (t: T) => t
+  private var _getter: T => T = (t: T) => t
 
+  def setter: T => T = _setter
+
+  def getter: T => T = _getter
+
+  private[property_tracker] def setter_=(s: T => T): Unit = _setter = s
+
+  private[property_tracker] def getter_=(s: T => T): Unit = _getter = s
 
 
   private val _onSetController = EmitterController[(T, T)]()
@@ -39,7 +46,7 @@ final class Property[T] private[property](initialValue: T) {
 
   def value: T = getter(_value)
 
-  private[property] def value_=(v: T): Unit =
+  private[property_tracker] def value_=(v: T): Unit =
     val previous = _value
     _value = setter(v)
     _onSetController.emit((previous, _value))

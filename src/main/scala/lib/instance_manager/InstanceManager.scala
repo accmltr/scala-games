@@ -1,6 +1,6 @@
 package lib.instance_manager
 
-import lib.emitter.*
+import lib.event_emitter.*
 
 /** Manages instances of a certain type.
   *
