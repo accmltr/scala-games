@@ -24,14 +24,14 @@ object MyGame extends World {
     ).map(_ * 13)
   )
   val wolf = Wolf("Razor")
-  wolf.addRenderElement(PolygonRenderElement(diamond * 3))
+//  wolf.addRenderElement(PolygonRenderElement(diamond * 3))
   wolf.globalPosition = Vector2(500, 400)
   val wolfCub = Wolf("Razorine")
   wolf.addChild(wolfCub)
   wolfCub.localPosition = Vector2(70, -30)
-  wolfCub.addRenderElement(
-    PolygonRenderElement(diamond)
-  )
+//  wolfCub.addRenderElement(
+//    PolygonRenderElement(diamond)
+//  )
   println(s"Wolf children: ${wolf.children}")
   println(s"WolfCub parent: ${wolfCub.parent}")
 
@@ -42,8 +42,8 @@ object MyGame extends World {
   window.fpsStats.showAvg = true
   window.backgroundColor = Vector3.one * 0.12
   window.anti_aliasing = AA.x8
-
   window.vsync = true
+
   onInit += { _ =>
     window.setCursor("res/cursor.png", 0, 0)
   }
