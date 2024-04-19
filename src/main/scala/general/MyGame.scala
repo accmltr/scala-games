@@ -35,6 +35,8 @@ object MyGame extends World {
   println(s"Wolf children: ${wolf.children}")
   println(s"WolfCub parent: ${wolfCub.parent}")
 
+  val dyn4j = Dyn4j("My dyn4j instance")
+
   window.resolution = Resolution.p720
   window.maximized = false
   window.fpsStats.showAvg = true
