@@ -1,6 +1,6 @@
-import lib.operation_tracker.{Op, OpController}
+import lib.procedure_tracker.{Procedure, ProcedureController}
 
-val animationOpController = OpController()
+val animationOpController = ProcedureController()
 val animationOp = animationOpController.op
 
 

@@ -1,7 +1,7 @@
-package lib.operation_tracker
+package lib.procedure_tracker
 
-final case class OpController() {
-  val op: Op = new Op
+final case class ProcedureController() {
+  val op: Procedure = new Procedure
 
   def start(): Unit = op.start()
 
