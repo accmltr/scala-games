@@ -15,10 +15,6 @@ object MyGame extends World {
 
   title = "MyGame"
 
-  // onEntityReady += (e => println(s"Entity Created: " + e.name))
-  // onEntityDestroyQueued += (e => println(s"Entity Destroy Queued: " + e.name))
-  // onEntityDestroyed += (e => println(s"Entity Destroyed: " + e.name))
-
   val diamond = Polygon(
     Vector(
       Vector2(-1, 0),
@@ -46,37 +42,8 @@ object MyGame extends World {
   window.anti_aliasing = AA.x8
 
   window.vsync = true
-  onInit += { (_) =>
+  onInit += { _ =>
     window.setCursor("res/cursor.png", 0, 0)
-
-    // println(s"Wolf rotation 1: ${wolf.globalRotation}")
-    // wolf.globalRotation = pi / 4
-    // println(s"Wolf rotation 2: ${wolf.globalRotation}")
-    // wolf.globalRotation = pi / 2
-    // println(s"Wolf rotation 3: ${wolf.globalRotation}")
-    // wolf.globalRotation = pi
-    // println(s"Wolf rotation 4: ${wolf.globalRotation}")
-    // wolf.globalRotation = 3 * pi / 2
-    // println(s"Wolf rotation 5: ${wolf.globalRotation}")
-    // wolf.globalRotation = 2 * pi
-    // println(s"Wolf rotation 6: ${wolf.globalRotation}")
-    // wolf.globalRotation = -pi / 2
-    // println(s"Wolf rotation 7: ${wolf.globalRotation}")
-    // wolf.globalRotation = -pi
-    // println(s"Wolf rotation 8: ${wolf.globalRotation}")
-    // wolf.globalRotation = -3 * pi / 2
-    // println(s"Wolf rotation 9: ${wolf.globalRotation}")
-    // wolf.globalRotation = -2 * pi
-    // println(s"Wolf rotation 10: ${wolf.globalRotation}")
-    // wolf.globalRotation = 0
-    // println(s"Wolf rotation 11: ${wolf.globalRotation}")
-  }
-
-  enum UseMode {
-    case None
-    case Grab
-    case Rotate
-    case Scale
   }
   var ipos = Vector2.zero
   var irot = 0f
@@ -85,6 +52,7 @@ object MyGame extends World {
   var _useMode = UseMode.None
 
   final private def useMode = _useMode
+
   final private def useMode_=(mode: UseMode): Unit =
     ipos = wolf.globalPosition
     irot = wolf.globalRotation
@@ -92,13 +60,20 @@ object MyGame extends World {
     mstart = input.mousePosition
     _useMode = mode
 
+  enum UseMode {
+    case None
+    case Grab
+    case Rotate
+    case Scale
+  }
+
   onUpdate += { (delta: Float) =>
 
     // wolf.globalPosition = input.mousePosition
     // wolf.globalRotation =
     //   (-pi / 2f) + (input.mousePosition - wolf.globalPosition).angle
 
-//    wolf.localScale = Vector2.one * sin(Time.current)
+    //    wolf.localScale = Vector2.one * sin(Time.current)
 
     useMode match
       case MyGame.UseMode.None => ()
