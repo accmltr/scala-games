@@ -3,7 +3,7 @@ package engine.render.renderer
 import engine.render.window.Window
 import engine.render.shader.Shader
 
-trait Renderer(val window: Window) {
+private[render] trait Renderer(val window: Window) {
 
   /** Renders RenderData objects in order of their layer, from lowest to
     * highest.

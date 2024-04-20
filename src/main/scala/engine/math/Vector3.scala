@@ -2,17 +2,19 @@ package engine.math
 
 import org.joml
 
-case class Vector3(val x: Float, val y: Float, val z: Float)
+import scala.language.implicitConversions
+
+case class Vector3(x: Float, y: Float, z: Float)
     extends NearEqualsable[Vector3] {
 
   /** Creates a 2D vector from the x- and y-components of this 3D vector.
     */
   def xy: Vector2 = Vector2(x, y)
 
-  def +(o: Vector3) = Vector3(x + o.x, y + o.y, z + o.z)
-  def -(o: Vector3) = Vector3(x - o.x, y - o.y, z - o.z)
-  def *(f: Float) = Vector3(x * f, y * f, z * f)
-  def /(f: Float) = this * (1 / f)
+  def +(o: Vector3): Vector3 = Vector3(x + o.x, y + o.y, z + o.z)
+  def -(o: Vector3): Vector3 = Vector3(x - o.x, y - o.y, z - o.z)
+  def *(f: Float): Vector3 = Vector3(x * f, y * f, z * f)
+  def /(f: Float): Vector3 = this * (1 / f)
 
   def length: Float = joml.Vector3f.length(x, y, z)
 
@@ -23,19 +25,17 @@ case class Vector3(val x: Float, val y: Float, val z: Float)
     *   length of this `Vector3` squared
     */
   def lengthSquared: Float = joml.Vector3f.lengthSquared(x, y, z)
-  def distance(other: Vector3) =
+  def distance(other: Vector3): Float =
     joml.Vector3f.distance(x, y, z, other.x, other.y, other.z)
 
   /** More efficient than the `distance` method, because it doesn't do the
     * square root. Try to use this instead of `distance` when possible.
-    *
-    * @param other
     * @return
     *   distance squared between this and another `Vector3`
     */
-  def distanceSquared(other: Vector3) =
+  def distanceSquared(other: Vector3): Float =
     joml.Vector3f.distanceSquared(x, y, z, other.x, other.y, other.z)
-  def normalize = this / length
+  def normalize: Vector3 = this / length
 
   /** Returns the dot product of this vector with another vector.
     */
@@ -53,22 +53,22 @@ case class Vector3(val x: Float, val y: Float, val z: Float)
   /** Returns angle between this vector and another vector (in radians).
     */
   def angleBetween(other: Vector3): Float = {
-    val cosAngle = (this dot other) / (this.length * other.length)
+    val cosAngle = this.dot(other) / (this.length * other.length)
     math.acos(cosAngle).toFloat
   }
 
   def nearEquals(other: Vector3, epsilon: Float = 0.0001f): Boolean = {
-    (x nearEquals (other.x, epsilon)) &&
-    (y nearEquals (other.y, epsilon)) &&
-    (z nearEquals (other.z, epsilon))
+    x.nearEquals(other.x, epsilon) &&
+      y.nearEquals(other.y, epsilon) &&
+      z.nearEquals(other.z, epsilon)
   }
 
-  override def equals(other: Any) = other match {
+  override def equals(other: Any): Boolean = other match {
     case v: Vector3 => x == v.x && y == v.y && z == v.z
     case _          => false
   }
 
-  override def toString = "(%f, %f, %f)".format(x, y, z)
+  override def toString: String = "(%f, %f, %f)".format(x, y, z)
 
   /** Returns a new vector with the given number of decimals.
     */
@@ -91,11 +91,11 @@ object Vector3 {
     }
     new Vector3(vec2.x, vec2.y, zf)
 
-  def zero = apply(0, 0, 0)
-  def one = apply(1, 1, 1)
-  def xAxis = apply(1, 0, 0)
-  def yAxis = apply(0, 1, 0)
-  def zAxis = apply(0, 0, 1)
+  def zero: Vector3 = apply(0, 0, 0)
+  def one: Vector3 = apply(1, 1, 1)
+  def xAxis: Vector3 = apply(1, 0, 0)
+  def yAxis: Vector3 = apply(0, 1, 0)
+  def zAxis: Vector3 = apply(0, 0, 1)
 }
 
 object Vector3Implicits {

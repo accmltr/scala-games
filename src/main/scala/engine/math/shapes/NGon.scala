@@ -16,7 +16,7 @@ final case class NGon(radius: Float, segments: Int) extends Shape2D {
           center.x + radius * Math.cos(angle),
           center.y + radius * Math.sin(angle)
         )
-        if (point.distanceSquared(vertex) < radius * radius) {
+        if (point.distanceToSquared(vertex) < radius * radius) {
           break(true)
         }
       }

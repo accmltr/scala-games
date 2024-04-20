@@ -4,7 +4,7 @@ import engine.render.shader.{Uniform, Shader}
 import engine.render.Color
 import engine.math.Matrix3
 import scala.util.boundary, boundary.break
-import engine.math.geometry.Polyline
+import engine.math.geometry.PolyLine
 
 /** The RenderData class serves as an immutable snapshot of the data needed to
   * render an object. Mutable game objects are need to be passed to the renderer
@@ -26,7 +26,7 @@ import engine.math.geometry.Polyline
   *   uniforms provided by the renderer.
   * @param shader
   */
-final private[engine] case class RenderData(
+final private[render] case class RenderData(
     shader: Shader = Shader(
       "src/main/scala/engine/render/shaders/vertex/default.vert",
       "src/main/scala/engine/render/shaders/fragment/color_fill.frag"
@@ -46,14 +46,14 @@ final private[engine] case class RenderData(
     )
   if vertices == null
   then throw new IllegalArgumentException("'vertices' not initialized")
-  if vertices.size < 3
+  if vertices.length < 3
   then
     throw new IllegalArgumentException(
       "'vertices' must have at least 3 elements"
     )
   if indices == null
   then throw new IllegalArgumentException("'indices' not initialized")
-  if indices.size < 3
+  if indices.length < 3
   then
     throw new IllegalArgumentException(
       "'indices' must have at least 3 elements"

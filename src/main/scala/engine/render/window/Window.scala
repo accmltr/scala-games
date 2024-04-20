@@ -1,42 +1,37 @@
 package engine.render.window
 
-import org.lwjgl._
-import org.lwjgl.glfw._
-import org.lwjgl.opengl._
-import org.lwjgl.system._
-import org.lwjgl.glfw.Callbacks._
-import org.lwjgl.glfw.GLFW._
-import org.lwjgl.opengl.GL11._
-import org.lwjgl.opengl.GL12._
-import org.lwjgl.opengl.GL13._
-import org.lwjgl.opengl.GL14._
-import org.lwjgl.opengl.GL15._
-import org.lwjgl.opengl.GL20._
-import org.lwjgl.opengl.GL30._
-import org.lwjgl.opengl.GL45._
-import org.lwjgl.system.MemoryStack._
-import org.lwjgl.system.MemoryUtil._
 import engine.Time
 import engine.TimeImplicits.given
-import engine.input.{MouseListener, KeyListener}
-import engine.math.Vector2
-import scala.collection.mutable.Queue
-import engine.math.Vector3
-import engine.render.window.Resolution
-import engine.render.window.FpsStats
 import engine.input.{KeyListener, MouseListener}
-import java.nio.ByteBuffer
-import java.nio.IntBuffer
-import org.lwjgl.stb.STBImage.stbi_load
-import org.lwjgl.stb.STBImage.stbi_failure_reason
+import engine.math.Vector3
+import lib.event_emitter.*
+import org.lwjgl.*
+import org.lwjgl.glfw.*
+import org.lwjgl.glfw.Callbacks.*
+import org.lwjgl.glfw.GLFW.*
+import org.lwjgl.opengl.*
+import org.lwjgl.opengl.GL11.*
+import org.lwjgl.opengl.GL13.*
+import org.lwjgl.opengl.GL30.*
+import org.lwjgl.stb.STBImage.{stbi_failure_reason, stbi_load}
+import org.lwjgl.system.*
+import org.lwjgl.system.MemoryStack.*
+import org.lwjgl.system.MemoryUtil.*
 
-class Window(
+import java.nio.{ByteBuffer, IntBuffer}
+
+final private[engine] class Window(
     private var _title: String,
     mouseListener: MouseListener,
-    keyListener: KeyListener,
-    initCallback: () => Unit,
-    postRenderCallback: Float => Unit
+    keyListener: KeyListener
 ) {
+
+  // Events
+  private val onInitController = EmitterController[Unit]()
+  val onInit = onInitController.emitter
+  private val onRenderController = EmitterController[Float]()
+  val onRender = onRenderController.emitter
+
   // Private Fields
   private var _windowId: Long = -1;
   private var _deltaTime = 0.0f
@@ -212,8 +207,8 @@ class Window(
     glEnable(GL_MULTISAMPLE)
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
 
-    // Initialize the game
-    initCallback()
+    // Init done
+    onInitController.emit()
   }
   private def _runLoop(): Unit = {
     var lastTime: Float = Time
@@ -254,8 +249,8 @@ class Window(
       title += " | Mouse: " + mouseListener.position.formatted(0) // Temp
       glfwSetWindowTitle(_windowId, title)
 
-      // Trigger the renderUpdate
-      postRenderCallback(_deltaTime)
+      // Trigger remote render process
+      onRenderController.emit(_deltaTime)
 
       // EndFrame on Input
       mouseListener.endFrame()
@@ -265,6 +260,9 @@ class Window(
   def requestAttention(): Unit = {
     glfwRequestWindowAttention(_windowId)
   }
+
+  def close(): Unit =
+    glfwSetWindowShouldClose(windowId, true)
 
   import org.lwjgl.glfw.GLFWImage
   private var _cursorPath: String = null

@@ -5,6 +5,7 @@ import engine.math.Matrix3
 import engine.render.shader.Uniform
 import engine.math.Vector2
 import engine.render.renderer.RenderData
+import engine.math.shapes.Polygon
 
 final case class PolygonRenderElement private () extends RenderElement {
 
@@ -25,7 +26,7 @@ final case class PolygonRenderElement private () extends RenderElement {
       indices = indices,
       layer = layer,
       color = color,
-      transform = Matrix3.transform(
+      transform = Matrix3(
         position,
         rotation,
         scale
@@ -42,6 +43,8 @@ object PolygonRenderElement {
     val polyRe = PolygonRenderElement()
     polyRe.points = points
     polyRe
+
+  def apply(polygon: Polygon): PolygonRenderElement = apply(polygon.points)
 
   import scala.util.boundary, boundary.break
   import engine.math.geometry.Line
