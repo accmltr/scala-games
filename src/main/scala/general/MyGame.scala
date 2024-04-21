@@ -7,7 +7,6 @@ import engine.math.*
 import engine.math.shapes.*
 import engine.render.*
 import engine.render.renderer.*
-import engine.render.renderer.render_element.*
 import engine.render.window.{AA, Resolution}
 import org.lwjgl.opengl.GL11.*
 

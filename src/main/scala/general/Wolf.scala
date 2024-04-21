@@ -1,7 +1,6 @@
 package general
 
-import engine.core.World
-import engine.core.Entity
+import engine.core.{Entity, World}
 import lib.instance_manager.Ref
 
 class Wolf private (using world: World) extends Entity {
