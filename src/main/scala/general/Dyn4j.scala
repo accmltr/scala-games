@@ -4,6 +4,7 @@ import engine.core.{Entity, World}
 import engine.input.MouseCode
 import engine.math.{Vector2, pi}
 import engine.render.renderer.render_element.{NGonRenderElement, PolygonRenderElement}
+import imgui.ImGui
 import lib.instance_manager.Ref
 import org.dyn4j.dynamics.Body
 import org.dyn4j.geometry.{Geometry, MassType}
@@ -44,6 +45,7 @@ class Dyn4j private(using world: World) extends Entity {
 
 
   world.onUpdate += (deltaTime =>
+    ImGui.text("Hellooooo!")
     dyn4jWorld.update(deltaTime)
 
     // Update visuals positions

@@ -4,6 +4,10 @@ import engine.Time
 import engine.TimeImplicits.given
 import engine.input.{KeyListener, MouseListener}
 import engine.math.Vector3
+import imgui.ImGui
+import imgui.flag.ImGuiConfigFlags
+import imgui.gl3.ImGuiImplGl3
+import imgui.glfw.ImGuiImplGlfw
 import lib.event_emitter.*
 import org.lwjgl.*
 import org.lwjgl.glfw.*
@@ -27,6 +31,7 @@ final private[engine] class Window(
     keyListener: KeyListener
 ) {
 
+
   // Events
   private val onInitController = EmitterController[Unit]()
   val onInit: Emitter[Unit] = onInitController.emitter
@@ -34,6 +39,9 @@ final private[engine] class Window(
   val onRender: Emitter[Float] = onRenderController.emitter
 
   // Private Fields
+  private val _imGuiGlwf = ImGuiImplGlfw()
+  private val _imGuiGl3 = ImGuiImplGl3()
+  private var _glslVersion: String = uninitialized
   private var _windowId: Long = -1
   private var _deltaTime = 0.0f
   private var _backgroundColor = Vector3(0.0f, 0.0f, 0.0f)
@@ -90,7 +98,13 @@ final private[engine] class Window(
     // Log that the game is running (and the version of LWJGL)
     println("Running Scala Games on LWJGL " + Version.getVersion + "!")
 
-    _init()
+    // Setup
+    _initWindow()
+    _initImGui()
+    _imGuiGlwf.init(_windowId, true)
+    _imGuiGl3.init(_glslVersion)
+
+    // Loop
     _runLoop()
 
     // Free the window callbacks and destroy the window
@@ -102,8 +116,28 @@ final private[engine] class Window(
     glfwSetErrorCallback(null).free()
 
   }
+
+  private def _setupGlslVersion(): Unit = {
+    System.getProperty("os.name").toLowerCase match
+      case x if x.contains("win") =>
+        _glslVersion = "#version 130"
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3)
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0)
+      case x if x.contains("mac") =>
+        _glslVersion = "150"
+        GLFW.glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3)
+        GLFW.glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2)
+        GLFW.glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE)
+        GLFW.glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE)
+      case _ =>
+        _glslVersion = "#version 150"
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3)
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2)
+        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE)
+        glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE)
+  }
   // Private Methods
-  private def _init(): Unit = {
+  private def _initWindow(): Unit = {
     // Setup an error callback
     GLFWErrorCallback.createPrint(System.err).set()
 
@@ -113,6 +147,7 @@ final private[engine] class Window(
 
     // Configure GLFW
     glfwDefaultWindowHints()
+    _setupGlslVersion()
     glfwWindowHint(GLFW_SAMPLES, _anti_aliasing.x)
     glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE)
     glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE)
@@ -211,6 +246,10 @@ final private[engine] class Window(
     // Init done
     onInitController.emit()
   }
+
+  private def _initImGui(): Unit = {
+    ImGui.createContext()
+  }
   private def _runLoop(): Unit = {
     var lastTime: Float = Time
 
@@ -218,21 +257,7 @@ final private[engine] class Window(
     glClearColor(0, 0.5, 1, 1)
 
     while (!glfwWindowShouldClose(_windowId)) {
-      // Poll events
-      glfwPollEvents()
 
-      // Swap the color buffers
-      glfwSwapBuffers(_windowId)
-
-      // Set the clear color
-      val color = _backgroundColor
-      glClearColor(color.x, color.y, color.z, 1)
-
-      // Clear the framebuffer
-      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-
-      // Render the frame
-      // postRenderCallback(_deltaTime)
 
       // Calculate delta time
       _deltaTime = Time - lastTime
@@ -250,8 +275,38 @@ final private[engine] class Window(
       title += " | Mouse: " + mouseListener.position.formatted(0) // Temp
       glfwSetWindowTitle(_windowId, title)
 
+      // Prepare ImGui
+      _imGuiGlwf.newFrame()
+      ImGui.newFrame()
+
+      // Test ImGui text
+            ImGui.text("Hello!")
+
       // Trigger remote render process
       onRenderController.emit(_deltaTime)
+
+      // Render ImGui
+      ImGui.render()
+      _imGuiGl3.renderDrawData(ImGui.getDrawData)
+
+      if (ImGui.getIO.hasConfigFlags(ImGuiConfigFlags.ViewportsEnable)) {
+        val backupWindowPtr = GLFW.glfwGetCurrentContext
+        ImGui.updatePlatformWindows()
+        ImGui.renderPlatformWindowsDefault()
+        GLFW.glfwMakeContextCurrent(backupWindowPtr)
+      }
+      // Poll events
+      glfwPollEvents()
+
+      // Swap the color buffers
+      glfwSwapBuffers(_windowId)
+
+      // Set the clear color
+      val color = _backgroundColor
+      glClearColor(color.x, color.y, color.z, 1)
+
+      // Clear the framebuffer
+      glClear(GL_COLOR_BUFFER_BIT)
 
       // EndFrame on Input
       mouseListener.endFrame()
