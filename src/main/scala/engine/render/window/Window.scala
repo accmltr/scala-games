@@ -19,6 +19,7 @@ import org.lwjgl.system.MemoryStack.*
 import org.lwjgl.system.MemoryUtil.*
 
 import java.nio.{ByteBuffer, IntBuffer}
+import scala.compiletime.uninitialized
 
 final private[engine] class Window(
     private var _title: String,
@@ -28,12 +29,12 @@ final private[engine] class Window(
 
   // Events
   private val onInitController = EmitterController[Unit]()
-  val onInit = onInitController.emitter
+  val onInit: Emitter[Unit] = onInitController.emitter
   private val onRenderController = EmitterController[Float]()
-  val onRender = onRenderController.emitter
+  val onRender: Emitter[Float] = onRenderController.emitter
 
   // Private Fields
-  private var _windowId: Long = -1;
+  private var _windowId: Long = -1
   private var _deltaTime = 0.0f
   private var _backgroundColor = Vector3(0.0f, 0.0f, 0.0f)
   private var _resolution = Resolution(800, 600)
@@ -42,7 +43,7 @@ final private[engine] class Window(
   private var _centered = true
   private var _anti_aliasing: AA = AA.x4
 
-  val fpsStats = FpsStats()
+  val fpsStats: FpsStats = FpsStats()
 
   // Public Accessors
   def windowId: Long = _windowId
@@ -196,10 +197,10 @@ final private[engine] class Window(
     GL.createCapabilities()
 
     val maxSamples = glGetInteger(GL_MAX_SAMPLES)
-    println(s"Maximum supported anti aliasing sample size: ${maxSamples}")
+    println(s"Maximum supported anti aliasing sample size: $maxSamples")
     if (_anti_aliasing.x > maxSamples)
       println(
-        s"Desired anti aliasing sample size ${_anti_aliasing.x} too high, using maximum supported sample size of ${maxSamples}."
+        s"Desired anti aliasing sample size ${_anti_aliasing.x} too high, using maximum supported sample size of $maxSamples."
       )
 
     // Enable blending
@@ -265,14 +266,14 @@ final private[engine] class Window(
     glfwSetWindowShouldClose(windowId, true)
 
   import org.lwjgl.glfw.GLFWImage
-  private var _cursorPath: String = null
+  private var _cursorPath: String = uninitialized
   private var _cursorWidth: Int = 0
   private var _cursorHeight: Int = 0
   private var _cursorChannels: Int = 0
-  private var _cursorData: ByteBuffer = null
+  private var _cursorData: ByteBuffer = uninitialized
   private var _cursorHotspotX: Int = 0
   private var _cursorHotspotY: Int = 0
-  private var _cursorGLFWImage: GLFWImage = null
+  private var _cursorGLFWImage: GLFWImage = uninitialized
   private var _cursorPointer: Long = 0
   def cursorPath: String = _cursorPath
   def cursorWidth: Int = _cursorWidth

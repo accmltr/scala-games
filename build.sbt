@@ -33,5 +33,6 @@ libraryDependencies ++= Seq(
   "org.lwjgl" % "lwjgl-opengl" % lwjglVersion classifier nativeOS,
   "org.lwjgl" % "lwjgl-stb" % lwjglVersion classifier nativeOS,
   "org.joml" % "joml" % jomlVersion,
+  "io.github.spair" % "imgui-java-app" % "1.86.11",
   "org.dyn4j" % "dyn4j" % "5.0.2",
 )
