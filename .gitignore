@@ -37,3 +37,4 @@ doc/.*.bpk
 # Log file
 logs/
 *.log
+imgui.ini
