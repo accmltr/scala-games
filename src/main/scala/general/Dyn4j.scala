@@ -10,15 +10,15 @@ import org.dyn4j.geometry.{Geometry, MassType}
 
 class Dyn4j private(using world: World) extends Entity {
 
-  val dyn4jWorld = org.dyn4j.world.World[Body]()
+  private val dyn4jWorld = org.dyn4j.world.World[Body]()
   dyn4jWorld.setGravity(0, -9.8 * 30.0)
-  val floor = Body()
+  private val floor = Body()
   floor.addFixture(Geometry.createRectangle(50.0, 0.6))
   floor.setMass(MassType.INFINITE)
   floor.translate(100.0, 30.0)
   floor.rotateAboutCenter(pi * 0.02)
   dyn4jWorld.addBody(floor)
-  val body01 = Body()
+  private val body01 = Body()
   body01.addFixture(Geometry.createCircle(10.0))
   body01.translate(100.0, 100.0)
   body01.setMass(MassType.NORMAL)
@@ -26,7 +26,7 @@ class Dyn4j private(using world: World) extends Entity {
 
   val dyn4jVisualScale = 5.0f
 
-  val floorVisuals = Entity("Floor Visuals")
+  private val floorVisuals = Entity("Floor Visuals")
   floorVisuals.addRenderElement(
     PolygonRenderElement(Vector(
       Vector2(-25, -0.3),
@@ -35,7 +35,7 @@ class Dyn4j private(using world: World) extends Entity {
       Vector2(25, -0.3),
     ).map(_ * dyn4jVisualScale))
   )
-  val body01Visuals = Entity("Body01 Visuals")
+  private val body01Visuals = Entity("Body01 Visuals")
   body01Visuals.addRenderElement(
     NGonRenderElement(10.0f * dyn4jVisualScale)
   )
