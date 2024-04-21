@@ -33,3 +33,7 @@ metals.sbt
 
 # Draw.io
 doc/.*.bpk
+
+# Log file
+logs/
+*.log
