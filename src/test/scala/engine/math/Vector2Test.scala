@@ -1,8 +1,8 @@
 package engine.math
-import org.scalatest.freespec.AnyFreeSpec
+
 import engine.math.pi
-import engine.test_utils.assertNearEquals
-import engine.test_utils.assertAnglesEqual
+import engine.test_utils.{assertAnglesEqual, assertNearEquals}
+import org.scalatest.freespec.AnyFreeSpec
 
 class Vector2Test extends AnyFreeSpec {
   "Vector2" - {
@@ -74,7 +74,7 @@ class Vector2Test extends AnyFreeSpec {
     }
     "should have correct from angle 3" in {
       val angle = pi / 4
-      assertNearEquals(Vector2.fromAngle(angle, 1), Vector2(.707107, .707107))
+      assertNearEquals(Vector2.fromAngle(angle), Vector2(.707107, .707107))
     }
     "should normalize" in {
       val vector = Vector2(3, 4)
@@ -119,36 +119,36 @@ class Vector2Test extends AnyFreeSpec {
 
   "Vector2.fromAngle factory method" - {
     "should return correct vector" in {
-      assert(Vector2.fromAngle(0, 1) nearEquals Vector2(1, 0))
+      assert(Vector2.fromAngle(0).nearEquals(Vector2(1, 0)))
       assert(
-        Vector2.fromAngle(pi / 4, 1) nearEquals Vector2(.707107f, .707107f)
+        Vector2.fromAngle(pi / 4).nearEquals(Vector2(.707107f, .707107f))
       )
-      assert(Vector2.fromAngle(pi / 2, 1) nearEquals Vector2(0, 1))
+      assert(Vector2.fromAngle(pi / 2).nearEquals(Vector2(0, 1)))
       assert(
-        Vector2.fromAngle((3f / 4f) * pi, 1) nearEquals Vector2(
+        Vector2.fromAngle((3f / 4f) * pi).nearEquals(Vector2(
           -.707107f,
           .707107f
-        )
+        ))
       )
-      assert(Vector2.fromAngle(pi, 1) nearEquals Vector2(-1, 0))
+      assert(Vector2.fromAngle(pi).nearEquals(Vector2(-1, 0)))
       assert(
-        Vector2.fromAngle((5f / 4f) * pi, 1) nearEquals Vector2(
+        Vector2.fromAngle((5f / 4f) * pi).nearEquals(Vector2(
           -.707107f,
           -.707107f
-        )
+        ))
       )
-      assert(Vector2.fromAngle((3f / 2f) * pi, 1) nearEquals Vector2(0, -1))
+      assert(Vector2.fromAngle((3f / 2f) * pi).nearEquals(Vector2(0, -1)))
       assert(
-        Vector2.fromAngle((7f / 4f) * pi, 1) nearEquals Vector2(
+        Vector2.fromAngle((7f / 4f) * pi).nearEquals(Vector2(
           .707107f,
           -.707107f
-        )
+        ))
       )
-      assert(Vector2.fromAngle(2 * pi) nearEquals Vector2(1, 0))
-      assert(Vector2.fromAngle(-pi) nearEquals Vector2(-1, 0))
-      assert(Vector2.fromAngle(-pi / 2) nearEquals Vector2(0, -1))
-      assert(Vector2.fromAngle(-pi / 4) nearEquals Vector2(.707107f, -.707107f))
-      assert(Vector2.fromAngle(-2 * pi) nearEquals Vector2(1, 0))
+      assert(Vector2.fromAngle(2 * pi).nearEquals(Vector2(1, 0)))
+      assert(Vector2.fromAngle(-pi).nearEquals(Vector2(-1, 0)))
+      assert(Vector2.fromAngle(-pi / 2).nearEquals(Vector2(0, -1)))
+      assert(Vector2.fromAngle(-pi / 4).nearEquals(Vector2(.707107f, -.707107f)))
+      assert(Vector2.fromAngle(-2 * pi).nearEquals(Vector2(1, 0)))
 
     }
   }

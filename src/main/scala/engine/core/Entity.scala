@@ -5,12 +5,14 @@ import engine.render.renderer.render_element.RenderElement
 import lib.event_emitter.*
 import lib.instance_manager.Ref
 
+import scala.compiletime.uninitialized
+
 class Entity protected(using val world: World) {
 
   // Givens
   final given World = world
 
-  final private var _ref: Ref[Entity, Entity] = _
+  final private var _ref: Ref[Entity, Entity] = uninitialized
 
   def ref: Ref[Entity, Entity] = _ref
 
@@ -203,7 +205,7 @@ class Entity protected(using val world: World) {
 
 object Entity {
   def apply(name: String = "Unnamed Entity")(using world: World): Entity =
-    var entity = new Entity()
+    val entity = new Entity()
     entity.name = name
     entity.makeReady()
     entity

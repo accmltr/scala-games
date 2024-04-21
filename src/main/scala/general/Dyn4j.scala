@@ -16,7 +16,7 @@ class Dyn4j private(using world: World) extends Entity {
   floor.addFixture(Geometry.createRectangle(50.0, 0.6))
   floor.setMass(MassType.INFINITE)
   floor.translate(100.0, 30.0)
-  floor.rotateAboutCenter(pi * 0.1)
+  floor.rotateAboutCenter(pi * 0.02)
   dyn4jWorld.addBody(floor)
   val body01 = Body()
   body01.addFixture(Geometry.createCircle(10.0))
@@ -60,9 +60,9 @@ class Dyn4j private(using world: World) extends Entity {
       if (cd.isContactConstraintCollision) {
         val cc = cd.getContactConstraint
 
-        cc.getContacts.forEach(c =>
-          println(c.getPoint)
-        )
+//        cc.getContacts.forEach(c =>
+//          println(c.getPoint)
+//        )
       }
 
 

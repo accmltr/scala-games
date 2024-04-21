@@ -50,10 +50,10 @@ class ShapeTest extends AnyFreeSpec {
   }
   "Polygon" - {
     "should nearEquals" in {
-      var polygon1 = Polygon(
+      val polygon1 = Polygon(
         Vector(Vector2(-5, 5), Vector2(5, 5), Vector2(5, -5), Vector2(-5, -5))
       )
-      var polygon2 = Polygon(
+      val polygon2 = Polygon(
         Vector(
           Vector2(-5.1, 5),
           Vector2(5, 5),
@@ -62,13 +62,13 @@ class ShapeTest extends AnyFreeSpec {
         )
       )
 
-      assert((polygon1 nearEquals (polygon2, .1f)))
+      assert(polygon1.nearEquals(polygon2, .1f))
     }
     "should not nearEquals" in {
-      var polygon1 = Polygon(
+      val polygon1 = Polygon(
         Vector(Vector2(-5, 5), Vector2(5, 5), Vector2(5, -5), Vector2(-5, -5))
       )
-      var polygon2 = Polygon(
+      val polygon2 = Polygon(
         Vector(
           Vector2(-5.1, 5),
           Vector2(5, 5),

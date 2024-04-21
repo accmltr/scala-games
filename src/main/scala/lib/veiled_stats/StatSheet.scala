@@ -62,14 +62,14 @@ final case class StatSheet(
   }
 
   def nearEquals(other: StatSheet, epsilon: Float = 0.0001f): Boolean = {
-    (cpower nearEquals (other.cpower, epsilon)) &&
-    (cspeed nearEquals (other.cspeed, epsilon)) &&
-    (health nearEquals (other.health, epsilon)) &&
-    (hregen nearEquals (other.hregen, epsilon)) &&
-    (movespeed nearEquals (other.movespeed, epsilon))
+    cpower.nearEquals(other.cpower, epsilon) &&
+      cspeed.nearEquals(other.cspeed, epsilon) &&
+      health.nearEquals(other.health, epsilon) &&
+      hregen.nearEquals(other.hregen, epsilon) &&
+      movespeed.nearEquals(other.movespeed, epsilon)
   }
 
-  override def toString(): String = {
+  override def toString: String = {
     s"Stats(cpower = $cpower, cspeed = $cspeed, health = $health, hregen = $hregen, movespeed = $movespeed)"
   }
 }
