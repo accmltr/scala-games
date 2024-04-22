@@ -4,7 +4,7 @@ final class Emitter[T] private[event_emitter] {
   private var _listeners: List[T => Unit] = Nil
 
   def connect(f: T => Unit): Unit =
-    _listeners = f :: _listeners
+    _listeners = _listeners :+ f
 
   def disconnect(f: T => Unit): Unit =
     require(_listeners.contains(f), "Trying to disconnect non-existent lambda `f`.")
